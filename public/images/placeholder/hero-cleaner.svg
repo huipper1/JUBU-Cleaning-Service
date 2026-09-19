@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="grad_herocleanersvg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A1E3B" />
+      <stop offset="100%" stop-color="#0070BA" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad_herocleanersvg)" />
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  <g transform="translate(960, 540)" text-anchor="middle">
+    <rect x="-140" y="-80" width="280" height="34" rx="17" fill="#00A651" opacity="0.15" />
+    <text x="0" y="-58" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" letter-spacing="1.5" fill="#00A651">JUBU HERO BANNER • 16:9</text>
+    <text x="0" y="5" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="44" font-weight="800" fill="#FFFFFF">Professional Cleaning in Dubai</text>
+    <text x="0" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="500" fill="#94A3B8">JUBU Cleaning Service Dubai Placeholder</text>
+  </g>
+</svg>
