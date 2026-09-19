@@ -62,7 +62,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.4rem;
   --background: oklch(1 0 0);
   --foreground: #0a1e3b;
   --brand-navy: #0a1e3b;
@@ -170,12 +170,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   button {
     @apply cursor-pointer;
   }
+
   .container {
     @apply mx-auto px-4;
   }
