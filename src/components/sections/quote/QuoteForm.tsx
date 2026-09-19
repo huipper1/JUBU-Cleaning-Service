@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import Image from "next/image";
 
 import {
+  ArrowRight,
   Calendar,
   CheckCircle2,
   ExternalLink,
@@ -15,7 +17,6 @@ import {
   RotateCcw,
   Settings,
   ShieldCheck,
-  Sparkles,
   User
 } from "lucide-react";
 
@@ -196,35 +197,47 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
   return (
     <section
       id="quote"
-      className="relative overflow-hidden bg-brand-navy-dark py-16 text-white sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[#071933] py-16 text-white sm:py-20 lg:py-24"
       aria-label="Request a Free Quote"
     >
-      {/* Background Decorative Lighting Gradients */}
-      <div className="pointer-events-none absolute top-0 right-1/4 h-96 w-96 rounded-full bg-brand-blue/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-brand-green/10 blur-3xl" />
+      {/* Dubai City Skyline Background */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <Image
+          src="/images/placeholder/city-background.png"
+          alt="Dubai city skyline illuminated at night"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        {/* Deep blue/navy gradient overlay matching the design mockup */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#061833]/92 via-[#071e3d]/78 to-[#061833]/70" />
+        <div className="absolute inset-0 bg-[#05142b]/40 mix-blend-multiply" />
+      </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
           {/* Left Column: Value propositions & WhatsApp contact box */}
           <div className="flex flex-col items-start text-left lg:col-span-6">
-            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-brand-sky/30 bg-brand-sky/10 px-3.5 py-1 text-xs font-bold tracking-wider text-brand-sky uppercase">
-              <Sparkles className="h-3.5 w-3.5" />
+            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-white backdrop-blur-xs">
               <span>CLEANER SPACES • BRIGHTER LIVES</span>
             </span>
 
-            <h2 className="mb-4 text-3xl leading-tight font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Get a Free Quote <span className="text-brand-sky">Today</span>
+            <h2 className="mb-4 flex flex-wrap items-center gap-2 text-3xl leading-tight font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <span>Get a Free Quote</span>
+              <span className="text-brand-sky">Today</span>
+              <span className="inline-block h-1 w-12 rounded-full bg-brand-green sm:w-16" />
             </h2>
 
-            <p className="mb-8 max-w-lg text-sm leading-relaxed font-normal text-slate-300 sm:text-base">
+            <p className="mb-8 max-w-lg text-sm leading-relaxed font-normal text-slate-200 sm:text-base">
               Tell us your cleaning needs and we&apos;ll provide the best solution for your space,
               quickly and easily.
             </p>
 
-            {/* 3 Benefits bullets */}
-            <div className="mb-10 w-full max-w-md space-y-4">
+            {/* 3 Benefits bullets with circular icons matching design */}
+            <div className="mb-8 w-full max-w-md space-y-4 sm:mb-10">
               <div className="flex items-start gap-3.5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-brand-sky">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white">
                   <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div>
@@ -234,58 +247,82 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
               </div>
 
               <div className="flex items-start gap-3.5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-brand-sky">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white">
                   <Settings className="h-5 w-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">Customized Solutions</h3>
                   <p className="mt-0.5 text-xs text-slate-300">
-                    Tailored to your specific space and timing
+                    Tailored to your specific needs
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3.5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-brand-sky">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white">
                   <Leaf className="h-5 w-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">No Obligation</h3>
-                  <p className="mt-0.5 text-xs text-slate-300">Get a quote with zero commitment</p>
+                  <p className="mt-0.5 text-xs text-slate-300">Get a quote with no commitment</p>
                 </div>
               </div>
             </div>
 
-            {/* Direct Call & WhatsApp Contact Box */}
-            <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xs sm:p-6">
+            {/* Direct Call & WhatsApp row with cursive slogan */}
+            <div className="flex w-full flex-col gap-4">
               <div className="flex items-center gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-sm">
-                  <MessageCircle className="h-5 w-5" />
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-lg">
+                  <MessageCircle className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="block text-xs leading-tight text-slate-400">
+                  <span className="block text-xs font-medium text-slate-300">
                     Call / WhatsApp
                   </span>
                   <a
                     href={`tel:${settings.phoneTel}`}
-                    className="text-lg font-extrabold text-white transition-colors hover:text-brand-sky"
+                    className="text-xl font-extrabold tracking-tight text-white transition-colors hover:text-brand-sky sm:text-2xl"
                   >
                     {settings.phoneDisplay}
                   </a>
                 </div>
               </div>
 
-              <a
-                href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
-                  settings.whatsappDefaultMessage
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-5 py-3 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
-              >
-                <MessageCircle className="h-4 w-4" />
-                <span>Contact Us on WhatsApp</span>
-              </a>
+              <div className="flex flex-wrap items-center gap-6 pt-1">
+                <a
+                  href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+                    settings.whatsappDefaultMessage
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-xs font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Contact Us on WhatsApp</span>
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+
+                {/* Cursive text accent "Cleaner Dubai Brighter Lives" */}
+                <div className="relative -rotate-2 select-none">
+                  <span className="block font-serif text-lg italic tracking-wide text-white/90 sm:text-xl">
+                    Cleaner Dubai Brighter Lives
+                  </span>
+                  <svg
+                    className="mt-0.5 h-2 w-32 text-brand-green"
+                    viewBox="0 0 100 8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 6C30 1 70 1 98 6"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -515,7 +552,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   <button
                     type="submit"
                     disabled={status === "submitting"}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover hover:shadow-lg active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover hover:shadow-lg active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {status === "submitting" ? (
                       <>
@@ -525,15 +562,15 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     ) : (
                       <>
                         <span>Request Free Quote</span>
-                        <ExternalLink className="h-4 w-4" />
+                        <ArrowRight className="h-4 w-4" />
                       </>
                     )}
                   </button>
 
                   {/* Privacy note */}
-                  <div className="mt-1 flex items-center justify-center gap-2 text-center text-[11px] text-brand-muted">
+                  <div className="mt-1 flex items-center justify-center gap-1.5 text-center text-[11px] text-brand-muted">
                     <Lock className="h-3.5 w-3.5 shrink-0" />
-                    <span>Your information is safe with us. We never share your details.</span>
+                    <span>Your information is safe with us. We never share your details with third parties.</span>
                   </div>
                 </form>
               )}

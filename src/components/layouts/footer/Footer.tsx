@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Mail } from "lucide-react";
 
 import type { SiteSettings } from "@/types/content";
 
@@ -38,11 +38,25 @@ export function Footer({ settings }: FooterProps) {
 
   return (
     <footer
-      className="border-t border-white/10 bg-brand-navy-dark pt-16 pb-12 text-white sm:pb-8"
+      className="relative overflow-hidden border-t border-white/10 bg-[#061833] pt-16 pb-12 text-white sm:pb-8"
       aria-label="Site Footer"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-14 md:grid-cols-12 lg:gap-14">
+      {/* Dubai City Skyline Background */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <Image
+          src="/images/placeholder/city-background.png"
+          alt="Dubai skyline illuminated at night"
+          fill
+          sizes="100vw"
+          className="object-cover object-bottom"
+        />
+        {/* Navy Overlay to maintain high legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#061833]/94 via-[#071e3d]/82 to-[#040e1e]/90" />
+        <div className="absolute inset-0 bg-[#05142b]/40 mix-blend-multiply" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 border-b border-white/15 pb-14 md:grid-cols-12 lg:gap-14">
           {/* Column 1: Brand details & Socials */}
           <div className="flex flex-col items-start text-left md:col-span-5">
             <Link
@@ -80,7 +94,7 @@ export function Footer({ settings }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Follow JUBU on ${social.platform}`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition-colors hover:bg-brand-blue hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors hover:bg-brand-blue hover:text-white"
                 >
                   <Icon name={social.icon} className="h-4 w-4" />
                 </a>
@@ -113,8 +127,7 @@ export function Footer({ settings }: FooterProps) {
               Newsletter
             </h3>
             <p className="mb-5 text-xs leading-relaxed font-normal text-slate-300 sm:text-sm">
-              Subscribe to our newsletter for cleaning tips, special seasonal offers and latest
-              updates.
+              Subscribe to our newsletter for cleaning tips, special offers and latest updates.
             </p>
 
             {isSubscribed ? (
@@ -123,19 +136,22 @@ export function Footer({ settings }: FooterProps) {
                 <span>Thank you for subscribing!</span>
               </div>
             ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex w-full gap-2">
+              <form onSubmit={handleNewsletterSubmit} className="flex w-full items-center rounded-xl bg-white p-1.5 shadow-md">
+                <div className="pl-3 pr-2 text-slate-400">
+                  <Mail className="h-4 w-4" />
+                </div>
                 <input
                   type="email"
                   required
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
                   placeholder="Your email address"
-                  className="flex-1 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-xs text-white transition-colors placeholder:text-slate-400 focus:border-brand-sky focus:outline-none sm:text-sm"
+                  className="flex-1 bg-transparent py-2 pr-2 text-xs text-brand-navy placeholder:text-slate-400 focus:outline-none sm:text-sm"
                 />
                 <button
                   type="submit"
                   aria-label="Subscribe to newsletter"
-                  className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-brand-blue text-white shadow-sm transition-colors hover:bg-brand-blue-hover sm:h-11 sm:w-11"
+                  className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-brand-blue text-white shadow-sm transition-colors hover:bg-brand-blue-hover"
                 >
                   <ArrowRight className="h-4 w-4" />
                 </button>
@@ -148,7 +164,7 @@ export function Footer({ settings }: FooterProps) {
         <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-slate-400 sm:flex-row">
           <p>{settings.copyrightText}</p>
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-300">{settings.tagline}</span>
+            <span className="font-semibold tracking-wider text-slate-300 uppercase">{settings.tagline}</span>
             <span className="inline-block h-0.5 w-8 rounded-full bg-brand-green" />
           </div>
         </div>
