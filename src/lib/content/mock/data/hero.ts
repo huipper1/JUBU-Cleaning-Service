@@ -37,7 +37,7 @@ export const mockHeroData: HeroContent = {
     }
   ],
   heroImage: {
-    src: "/images/placeholder/hero-cleaner.svg", // DUMMY
+    src: "/images/placeholder/hero-cleaner.png", // DUMMY
     alt: "Professional JUBU cleaner wiping window with Burj Khalifa view in Dubai",
     width: 1920,
     height: 1080

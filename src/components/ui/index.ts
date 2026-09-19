@@ -6,6 +6,7 @@ export * from "./form";
 export * from "./icon";
 export * from "./input";
 export * from "./label";
+export * from "./section-heading";
 export * from "./separator";
 export * from "./sonner";
 export * from "./table";
