@@ -9,10 +9,10 @@ export const mockGalleryData: GalleryItem[] = [
     serviceId: "home-cleaning",
     serviceName: "Home Cleaning",
     image: {
-      src: "/images/placeholder/gallery-villa.svg", // DUMMY
-      alt: "Pristine luxury villa with pool in Palm Jumeirah",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-home.png", // DUMMY
+      alt: "Pristine luxury villa cleaned by JUBU in Dubai",
+      width: 500,
+      height: 500
     },
     order: 1,
     isActive: true,
@@ -26,10 +26,10 @@ export const mockGalleryData: GalleryItem[] = [
     serviceId: "office-cleaning",
     serviceName: "Office Cleaning",
     image: {
-      src: "/images/placeholder/gallery-office.svg", // DUMMY
+      src: "/images/placeholder/gallery-office.png", // DUMMY
       alt: "Clean modern open plan office in Business Bay",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 2,
     isActive: true,
@@ -39,26 +39,26 @@ export const mockGalleryData: GalleryItem[] = [
   {
     id: "gallery-deep-cleaning",
     title: "Deep Cleaning", // DUMMY
-    caption: "Intensive bathroom and grout restoration before and after cleaning.", // DUMMY
+    caption: "Intensive deep cleaning and sanitization for healthier spaces.", // DUMMY
     serviceId: "deep-cleaning",
     serviceName: "Deep Cleaning",
     image: {
-      src: "/images/placeholder/gallery-deep-after.svg", // DUMMY
-      alt: "Sparkling clean luxury bathroom after deep treatment",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
+      alt: "Deep cleaning for healthier and fresher environment",
+      width: 500,
+      height: 500
     },
     beforeImage: {
-      src: "/images/placeholder/gallery-deep-before.svg", // DUMMY
-      alt: "Bathroom tile surfaces before deep cleaning",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
+      alt: "Surfaces before deep cleaning",
+      width: 500,
+      height: 500
     },
     afterImage: {
-      src: "/images/placeholder/gallery-deep-after.svg", // DUMMY
-      alt: "Restored bathroom tile surfaces after deep cleaning",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
+      alt: "Restored pristine surfaces after deep cleaning",
+      width: 500,
+      height: 500
     },
     isBeforeAfter: true,
     order: 3,
@@ -73,10 +73,10 @@ export const mockGalleryData: GalleryItem[] = [
     serviceId: "post-construction-cleaning",
     serviceName: "Post Construction Cleaning",
     image: {
-      src: "/images/placeholder/gallery-construction.svg", // DUMMY
-      alt: "Post-construction dust extraction in new Dubai penthouse",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-construction.png", // DUMMY
+      alt: "Post-construction dust extraction in new Dubai property",
+      width: 500,
+      height: 500
     },
     order: 4,
     isActive: true,
@@ -86,14 +86,14 @@ export const mockGalleryData: GalleryItem[] = [
   {
     id: "gallery-sofa-carpet",
     title: "Sofa & Carpet Cleaning", // DUMMY
-    caption: "Deep steam shampooing of living room sectional sofa and rug.", // DUMMY
+    caption: "Deep steam shampooing of living room sectional sofa and upholstery.", // DUMMY
     serviceId: "sofa-carpet-cleaning",
     serviceName: "Sofa & Carpet Cleaning",
     image: {
-      src: "/images/placeholder/gallery-sofa.svg", // DUMMY
-      alt: "Freshly cleaned and sanitized fabric sofa and wool carpet",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-sofa.png", // DUMMY
+      alt: "Freshly cleaned and sanitized fabric sofa and upholstery",
+      width: 500,
+      height: 500
     },
     order: 5,
     isActive: true,
@@ -103,14 +103,14 @@ export const mockGalleryData: GalleryItem[] = [
   {
     id: "gallery-home-cleaning",
     title: "Home Cleaning", // DUMMY
-    caption: "Spotless modern kitchen counter and cabinetry sanitization.", // DUMMY
+    caption: "Spotless modern living room and apartment sanitization in Dubai.", // DUMMY
     serviceId: "home-cleaning",
     serviceName: "Home Cleaning",
     image: {
-      src: "/images/placeholder/gallery-home.svg", // DUMMY
-      alt: "Spotless modern kitchen island and living space in Dubai Hills",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-home.png", // DUMMY
+      alt: "Spotless modern living space in Dubai",
+      width: 500,
+      height: 500
     },
     order: 6,
     isActive: true,
@@ -120,26 +120,26 @@ export const mockGalleryData: GalleryItem[] = [
   {
     id: "gallery-move-in-out",
     title: "Move In / Move Out", // DUMMY
-    caption: "Tenancy transition hallway and parquet floor cleaning before and after.", // DUMMY
+    caption: "Tenancy transition handover cleaning for a stress-free move.", // DUMMY
     serviceId: "move-in-move-out-cleaning",
     serviceName: "Move In / Move Out Cleaning",
     image: {
-      src: "/images/placeholder/gallery-move-after.svg", // DUMMY
+      src: "/images/placeholder/gallery-move.png", // DUMMY
       alt: "Empty polished apartment ready for tenant move-in",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     beforeImage: {
-      src: "/images/placeholder/gallery-move-before.svg", // DUMMY
-      alt: "Apartment flooring before move-out cleaning",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-move.png", // DUMMY
+      alt: "Apartment before move-out cleaning",
+      width: 500,
+      height: 500
     },
     afterImage: {
-      src: "/images/placeholder/gallery-move-after.svg", // DUMMY
-      alt: "Apartment flooring gleaming after move-out cleaning",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-move.png", // DUMMY
+      alt: "Apartment gleaming after move-out cleaning",
+      width: 500,
+      height: 500
     },
     isBeforeAfter: true,
     order: 7,
@@ -154,10 +154,10 @@ export const mockGalleryData: GalleryItem[] = [
     serviceId: "office-cleaning",
     serviceName: "Office Cleaning",
     image: {
-      src: "/images/placeholder/gallery-commercial.svg", // DUMMY
-      alt: "Spotless corporate boardroom and executive desks",
-      width: 800,
-      height: 600
+      src: "/images/placeholder/gallery-office.png", // DUMMY
+      alt: "Spotless corporate office workspaces",
+      width: 500,
+      height: 500
     },
     order: 8,
     isActive: true,

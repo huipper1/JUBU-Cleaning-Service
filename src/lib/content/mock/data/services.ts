@@ -12,10 +12,10 @@ export const mockServicesData: Service[] = [
       "Comprehensive residential cleaning services customized for Dubai apartments and luxury villas. We vacuum, sanitize, mop, and polish every room to pristine standards.", // DUMMY
     icon: "home",
     image: {
-      src: "/images/placeholder/service-home.svg", // DUMMY
+      src: "/images/placeholder/gallery-home.png", // DUMMY
       alt: "Home Cleaning in Dubai living room with sofa and plants",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 1,
     isActive: true,
@@ -31,10 +31,10 @@ export const mockServicesData: Service[] = [
       "Keep your workplace hygienic and welcoming for staff and clients. Flexible daily, weekly, or after-hours commercial office cleaning schedules across Dubai.", // DUMMY
     icon: "building",
     image: {
-      src: "/images/placeholder/service-office.svg", // DUMMY
+      src: "/images/placeholder/gallery-office.png", // DUMMY
       alt: "Clean modern corporate office workspace in Dubai",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 2,
     isActive: true,
@@ -50,10 +50,10 @@ export const mockServicesData: Service[] = [
       "Intensive sanitization reaching behind heavy furniture, kitchen appliances, grouting, ventilation ducts, and hard-to-reach areas.", // DUMMY
     icon: "sparkles",
     image: {
-      src: "/images/placeholder/service-deep.svg", // DUMMY
+      src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
       alt: "Deep steam extraction cleaning on living room carpet",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 3,
     isActive: true,
@@ -69,10 +69,10 @@ export const mockServicesData: Service[] = [
       "Specialized upholstery shampooing and stain extraction for sofas, mattresses, rugs, and curtains using fabric-safe eco detergents.", // DUMMY
     icon: "sofa",
     image: {
-      src: "/images/placeholder/service-sofa.svg", // DUMMY
+      src: "/images/placeholder/gallery-sofa.png", // DUMMY
       alt: "High-power upholstery cleaning on fabric sofa",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 4,
     isActive: true,
@@ -87,10 +87,10 @@ export const mockServicesData: Service[] = [
     // Edge case: optional longDescription omitted
     icon: "hard-hat",
     image: {
-      src: "/images/placeholder/service-construction.svg", // DUMMY
+      src: "/images/placeholder/gallery-construction.png", // DUMMY
       alt: "Post-renovation dust extraction and clean-up in Dubai villa",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 5,
     isActive: true,
@@ -106,10 +106,10 @@ export const mockServicesData: Service[] = [
       "Make your property pristine for landlord inspections or fresh move-ins. Complete tenancy handover cleaning ensuring full deposit returns.", // DUMMY
     icon: "truck",
     image: {
-      src: "/images/placeholder/service-move.svg", // DUMMY
+      src: "/images/placeholder/gallery-move.png", // DUMMY
       alt: "Move-in ready apartment cleaning with packed boxes",
-      width: 800,
-      height: 600
+      width: 500,
+      height: 500
     },
     order: 6,
     isActive: true,

@@ -7,7 +7,7 @@ export const mockTeamData: TeamMember[] = [
     name: "Ahmed Khan", // DUMMY
     role: "Team Supervisor", // DUMMY
     photo: {
-      src: "/images/placeholder/team-ahmed.svg", // DUMMY
+      src: "/images/placeholder/team-ahmed.png", // DUMMY
       alt: "Ahmed Khan - Team Supervisor at JUBU Cleaning Service",
       width: 600,
       height: 600
@@ -23,7 +23,7 @@ export const mockTeamData: TeamMember[] = [
     name: "Rahim Uddin", // DUMMY
     role: "Senior Cleaner", // DUMMY
     photo: {
-      src: "/images/placeholder/team-rahim.svg", // DUMMY
+      src: "/images/placeholder/team-ahmed.png", // DUMMY
       alt: "Rahim Uddin - Senior Cleaner at JUBU Cleaning Service",
       width: 600,
       height: 600
@@ -39,7 +39,7 @@ export const mockTeamData: TeamMember[] = [
     name: "Sara Ali", // DUMMY
     role: "Home Cleaning Specialist", // DUMMY
     photo: {
-      src: "/images/placeholder/team-sara.svg", // DUMMY
+      src: "/images/placeholder/team-ahmed.png", // DUMMY
       alt: "Sara Ali - Home Cleaning Specialist at JUBU Cleaning Service",
       width: 600,
       height: 600
@@ -55,7 +55,7 @@ export const mockTeamData: TeamMember[] = [
     name: "Imran Sheikh", // DUMMY
     role: "Deep Cleaning Technician", // DUMMY
     photo: {
-      src: "/images/placeholder/team-imran.svg", // DUMMY
+      src: "/images/placeholder/team-ahmed.png", // DUMMY
       alt: "Imran Sheikh - Deep Cleaning Technician at JUBU Cleaning Service",
       width: 600,
       height: 600
