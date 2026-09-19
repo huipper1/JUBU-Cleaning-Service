@@ -64,7 +64,7 @@ export function Footer({ settings }: FooterProps) {
               className="mb-4 flex items-center gap-2 rounded-md focus-visible:outline-2 focus-visible:outline-brand-sky"
               aria-label={`${settings.businessName} Home`}
             >
-              <figure className="relative m-0 flex items-center rounded-xl border border-white/10 bg-white/10 p-2 backdrop-blur-xs">
+              <figure className="relative m-0 flex items-center">
                 <Image
                   src={settings.logo.src}
                   alt={settings.logo.alt}
