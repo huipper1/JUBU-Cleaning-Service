@@ -13,6 +13,7 @@ import type {
   SiteSettings,
   SocialLinkItem,
   TeamMember,
+  TradeLicence,
   TrustBadgeItem,
   WhyChooseItem
 } from "@/types/content";
@@ -32,10 +33,18 @@ export const linkSchema = z.object({
   href: z.string().min(1, "Link href is required")
 });
 
+// Trade Licence Schema
+export const tradeLicenceSchema = z.object({
+  number: z.string().min(1),
+  legalStructure: z.string().min(1),
+  issuingAuthority: z.string().min(1),
+  issueDate: z.string().min(1)
+});
+
 // Social Link Schema
 export const socialLinkSchema = z.object({
   platform: z.string().min(1),
-  url: z.string().url("Invalid social URL"),
+  url: z.string().url("Invalid social URL").optional(),
   icon: z.string().min(1)
 });
 
@@ -64,7 +73,8 @@ export const siteSettingsSchema = z.object({
   workingHours: z.string().min(1),
   socialLinks: z.array(socialLinkSchema),
   defaultSeo: seoMetadataSchema,
-  copyrightText: z.string().min(1)
+  copyrightText: z.string().min(1),
+  licence: tradeLicenceSchema
 });
 
 // Trust Badge Schema
@@ -130,7 +140,8 @@ export const aboutContentSchema = z.object({
   highlights: z.array(aboutHighlightSchema),
   taglineBadge: z.string().optional(),
   secondaryBadge: z.string().optional(),
-  images: z.array(imageSchema).min(1)
+  images: z.array(imageSchema).min(1),
+  equipment: z.array(z.string().min(1))
 });
 
 // Team Member Schema
@@ -220,6 +231,7 @@ export type {
   SiteSettings,
   SocialLinkItem,
   TeamMember,
+  TradeLicence,
   TrustBadgeItem,
   WhyChooseItem
 };

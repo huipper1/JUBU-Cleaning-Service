@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -55,7 +55,7 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
     () => areas.find((a) => a.id === activeId),
     [areas, activeId]
   );
-  const resetCountRef = useRef(0);
+  const [resetCount, setResetCount] = useState(0);
 
   // Auto open popup when activeId changes via chip click
   useEffect(() => {
@@ -71,7 +71,7 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
 
   const handleReset = () => {
     onSelect(null);
-    resetCountRef.current += 1;
+    setResetCount((c) => c + 1);
     // close any open popups
     Object.values(markerRefs.current).forEach((marker) => {
       marker.closePopup();
@@ -102,7 +102,7 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
 
-        <MapController activeArea={activeArea} resetTrigger={resetCountRef.current} />
+        <MapController activeArea={activeArea} resetTrigger={resetCount} />
 
         {areas.map((area) => {
           if (!area.lat || !area.lng) return null;

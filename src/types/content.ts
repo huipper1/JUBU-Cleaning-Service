@@ -10,9 +10,16 @@ export interface LinkItem {
   href: string;
 }
 
+export interface TradeLicence {
+  number: string;
+  legalStructure: string;
+  issuingAuthority: string;
+  issueDate: string;
+}
+
 export interface SocialLinkItem {
   platform: string;
-  url: string;
+  url?: string;
   icon: string;
 }
 
@@ -40,6 +47,7 @@ export interface SiteSettings {
   socialLinks: SocialLinkItem[];
   defaultSeo: SeoMetadata;
   copyrightText: string;
+  licence: TradeLicence;
 }
 
 export interface TrustBadgeItem {
@@ -100,6 +108,7 @@ export interface AboutContent {
   taglineBadge?: string;
   secondaryBadge?: string;
   images: ImageItem[];
+  equipment: string[];
 }
 
 export interface TeamMember {

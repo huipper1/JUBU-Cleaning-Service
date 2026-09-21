@@ -5,7 +5,7 @@ import { env } from "@/env";
 export const siteConfig: SiteConfig = {
   name: "JUBU Cleaning Service",
   description:
-    "Professional, reliable and affordable cleaning solutions for homes, offices, villas and commercial spaces across Dubai.",
+    "Professional and reliable cleaning services for homes, offices, villas and commercial spaces across Dubai. Request your free quote today.",
   url: env.NEXT_PUBLIC_SITE_URL,
   author: "JUBU Cleaning Service",
   locale: "en",

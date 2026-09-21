@@ -8,7 +8,6 @@ import {
   Calendar,
   CheckCircle2,
   ExternalLink,
-  Leaf,
   Loader2,
   Lock,
   MessageCircle,
@@ -260,11 +259,11 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
 
               <div className="flex items-start gap-3.5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white">
-                  <Leaf className="h-5 w-5" />
+                  <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">No Obligation</h3>
-                  <p className="mt-0.5 text-xs text-slate-300">Get a quote with no commitment</p>
+                  <p className="mt-0.5 text-xs text-slate-300">Free quotes with no commitment</p>
                 </div>
               </div>
             </div>
@@ -459,7 +458,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                           disabled={status === "submitting"}
                           value={formData.mobile}
                           onChange={handleChange}
-                          placeholder="50 123 4567"
+                          placeholder="54 299 5191"
                           className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
                             fieldErrors.mobile
                               ? "border-red-400 bg-red-950/30"

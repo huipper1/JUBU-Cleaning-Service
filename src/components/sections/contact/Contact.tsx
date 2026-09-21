@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-import { MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import type { SiteSettings } from "@/types/content";
 
@@ -10,10 +9,14 @@ interface ContactProps {
 }
 
 export function Contact({ settings }: ContactProps) {
+  const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+    settings.whatsappDefaultMessage
+  )}`;
+
   return (
     <section
       id="contact"
-      className="relative z-30 -mb-32 sm:-mb-44 lg:-mb-52 pointer-events-none "
+      className="relative z-30 -mb-32 sm:-mb-44 lg:-mb-52 pointer-events-none"
       aria-label="Contact JUBU Cleaning Service"
     >
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
@@ -31,10 +34,43 @@ export function Contact({ settings }: ContactProps) {
               <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/50 px-3.5 py-1 text-xs font-bold tracking-wider text-sky-300 uppercase backdrop-blur-xs sm:text-sm">
                 Get In Touch With JUBU
               </span>
-              <h2 className="mb-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.12]">
+              <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.12]">
                 Experience Your <br className="hidden sm:inline" />
                 <span className="text-[#34d399]">Cleanest Home</span> Yet
               </h2>
+
+              {/* Full Contact Details from SiteSettings */}
+              <div className="mb-6 flex flex-col gap-2.5 text-xs text-slate-200 sm:text-sm">
+                <a
+                  href={settings.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-2 text-slate-300 hover:text-white transition-colors"
+                >
+                  <MapPin className="h-4 w-4 shrink-0 text-[#34d399] mt-0.5" />
+                  <span>{settings.address}</span>
+                </a>
+
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                  <a
+                    href={`mailto:${settings.email}`}
+                    className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
+                  >
+                    <Mail className="h-4 w-4 shrink-0 text-[#38bdf8]" />
+                    <span>{settings.email}</span>
+                  </a>
+
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
+                  >
+                    <MessageCircle className="h-4 w-4 shrink-0 text-[#34d399]" />
+                    <span>WhatsApp: {settings.phoneDisplay}</span>
+                  </a>
+                </div>
+              </div>
 
               {/* Action Buttons styled to match site theme */}
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
@@ -43,7 +79,7 @@ export function Contact({ settings }: ContactProps) {
                   className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  <span>Get Instant Price</span>
+                  <span>Get Free Quote</span>
                 </Link>
 
                 <a
@@ -77,4 +113,3 @@ export function Contact({ settings }: ContactProps) {
     </section>
   );
 }
-

@@ -1,11 +1,11 @@
 import type { HeroContent } from "@/types/content";
 
-// Mock hero section content from reference screenshot
+// Mock hero section content supported by verified client facts
 export const mockHeroData: HeroContent = {
   badge: "Professional Cleaning Services in Dubai",
   headline: "Turning Houses into Fresh Homes",
   subheadline:
-    "Our team of experienced cleaners will leave your property clean and tidy, whether it's a one-off clean or a regular service.",
+    "Professional residential and commercial cleaning across Dubai. Operating as a licensed LLC with specialized machines and free quotes.",
   primaryCta: {
     label: "Get a Free Quote",
     href: "#quote"
@@ -16,23 +16,23 @@ export const mockHeroData: HeroContent = {
   },
   trustBadges: [
     {
-      id: "trusted-insured",
-      label: "Trusted & Insured",
+      id: "licensed-in-dubai",
+      label: "Licensed in Dubai",
       icon: "shield-check"
     },
     {
-      id: "professional-staff",
-      label: "Professional Staff",
-      icon: "users"
+      id: "professional-equipment",
+      label: "Professional Equipment",
+      icon: "settings"
     },
     {
-      id: "eco-friendly",
-      label: "Eco-Friendly Products",
-      icon: "leaf"
+      id: "reliable-service",
+      label: "Reliable Service",
+      icon: "users"
     }
   ],
   heroImage: {
-    src: "/images/placeholder/hero-cleaner.png",
+    src: "/images/placeholder/hero-cleaner.png", // DUMMY
     alt: "JUBU Professional Cleaner in uniform with spray bottle and cloth",
     width: 900,
     height: 1000

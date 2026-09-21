@@ -1,58 +1,71 @@
 import type { AboutContent } from "@/types/content";
 
-// DUMMY: Mock about company section content matching design Part 2
+// DRAFT: client to approve
 export const mockAboutData: AboutContent = {
-  badge: "ABOUT JUBU CLEANING SERVICE", // DUMMY
-  heading: "More Than Just Cleaning", // DUMMY
+  badge: "ABOUT JUBU CLEANING SERVICE",
+  heading: "Professional Cleaning in Dubai",
   paragraphs: [
-    "JUBU Cleaning Service is a Dubai-based cleaning company focused on quality, reliability and customer satisfaction. We provide professional cleaning solutions for homes, offices, villas and commercial spaces across Dubai.", // DUMMY
-    "We believe a clean environment creates a healthier, happier lifestyle. That's why we go the extra mile to deliver exceptional service with attention to detail, every time." // DUMMY
+    "JUBU Cleaning Service is a Dubai-based Limited Liability Company (LLC), licensed by the Dubai Department of Economy and Tourism since January 2022. Operating from our office in Naif, Dubai, we provide trusted cleaning solutions for residential and commercial spaces across the city.",
+    "Our professional team delivers six dedicated cleaning services: Home Cleaning, Office Cleaning, Deep Cleaning, Sofa & Carpet Cleaning, Post Construction Cleaning, and Move In / Move Out Cleaning. Equipped with professional cleaning machines and specialized tools, we serve our 10 service areas across Dubai with reliable quality and free quotes via WhatsApp, phone, or online inquiry."
   ],
   cta: {
-    label: "Learn More", // DUMMY
+    label: "Get a Free Quote",
     href: "#quote"
   },
   highlights: [
     {
-      id: "quality-service",
-      title: "Quality Service", // DUMMY
-      description: "Rigorous attention to detail and proven cleaning protocols.", // DUMMY
-      icon: "gem"
+      id: "licensed-company",
+      title: "Licensed in Dubai",
+      description: "Dubai Department of Economy and Tourism licensed LLC since January 2022.",
+      icon: "shield-check"
     },
     {
-      id: "cleaner-environment",
-      title: "A Cleaner Environment", // DUMMY
-      description: "Non-toxic, family and pet-safe certified detergents.", // DUMMY
-      icon: "leaf"
+      id: "professional-equipment",
+      title: "Professional Equipment",
+      description: "Specialized industrial scrubbing, steam, extraction, and vacuum machines.",
+      icon: "settings"
     },
     {
-      id: "happier-communities",
-      title: "Happier Communities", // DUMMY
-      description: "Building trustworthy long-term relationships across Dubai.", // DUMMY
-      icon: "users"
+      id: "coverage",
+      title: "10 Dubai Service Areas",
+      description: "Serving Downtown Dubai, Business Bay, Marina, JLT, JBR, Palm Jumeirah and more.",
+      icon: "map-pin"
     }
   ],
-  taglineBadge: "Clean Today Brighter Tomorrow", // DUMMY
-  secondaryBadge: "Clean Homes Happy Families", // DUMMY
+  taglineBadge: "Licensed & Reliable",
+  secondaryBadge: "Dubai-Wide Service",
   images: [
     {
-      src: "/images/placeholder/about-team.png", // DUMMY
-      alt: "Pristine modern living room cleaned by JUBU specialists in Dubai",
+      src: "/images/placeholder/about-cleaner.png", // DUMMY
+      alt: "JUBU Cleaning Service team at work in Dubai",
       width: 800,
       height: 600
     },
     {
       src: "/images/placeholder/about-detail.png", // DUMMY
-      alt: "Gloved hands sanitizing luxury marble surface",
+      alt: "Professional surface sanitization",
       width: 600,
       height: 600
     },
     {
-      src: "/images/placeholder/about-cleaning.png", // DUMMY
-      alt: "JUBU uniformed staff vacuuming luxury rug",
+      src: "/images/placeholder/about-team.png", // DUMMY
+      alt: "JUBU Cleaning Service staff",
       width: 600,
       height: 600
     }
+  ],
+  equipment: [
+    "Wet & Dry Vacuum Cleaner",
+    "Floor Scrubber Machine",
+    "Single Disc Machine",
+    "High Pressure Washer",
+    "Carpet / Sofa Extractor Machine",
+    "Steam Cleaner",
+    "Cleaning Trolley",
+    "Mop & Bucket",
+    "Window Cleaning Kit",
+    "Microfiber Cloths & Brushes",
+    "Telescopic Cleaning Pole",
+    "Safety Equipment (Gloves, Shoes, Goggles)"
   ]
 };
-

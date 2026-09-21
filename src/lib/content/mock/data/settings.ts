@@ -1,38 +1,51 @@
 import type { SiteSettings } from "@/types/content";
 
-// DUMMY: Mock site settings based on design mockups
 export const mockSettingsData: SiteSettings = {
-  businessName: "JUBU Cleaning Service", // DUMMY
-  tagline: "Cleaner Spaces • Brighter Lives", // DUMMY
-  badgeText: "Professional Cleaning Services in Dubai", // DUMMY
+  businessName: "JUBU Cleaning Service",
+  tagline: "Cleaner Spaces • Brighter Lives",
+  badgeText: "Professional Cleaning Services in Dubai",
   logo: {
     src: "/images/logo.png",
     alt: "JUBU Cleaning Services Logo",
     width: 240,
     height: 80
   },
-  phone: "+971 50 123 4567", // DUMMY
-  phoneDisplay: "+971 50 123 4567", // DUMMY
-  phoneTel: "+971501234567", // DUMMY
-  whatsapp: "+971 50 123 4567", // DUMMY
-  whatsappNumber: "971501234567", // DUMMY
+  phone: "+971 54 299 5191",
+  phoneDisplay: "+971 54 299 5191",
+  phoneTel: "+971542995191",
+  whatsapp: "+971 54 299 5191",
+  whatsappNumber: "971542995191",
   whatsappDefaultMessage:
-    "Hello JUBU Cleaning Service, I would like to inquire about your cleaning services in Dubai.", // DUMMY
-  email: "info@jubucleaning.ae", // DUMMY
-  address: "Dubai, UAE", // DUMMY
-  mapUrl: "https://maps.google.com/?q=Dubai,+United+Arab+Emirates", // DUMMY
-  workingHours: "Sat to Thu, 8:00 AM - 8:00 PM", // DUMMY
+    "Hello JUBU Cleaning Service, I would like to inquire about a free quote for your cleaning services in Dubai.",
+  email: "sajibulislam679@gmail.com",
+  address: "Office No. 95-804, Naif, Dubai, United Arab Emirates",
+  // DUMMY: replace with real Maps link
+  mapUrl: "https://www.google.com/maps/search/?api=1&query=Office+95-804+Naif+Dubai",
+  // DUMMY: confirm with client
+  workingHours: "Sat to Thu, 8:00 AM - 8:00 PM",
   socialLinks: [
-    { platform: "Facebook", url: "https://facebook.com/jubucleaning", icon: "facebook" }, // DUMMY
-    { platform: "Instagram", url: "https://instagram.com/jubucleaning", icon: "instagram" }, // DUMMY
-    { platform: "WhatsApp", url: "https://wa.me/971501234567", icon: "whatsapp" }, // DUMMY
-    { platform: "YouTube", url: "https://youtube.com/@jubucleaning", icon: "youtube" } // DUMMY
+    {
+      platform: "Facebook",
+      url: "https://www.facebook.com/share/19bAVeUag4/?mibextid=wwXIfr",
+      icon: "facebook"
+    },
+    {
+      platform: "WhatsApp",
+      url: "https://wa.me/971542995191",
+      icon: "whatsapp"
+    }
   ],
   defaultSeo: {
-    title: "JUBU Cleaning Service | Dubai Cleaning Services", // DUMMY
+    title: "JUBU Cleaning Service | Dubai Cleaning Services",
     description:
-      "JUBU Cleaning Service provides reliable, professional and affordable cleaning solutions for homes, offices, villas and commercial spaces in Dubai.", // DUMMY
+      "JUBU Cleaning Service provides reliable and professional cleaning solutions for homes, offices, villas and commercial spaces in Dubai. Request your free quote today.",
     ogImage: "/images/placeholder/og-image.svg" // DUMMY
   },
-  copyrightText: "© 2026 JUBU Cleaning Service. All rights reserved." // DUMMY
+  copyrightText: "© 2026 JUBU Cleaning Service. All rights reserved.",
+  licence: {
+    number: "1026183",
+    legalStructure: "Limited Liability Company (LLC)",
+    issuingAuthority: "Dubai Department of Economy and Tourism",
+    issueDate: "25 January 2022"
+  }
 };
