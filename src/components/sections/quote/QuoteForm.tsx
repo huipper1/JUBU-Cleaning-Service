@@ -150,7 +150,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
         }
         setErrorMessage(
           data.message ||
-            "Unable to submit your quote request right now. Please call or WhatsApp us."
+          "Unable to submit your quote request right now. Please call or WhatsApp us."
         );
         return;
       }
@@ -211,7 +211,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
           className="object-cover object-center"
         />
         {/* Deep blue/navy gradient overlay matching the design mockup */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#061833]/92 via-[#071e3d]/78 to-[#061833]/70" />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-[#061833]/92 via-[#071e3d]/78 to-[#061833]/70" /> */}
         <div className="absolute inset-0 bg-[#05142b]/40 mix-blend-multiply" />
       </div>
 
@@ -303,9 +303,9 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                 </a>
 
                 {/* Cursive text accent "Cleaner Dubai Brighter Lives" */}
-                <div className="relative -rotate-2 select-none">
-                  <span className="block font-serif text-lg italic tracking-wide text-white/90 sm:text-xl">
-                    Cleaner Dubai Brighter Lives
+                <div className="relative -rotate-20 select-none">
+                  <span className="block font-serif text-lg italic tracking-wide text-center text-white/90 sm:text-xl">
+                    Cleaner<br /> Dubai<br /> Brighter<br /> Lives
                   </span>
                   <svg
                     className="mt-0.5 h-2 w-32 text-brand-green"
@@ -422,11 +422,10 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="e.g. John Doe"
-                        className={`w-full rounded-xl border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none ${
-                          fieldErrors.fullName
-                            ? "border-red-500 bg-red-50/20"
-                            : "border-brand-border"
-                        }`}
+                        className={`w-full rounded-xl border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none ${fieldErrors.fullName
+                          ? "border-red-500 bg-red-50/20"
+                          : "border-brand-border"
+                          }`}
                       />
                     </div>
                     {fieldErrors.fullName && (
@@ -460,11 +459,10 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                           value={formData.mobile}
                           onChange={handleChange}
                           placeholder="50 123 4567"
-                          className={`w-full rounded-xl border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none ${
-                            fieldErrors.mobile
-                              ? "border-red-500 bg-red-50/20"
-                              : "border-brand-border"
-                          }`}
+                          className={`w-full rounded-xl border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none ${fieldErrors.mobile
+                            ? "border-red-500 bg-red-50/20"
+                            : "border-brand-border"
+                            }`}
                         />
                       </div>
                     </div>
