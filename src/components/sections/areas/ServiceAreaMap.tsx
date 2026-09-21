@@ -90,7 +90,7 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
   };
 
   return (
-    <div className="relative h-[380px] w-full overflow-hidden rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.08)] sm:h-[420px] lg:h-[480px]">
+    <div className="relative h-[380px] w-full overflow-hidden rounded-lg  sm:h-[420px] lg:h-[480px]">
       <MapContainer
         center={DUBAI_CENTER}
         zoom={DEFAULT_ZOOM}

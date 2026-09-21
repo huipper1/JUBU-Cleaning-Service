@@ -87,21 +87,18 @@ export function ServiceAreas({ areas, whatsappUrl }: ServiceAreasProps) {
                     type="button"
                     onClick={() => handleChipClick(area.id)}
                     aria-pressed={isActive}
-                    className={`group flex cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[#0070ba] focus-visible:outline-offset-2 sm:px-3.5 sm:py-2 ${
-                      isActive
+                    className={`group flex cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[#0070ba] focus-visible:outline-offset-2 sm:px-3.5 sm:py-2 ${isActive
                         ? "border-2 border-[#16a34a] bg-[#f0fdf4] shadow-xs"
                         : "border border-sky-100 bg-white shadow-[0_1px_4px_rgba(0,112,186,0.04)] hover:border-[#0070ba] hover:bg-sky-50/50 hover:shadow-xs"
-                    }`}
+                      }`}
                   >
                     <MapPin
-                      className={`h-3.5 w-3.5 shrink-0 transition-colors ${
-                        isActive ? "text-[#16a34a]" : "text-[#0070ba] group-hover:text-[#005e9e]"
-                      }`}
+                      className={`h-3.5 w-3.5 shrink-0 transition-colors ${isActive ? "text-[#16a34a]" : "text-[#0070ba] group-hover:text-[#005e9e]"
+                        }`}
                     />
                     <span
-                      className={`truncate text-xs font-bold tracking-tight ${
-                        isActive ? "text-[#15803d]" : "text-[#081839]"
-                      }`}
+                      className={`truncate text-xs font-bold tracking-tight ${isActive ? "text-[#15803d]" : "text-[#081839]"
+                        }`}
                     >
                       {area.name}
                     </span>
