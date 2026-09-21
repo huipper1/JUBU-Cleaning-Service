@@ -4,6 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { MapPin, MessageCircle } from "lucide-react";
 
+import { SectionHeading } from "@/ui";
 import type { ServiceArea } from "@/types/content";
 
 // Skeleton loader matching the exact dimensions of the larger map
@@ -68,17 +69,13 @@ export function ServiceAreas({ areas, whatsappUrl }: ServiceAreasProps) {
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
           {/* Left Column: Heading, Description, Smaller Compact Chips & WhatsApp Banner */}
           <div className="flex flex-col items-start text-left lg:col-span-6 xl:col-span-6">
-            <span className="mb-2 text-xs font-bold tracking-wider text-[#00a651] uppercase sm:text-sm">
-              DUBAI SERVICE AREAS
-            </span>
-
-            <h2 className="mb-3 text-3xl font-black tracking-tight text-[#081839] sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
-              Areas We Serve in Dubai
-            </h2>
-
-            <p className="mb-6 max-w-lg text-sm leading-relaxed text-[#4a5f78] sm:text-base">
-              We provide professional cleaning services across all major areas of Dubai and surrounding communities. Click any area to locate it on the map.
-            </p>
+            <SectionHeading
+              badge="DUBAI SERVICE AREAS"
+              title="Areas We Serve in Dubai"
+              description="We provide professional cleaning services across all major areas of Dubai and surrounding communities. Click any area to locate it on the map."
+              align="left"
+              className="mb-6 max-w-lg"
+            />
 
             {/* Smaller, Compact Area Pill Buttons */}
             <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5">

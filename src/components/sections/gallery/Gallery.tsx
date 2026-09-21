@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { ArrowLeftRight, ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 
+import { SectionHeading } from "@/ui";
 import type { GalleryItem } from "@/types/content";
 
 interface GalleryProps {
@@ -75,25 +76,22 @@ export function Gallery({ items }: GalleryProps) {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with Title and View All Link */}
-        <div className="mb-10 flex flex-col justify-between gap-4 sm:mb-12 md:flex-row md:items-end">
-          <div className="flex flex-col items-start text-left">
-            <span className="mb-2.5 text-xs font-bold tracking-wider text-brand-green uppercase sm:text-sm">
-              OUR PROJECTS
-            </span>
-            <h2 className="text-2xl leading-tight font-extrabold tracking-tight text-brand-navy sm:text-3xl lg:text-4xl">
-              Our Recent Work
-            </h2>
-          </div>
-          <Link
-            href="#gallery"
-            className="group inline-flex items-center gap-3 rounded-full bg-[#00a651] py-2.5 pr-2.5 pl-6 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#008f45] active:scale-98 sm:text-sm"
-          >
-            <span>View All Projects</span>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0a1e3b] text-white transition-transform duration-200 group-hover:translate-x-0.5">
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </Link>
-        </div>
+        <SectionHeading
+          badge="OUR PROJECTS"
+          title="Our Recent Work"
+          align="left"
+          action={
+            <Link
+              href="#gallery"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#00a651] py-2.5 pr-2.5 pl-6 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#008f45] active:scale-98 sm:text-sm"
+            >
+              <span>View All Projects</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0a1e3b] text-white transition-transform duration-200 group-hover:translate-x-0.5">
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          }
+        />
 
         {/* 8 Items Grid */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">

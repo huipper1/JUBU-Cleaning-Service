@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SectionHeading } from "@/ui";
 import type { ImageItem, WhyChooseItem } from "@/types/content";
 
 interface WhyChooseUsProps {
@@ -143,15 +144,13 @@ export function WhyChooseUs({
 
           {/* Right Column: Content and 4 Horizontal Feature Badges */}
           <div className="flex flex-col justify-center py-12 lg:col-span-7 lg:py-16 lg:pl-10 lg:pr-2 xl:pl-14">
-            <span className="mb-2 text-xs font-bold tracking-wider text-[#16a34a] uppercase sm:text-sm">
-              {badge}
-            </span>
-            <h2 className="mb-3 text-2xl font-black tracking-tight text-[#081839] sm:text-3xl lg:text-4xl">
-              {title}
-            </h2>
-            <p className="mb-10 max-w-xl text-sm leading-relaxed text-[#4a5f78] sm:text-base">
-              {description}
-            </p>
+            <SectionHeading
+              badge={badge}
+              title={title}
+              description={description}
+              align="left"
+              className="mb-8 max-w-xl"
+            />
 
             {/* 4 Feature Items Matching Screenshot */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-3 lg:gap-4">

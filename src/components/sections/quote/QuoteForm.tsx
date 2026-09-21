@@ -328,7 +328,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
 
           {/* Right Column: Lead Form Card */}
           <div className="lg:col-span-6">
-            <div className="rounded-3xl border border-brand-border bg-white p-6 text-brand-navy shadow-2xl sm:p-8 md:p-10">
+            <div className="rounded-3xl border border-[#071933]/30 bg-[#071933]/20 backdrop-blur-xl p-6 text-brand-navy shadow-2xl sm:p-8 md:p-10">
               {status === "success" ? (
                 /* Success Confirmation State */
                 <div className="flex animate-in flex-col items-center py-6 text-center duration-300 zoom-in-95 fade-in">

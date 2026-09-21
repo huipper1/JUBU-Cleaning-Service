@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 import type { Service } from "@/types/content";
 
-import { Icon } from "@/ui";
+import { Icon, SectionHeading } from "@/ui";
 
 interface ServicesProps {
   services: Service[];
@@ -29,18 +29,12 @@ export function Services({ services }: ServicesProps) {
     <section id="services" className="relative bg-white py-16 sm:py-20 lg:py-24" aria-label="Our Services">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Section Header matching reference */}
-        <div className="mb-12 flex flex-col items-center text-center sm:mb-14">
-          <h6 className="mb-2 text-xs font-bold tracking-wider text-[#16a34a] uppercase sm:text-sm">
-            OUR SERVICES
-          </h6>
-          <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#081839] sm:text-4xl lg:text-5xl">
-            Cleaning Solutions for Every Space
-          </h2>
-          <p className="max-w-xl text-sm leading-relaxed text-slate-500 sm:text-base">
-            We offer a wide range of cleaning services tailored to your needs.
-          </p>
-        </div>
+        {/* Section Header */}
+        <SectionHeading
+          badge="OUR SERVICES"
+          title="Cleaning Solutions for Every Space"
+          description="From deep home sanitization to specialized commercial cleaning, our certified crew ensures every inch is fresh and pristine."
+        />
 
         {/* 6 Services Grid matching reference split card style */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
