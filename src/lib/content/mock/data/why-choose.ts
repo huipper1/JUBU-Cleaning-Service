@@ -1,32 +1,32 @@
 import type { WhyChooseItem } from "@/types/content";
 
-// DUMMY: Mock why choose items matching design Part 1
+// Why choose items matching design screenshot
 export const mockWhyChooseData: WhyChooseItem[] = [
   {
-    id: "professional-team",
-    title: "Professional Team", // DUMMY
-    description: "Trained, background-checked and dedicated cleaning professionals you can trust.", // DUMMY
-    icon: "users",
+    id: "on-time-service",
+    title: "On-Time Service",
+    description: "Always punctual, dependable, and consistent high standards on every visit.",
+    icon: "clock",
     order: 1,
     isActive: true,
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z"
   },
   {
-    id: "affordable-price",
-    title: "Affordable Price", // DUMMY
-    description: "Clear, transparent pricing without hidden charges or unexpected fees.", // DUMMY
-    icon: "coins",
+    id: "fully-trained-staff",
+    title: "Fully Trained Staff",
+    description: "Trained, background-checked and dedicated cleaning professionals you can trust.",
+    icon: "shield-check",
     order: 2,
     isActive: true,
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z"
   },
   {
-    id: "reliable-service",
-    title: "Reliable Service", // DUMMY
-    description: "Always punctual, dependable, and consistent high standards on every visit.", // DUMMY
-    icon: "shield-check",
+    id: "eco-friendly-products",
+    title: "Eco-Friendly Cleaning Products",
+    description: "Safe, non-toxic, and environmentally responsible cleaning solutions.",
+    icon: "leaf",
     order: 3,
     isActive: true,
     createdAt: "2026-01-01T00:00:00Z",
@@ -34,8 +34,8 @@ export const mockWhyChooseData: WhyChooseItem[] = [
   },
   {
     id: "customer-satisfaction",
-    title: "100% Customer Satisfaction", // DUMMY
-    description: "Your delight is our mission; we ensure every room is sparkling clean.", // DUMMY
+    title: "100% Customer Satisfaction",
+    description: "Your delight is our mission; we ensure every room is sparkling clean.",
     icon: "star",
     order: 4,
     isActive: true,

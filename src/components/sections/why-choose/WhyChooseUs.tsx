@@ -1,8 +1,5 @@
 import Image from "next/image";
-
 import type { ImageItem, WhyChooseItem } from "@/types/content";
-
-import { Icon } from "@/ui";
 
 interface WhyChooseUsProps {
   items: WhyChooseItem[];
@@ -10,6 +7,106 @@ interface WhyChooseUsProps {
   badge?: string;
   title?: string;
   description?: string;
+}
+
+// Custom crisp SVG icons matching the exact icons in the screenshot
+function FeatureIcon({ id }: { id: string }) {
+  if (id.includes("clock") || id.includes("time")) {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#16a34a"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-7 w-7"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <polyline points="12 7 12 12 9.5 12" />
+      </svg>
+    );
+  }
+
+  if (id.includes("shield") || id.includes("train")) {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#16a34a"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-7 w-7"
+      >
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <polyline points="9 11.5 11.5 14 15.5 9.5" />
+      </svg>
+    );
+  }
+
+  if (id.includes("leaf") || id.includes("eco")) {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        className="h-7 w-7 fill-[#16a34a]"
+      >
+        <path d="M20.6 3.4c-4.4-.8-9.4 1.2-12.8 4.6C4.4 11.4 2.5 16.4 3.3 20.7c.1.4.4.7.8.8 4.3.8 9.3-1.2 12.7-4.6 3.4-3.4 5.3-8.4 4.5-12.7-.1-.4-.4-.7-.7-.8zm-4.2 10.3c-2.8 2.8-6.9 4.3-10.4 3.7.8-3.5 2.3-7.6 5.1-10.4 2.8-2.8 6.9-4.3 10.4-3.7-.8 3.5-2.3 7.6-5.1 10.4z" />
+      </svg>
+    );
+  }
+
+  // Star icon (5-point outlined green star)
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#16a34a"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-7 w-7"
+    >
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+// Split multi-word labels cleanly into 2 lines
+function renderFormattedTitle(title: string) {
+  if (title === "On-Time Service") {
+    return (
+      <>
+        <span>On-Time</span>
+        <span>Service</span>
+      </>
+    );
+  }
+  if (title === "Fully Trained Staff") {
+    return (
+      <>
+        <span>Fully Trained</span>
+        <span>Staff</span>
+      </>
+    );
+  }
+  if (title.includes("Eco-Friendly") || title.includes("Cleaning Products")) {
+    return (
+      <>
+        <span>Eco-Friendly</span>
+        <span>Cleaning Products</span>
+      </>
+    );
+  }
+  if (title.includes("Satisfaction") || title.includes("100%")) {
+    return (
+      <>
+        <span>100% Customer</span>
+        <span>Satisfaction</span>
+      </>
+    );
+  }
+  return <span>{title}</span>;
 }
 
 export function WhyChooseUs({
@@ -44,9 +141,9 @@ export function WhyChooseUs({
             />
           </div>
 
-          {/* Right Column: Content and 4 Icons */}
-          <div className="flex flex-col justify-center py-12 lg:col-span-7 lg:py-16 lg:pl-14 lg:pr-4">
-            <span className="mb-2 text-xs font-bold tracking-wider text-[#00a651] uppercase sm:text-sm">
+          {/* Right Column: Content and 4 Horizontal Feature Badges */}
+          <div className="flex flex-col justify-center py-12 lg:col-span-7 lg:py-16 lg:pl-10 lg:pr-2 xl:pl-14">
+            <span className="mb-2 text-xs font-bold tracking-wider text-[#16a34a] uppercase sm:text-sm">
               {badge}
             </span>
             <h2 className="mb-3 text-2xl font-black tracking-tight text-[#081839] sm:text-3xl lg:text-4xl">
@@ -56,18 +153,18 @@ export function WhyChooseUs({
               {description}
             </p>
 
-            {/* 4 Feature Items */}
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-4">
+            {/* 4 Feature Items Matching Screenshot */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-3 lg:gap-4">
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col items-center text-center"
+                  className="flex items-center gap-2.5 text-left sm:gap-3"
                 >
-                  <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white text-[#0070ba] shadow-[0_4px_16px_rgba(0,112,186,0.12)] transition-transform duration-200 hover:scale-105 sm:h-18 sm:w-18">
-                    <Icon name={item.icon} className="h-7 w-7 stroke-[2.2]" />
+                  <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.06)] sm:h-14 sm:w-14">
+                    <FeatureIcon id={item.id} />
                   </div>
-                  <h3 className="text-xs font-bold leading-tight text-[#081839] sm:text-sm">
-                    {item.title}
+                  <h3 className="flex flex-col text-[11px] font-bold leading-tight text-[#081839] sm:text-xs xl:text-[13px]">
+                    {renderFormattedTitle(item.title)}
                   </h3>
                 </div>
               ))}
