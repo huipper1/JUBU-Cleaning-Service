@@ -39,7 +39,7 @@ export default async function Home() {
   )}`;
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-white pb-16 md:pb-0">
+    <div className="relative flex min-h-screen w-full flex-col bg-[#041633] pb-16 md:pb-0">
       {/* 1. Header (sticky, anchor nav, actions) */}
       <Header settings={settings} />
 

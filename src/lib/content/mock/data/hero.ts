@@ -1,46 +1,41 @@
 import type { HeroContent } from "@/types/content";
 
-// DUMMY: Mock hero section content from design Part 1
+// Mock hero section content from reference screenshot
 export const mockHeroData: HeroContent = {
-  badge: "Professional Cleaning Services in Dubai", // DUMMY
-  headline: "A Cleaner Space for a Healthier Life", // DUMMY
+  badge: "Professional Cleaning Services in Dubai",
+  headline: "Turning Houses into Fresh Homes",
   subheadline:
-    "JUBU Cleaning Service provides reliable, professional and affordable cleaning solutions for homes, offices, villas and commercial spaces in Dubai.", // DUMMY
+    "Our team of experienced cleaners will leave your property clean and tidy, whether it's a one-off clean or a regular service.",
   primaryCta: {
-    label: "Get a Free Quote", // DUMMY
+    label: "Get a Free Quote",
     href: "#quote"
   },
   secondaryCta: {
-    label: "Our Services", // DUMMY
+    label: "Our Services",
     href: "#services"
   },
   trustBadges: [
     {
       id: "trusted-insured",
-      label: "Trusted & Insured", // DUMMY
+      label: "Trusted & Insured",
       icon: "shield-check"
     },
     {
       id: "professional-staff",
-      label: "Professional Staff", // DUMMY
+      label: "Professional Staff",
       icon: "users"
     },
     {
       id: "eco-friendly",
-      label: "Eco-Friendly Products", // DUMMY
+      label: "Eco-Friendly Products",
       icon: "leaf"
-    },
-    {
-      id: "on-time-service",
-      label: "On-Time Service", // DUMMY
-      icon: "clock"
     }
   ],
   heroImage: {
-    src: "/images/placeholder/hero-cleaner.png", // DUMMY
-    alt: "Professional JUBU cleaner wiping window with Burj Khalifa view in Dubai",
-    width: 1920,
-    height: 1080
+    src: "/images/placeholder/hero-cleaner.png",
+    alt: "JUBU Professional Cleaner in uniform with spray bottle and cloth",
+    width: 900,
+    height: 1000
   },
-  floatingBadge: "Clean Spaces, Happy Faces" // DUMMY
+  floatingBadge: "Cleaner Spaces Brighter Lives"
 };

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Caveat, Plus_Jakarta_Sans } from "next/font/google";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -20,13 +20,20 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap"
 });
 
+const caveat = Caveat({
+  variable: "--font-handwriting",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  display: "swap"
+});
+
 export const metadata: Metadata = seoConfig;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang={siteConfig.locale} suppressHydrationWarning>
       <body
-        className={`${plusJakartaSans.variable} flex min-h-screen w-full flex-col font-sans antialiased`}
+        className={`${plusJakartaSans.variable} ${caveat.variable} flex min-h-screen w-full flex-col font-sans antialiased`}
       >
         <Providers>
           <main className="flex-1">{children}</main>

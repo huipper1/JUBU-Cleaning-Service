@@ -77,7 +77,7 @@ export function About({ content }: AboutProps) {
           {/* Left Large Photo: Cleaners in action */}
           <div className="relative h-[340px] w-full overflow-hidden rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)] sm:h-[420px] lg:col-span-7 lg:h-[480px]">
             <Image
-              src="/images/placeholder/hero-cleaner.png"
+              src="/images/placeholder/about-cleaner.png"
               alt="Professional JUBU cleaning team sanitizing office space"
               fill
               sizes="(max-width: 1024px) 100vw, 60vw"

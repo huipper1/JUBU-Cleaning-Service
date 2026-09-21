@@ -1,11 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, Check, MessageCircle, ShieldCheck, Sparkles, Star, Users } from "lucide-react";
 
 import type { HeroContent } from "@/types/content";
-
-import { Icon } from "@/ui";
 
 interface HeroProps {
   content: HeroContent;
@@ -13,106 +11,266 @@ interface HeroProps {
   phoneDisplay?: string;
 }
 
-export function Hero({ content }: HeroProps) {
-  // Take first 3 trust badges matching the design screenshot
-  const displayedBadges = content.trustBadges.slice(0, 3);
+// Avatars for social proof
+const SOCIAL_PROOF_AVATARS = [
+  { id: "1", src: "/images/placeholder/team-ahmed.png", alt: "Customer" },
+  { id: "2", src: "/images/placeholder/team-sara.png", alt: "Customer" },
+  { id: "3", src: "/images/placeholder/team-rahim.png", alt: "Customer" },
+  { id: "4", src: "/images/placeholder/team-imran.png", alt: "Customer" }
+];
 
+export function Hero({ content }: HeroProps) {
   return (
     <section
       id="top"
-      className="relative flex min-h-[580px] items-center overflow-hidden sm:min-h-[640px] lg:min-h-[720px]"
+      className="relative overflow-hidden bg-gradient-to-b from-[#041633] via-[#051c3f] to-[#030f24] text-white"
       aria-label="Hero Section"
     >
-      {/* Background Panorama Image (Cleaner overlooking Dubai skyline) */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <Image
-          src={content.heroImage.src}
-          alt={content.heroImage.alt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[75%_center] sm:object-[70%_center] lg:object-center"
-        />
-        {/* Soft white gradient on the left side to guarantee 100% crisp typography */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/50 to-transparent sm:via-white/40 lg:from-white/80 lg:via-white/40 lg:to-transparent" />
-      </div>
+      {/* Subtle radial ambient glows */}
+      <div className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full bg-brand-sky/15 blur-[120px]" />
+      <div className="pointer-events-none absolute top-1/3 right-0 h-[500px] w-[500px] rounded-full bg-brand-blue/20 blur-[150px]" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-emerald-500/10 blur-[130px]" />
 
-      <div className="relative z-10 container mx-auto px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-        <div className="max-w-2xl text-left">
-          {/* Top Category Badge */}
-          <div className="mb-4 inline-flex items-center rounded-full bg-[#dcfce7]/90 px-4 py-1.5 text-xs font-semibold text-brand-navy shadow-2xs backdrop-blur-xs sm:text-sm">
-            <span>{content.badge}</span>
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-4 xl:gap-6">
+          {/* Left Column: Copy, Trust Badges, CTAs, Social Proof (Vertically Centered) */}
+          <div className="flex flex-col items-start text-left sm:py-10 lg:col-span-5 lg:self-center lg:py-16 xl:col-span-5">
+            {/* Pill Tag: Professional Cleaning Services in Dubai */}
+            {/* <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/40 px-4 py-1.5 text-xs font-medium text-sky-200 shadow-sm backdrop-blur-md sm:text-sm">
+              <span>{content.badge || "Professional Cleaning Services in Dubai"}</span>
+            </div> */}
+
+            {/* Main Headline */}
+            <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
+              Turning Houses <br className="hidden sm:inline" />
+              into{" "}
+              <span className="relative inline-block text-[#34d399]">
+                Fresh Homes
+              </span>
+            </h1>
+
+            {/* Subheadline description */}
+            <p className="mb-8 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base">
+              {content.subheadline}
+            </p>
+
+            {/* 3 Trust Badges: Insured, Staff, Eco-Friendly */}
+            <div className="mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3.5">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400">
+                <ShieldCheck className="h-8 w-8" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-bold leading-tight text-white">Trusted &</span>
+                <span className="text-[11px] leading-tight text-slate-300">Insured</span>
+              </div>
+
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400">
+                <Users className="h-8 w-8" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-bold leading-tight text-white">Professional</span>
+                <span className="text-[11px] leading-tight text-slate-300">Staff</span>
+              </div>
+
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
+                <span className="text-3xl">🍃</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-bold leading-tight text-white">Eco-Friendly</span>
+                <span className="text-[11px] leading-tight text-slate-300">Products</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mb-10 flex flex-wrap items-center gap-4">
+              <Link
+                href={content.primaryCta.href}
+                className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span>{content.primaryCta.label}</span>
+              </Link>
+
+              <Link
+                href={content.secondaryCta.href}
+                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-[#092348]/90 px-7 py-3.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:border-sky-400 hover:bg-[#0d2f5e] active:scale-98 sm:text-base"
+              >
+                <span>{content.secondaryCta.label}</span>
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            {/* Social Proof: 4 Overlapping Avatar Circles + Label */}
+            <div className="flex items-center gap-3.5">
+              <div className="flex -space-x-2.5 overflow-hidden">
+                {SOCIAL_PROOF_AVATARS.map((avatar) => (
+                  <div
+                    key={avatar.id}
+                    className="relative inline-block h-10 w-10 rounded-full ring-2 ring-[#051c3f]"
+                  >
+                    <Image
+                      src={avatar.src}
+                      alt={avatar.alt}
+                      fill
+                      sizes="40px"
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs font-semibold text-slate-200 sm:text-sm">
+                Trusted by 2,000+ homeowners in Dubai
+              </p>
+            </div>
+
           </div>
 
-          {/* Main Headline */}
-          <h1 className="mb-4 text-3xl leading-[1.1] font-extrabold tracking-tight text-brand-navy sm:text-4xl md:text-5xl lg:text-[3.5rem]">
-            {content.headline}
-          </h1>
+          {/* Right/Center Column: Enlaarged Cleaner Cutout & Shifted Floating Badges */}
+          <div className="relative flex items-end justify-center self-end lg:col-span-7 lg:-ml-6 lg:justify-start xl:col-span-7 xl:-ml-10">
 
-          {/* Subheadline description */}
-          <p className="mb-8 max-w-lg text-sm leading-relaxed font-normal text-slate-600 sm:text-base">
-            {content.subheadline}
-          </p>
+            {/* Cleaner visual wrapper with relative badge positioning */}
+            <div className="relative mx-auto flex w-full max-w-[420px] items-end justify-center sm:max-w-[520px] lg:mx-0 lg:max-w-[620px] xl:max-w-[680px]">
 
-          {/* 3 Trust Badges Row (Direct icons + 2-line labels without box container) */}
-          <div className="mb-8 flex flex-wrap items-center gap-6 sm:mb-10 sm:gap-8">
-            {displayedBadges.map((badge) => (
-              <div key={badge.id} className="flex items-center gap-3">
-                <div className="text-brand-blue">
-                  <Icon name={badge.icon} className="h-7 w-7 stroke-[1.75]" />
+              {/* Decorative Four-Point Sparkles around cleaner */}
+              <div className="pointer-events-none absolute top-12 -left-2 z-10 text-sky-400 animate-pulse sm:left-2 lg:-left-6">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+                </svg>
+              </div>
+              <div className="pointer-events-none absolute top-32 right-12 z-10 text-sky-400 animate-pulse delay-300 sm:right-24">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+                </svg>
+              </div>
+              <div className="pointer-events-none absolute bottom-48 -left-4 z-10 text-sky-400 animate-pulse delay-700">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+                </svg>
+              </div>
+
+              {/* Central Cleaner Cutout Photo: Enlarged and touching bottom of hero */}
+              <Image
+                src="/images/placeholder/hero-cleaner.png"
+                alt="JUBU Professional Cleaner in uniform with spray bottle and microfibre cloth"
+                width={800}
+                height={950}
+                priority
+                className="relative z-10 block h-auto w-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
+              />
+
+              {/* Floating Badge 1: Top Right - Satisfaction Guaranteed */}
+              <div className="absolute top-16 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:flex sm:top-14 sm:right-2 lg:top-16 lg:-right-10 xl:-right-14">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400 text-brand-navy shadow-xs">
+                  <Star className="h-4 w-4 fill-brand-navy" />
                 </div>
-                <span className="max-w-[90px] text-xs leading-tight font-bold text-brand-navy sm:text-sm">
-                  {badge.label}
+                <span className="text-xs font-extrabold tracking-tight text-slate-900 sm:text-sm">
+                  Satisfaction Guaranteed
                 </span>
               </div>
-            ))}
+
+              {/* Floating Badge 2: Mid Right - Deep Cleaning Services */}
+              <div className="absolute top-36 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:flex sm:top-36 sm:right-0 lg:top-36 lg:-right-12 xl:-right-18">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs">
+                  <Check className="h-4 w-4 stroke-[3]" />
+                </div>
+                <span className="text-xs font-extrabold tracking-tight text-slate-900 sm:text-sm">
+                  Deep Cleaning Services
+                </span>
+              </div>
+
+              {/* Cursive Decorative Slogan (Right Side) */}
+              <div className="pointer-events-none absolute right-4 bottom-44 z-20 hidden select-none text-left sm:block sm:right-6 lg:right-0 xl:-right-4">
+                <div className="relative -rotate-[14deg] font-[family-name:var(--font-handwriting)]">
+                  {/* Sunburst / radiating cyan spark rays on top right */}
+                  <div className="absolute -top-3.5 right-2 flex flex-col items-center">
+                    <span className="absolute -top-1.5 -left-3 h-1.5 w-0.5 rounded-full bg-[#00e5ff]" />
+                    <span className="absolute -top-2.5 left-0 h-4 w-[2.5px] rotate-[22deg] rounded-full bg-[#00e5ff]" />
+                    <span className="absolute top-1 left-1.5 h-4 w-[2.5px] rotate-[52deg] rounded-full bg-[#00e5ff]" />
+                    <span className="absolute top-4 left-2.5 h-3.5 w-[2.5px] rotate-[82deg] rounded-full bg-[#00e5ff]" />
+                  </div>
+
+                  {/* Handwritten Text Lines */}
+                  <div className="flex flex-col leading-[1.05] tracking-tight">
+                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
+                      Cleaner
+                    </span>
+                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
+                      Spaces
+                    </span>
+                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
+                      Brighter
+                    </span>
+                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
+                      Lives
+                    </span>
+                  </div>
+
+                  {/* Gradient underline arc (cyan to vibrant lime green) */}
+                  <div className="mt-1 w-full max-w-[150px]">
+                    <svg
+                      viewBox="0 0 120 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-3 w-full"
+                    >
+                      <defs>
+                        <linearGradient id="sloganUnderlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#00c8ff" />
+                          <stop offset="60%" stopColor="#10e796" />
+                          <stop offset="100%" stopColor="#a3e635" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M3 13C35 4 85 4 117 11"
+                        stroke="url(#sloganUnderlineGrad)"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Badge 3: Bottom Right - Google Review Card */}
+              <div className="absolute right-0 bottom-8 z-20 flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-3 shadow-2xl backdrop-blur-md transition-transform hover:scale-105 sm:right-4 sm:bottom-10 lg:-right-4 xl:-right-8">
+                {/* Google G Logo SVG */}
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path
+                      fill="#4285F4"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="h-3.5 w-3.5 fill-amber-400 text-amber-400"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs font-bold text-white">4.9 out of 5 rating</span>
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href={content.primaryCta.href}
-              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover hover:shadow-lg active:scale-98 sm:text-base"
-            >
-              <MessageCircle className="h-5 w-5" />
-              <span>{content.primaryCta.label}</span>
-            </Link>
-
-            <Link
-              href={content.secondaryCta.href}
-              className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-blue bg-white/90 px-7 py-3.5 text-sm font-bold text-brand-navy shadow-xs transition-all duration-200 hover:bg-brand-blue hover:text-white active:scale-98 sm:text-base"
-            >
-              <span>{content.secondaryCta.label}</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Floating Cursive Slogan in Bottom Right */}
-      <div className="pointer-events-none absolute right-6 bottom-6 z-10 hidden sm:block md:right-10 md:bottom-8 lg:right-16 lg:bottom-10">
-        <div className="relative -rotate-2 select-none text-right">
-          <span className="block font-serif text-xl italic tracking-wide text-brand-navy drop-shadow-xs sm:text-2xl">
-            Clean Spaces,
-          </span>
-          <span className="flex items-center justify-end gap-1.5 font-serif text-xl italic tracking-wide text-brand-navy drop-shadow-xs sm:text-2xl">
-            <span>Happy Faces</span>
-            <Sparkles className="h-4 w-4 text-brand-sky" />
-          </span>
-          <svg
-            className="ml-auto mt-0.5 h-2 w-32 text-brand-green"
-            viewBox="0 0 100 8"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              d="M2 6C30 1 70 1 98 6"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-          </svg>
         </div>
       </div>
     </section>
