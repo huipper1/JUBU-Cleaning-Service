@@ -185,8 +185,8 @@ export const serviceAreaSchema = z.object({
   updatedAt: z.string().min(1)
 });
 
-// UAE Phone regex pattern: accommodates +971 5x xxx xxxx, 05x xxx xxxx, etc.
-export const uaePhoneRegex = /^(?:\+?971|00971|0)?(?:5[0124568]|2|3|4|6|7|9)\d{7}$/;
+// International phone regex: accepts 7-15 digits, optional +, spaces, dashes, parentheses
+export const phoneRegex = /^[+]?[\d\s\-().]{7,20}$/;
 
 // Lead Creation Input Schema (for Lead Form and /api/lead)
 export const createLeadInputSchema = z.object({
@@ -197,9 +197,9 @@ export const createLeadInputSchema = z.object({
   mobile: z
     .string()
     .min(7, "Mobile number is required")
-    .transform((val) => val.replace(/[\s\-()]/g, ""))
-    .refine((val) => uaePhoneRegex.test(val), {
-      message: "Please enter a valid UAE mobile number (e.g. +971 50 123 4567 or 050 123 4567)"
+    .transform((val) => val.replace(/[\s\-()\u200e]/g, ""))
+    .refine((val) => phoneRegex.test(val), {
+      message: "Please enter a valid mobile number"
     }),
   serviceId: z.string().min(1, "Please select a cleaning service"),
   message: z.string().max(1000, "Message is too long").optional(),

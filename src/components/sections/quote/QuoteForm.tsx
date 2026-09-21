@@ -163,66 +163,43 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
 
     setStatus("submitting");
 
-    try {
-      const response = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fullPayload)
-      });
+    // Resolve service name
+    const currentService =
+      services.find((s) => s.id === formData.serviceId)?.title ??
+      (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service");
 
-      const data = await response.json();
+    const submittedName = formData.fullName;
+    const submittedMobile = formData.mobile;
+    const submittedMessage = formData.message;
 
-      if (!response.ok || !data.success) {
-        setStatus("error");
-        if (data.errors) {
-          setFieldErrors(data.errors);
-        }
-        setErrorMessage(
-          data.message ||
-          "Unable to submit your quote request right now. Please call or WhatsApp us."
-        );
-        return;
-      }
-
-      // Success
-      const currentService =
-        services.find((s) => s.id === formData.serviceId)?.title ??
-        (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service");
-
-      const submittedName = formData.fullName;
-      const submittedMobile = formData.mobile;
-      const submittedMessage = formData.message;
-
-      setSubmittedData({
-        name: submittedName,
-        mobile: submittedMobile,
-        serviceName: currentService
-      });
-
-      setStatus("success");
-
-      // Auto-open WhatsApp with pre-filled message from the user's side
-      const waMessage = [
-        `Hello JUBU Cleaning Service! 👋`,
-        ``,
-        `I just submitted a quote request and would like to follow up:`,
-        ``,
-        `👤 *Name:* ${submittedName}`,
-        `📞 *Phone:* +${submittedMobile}`,
-        `🧹 *Service:* ${currentService}`,
-        submittedMessage ? `📝 *Details:* ${submittedMessage}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n");
-
-      const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
-      window.open(waUrl, "_blank", "noopener,noreferrer");
-    } catch {
-      setStatus("error");
-      setErrorMessage(
-        "Network error. Please check your internet connection or reach us directly via WhatsApp."
-      );
+    // Build WhatsApp pre-filled message
+    const waLines = [
+      `Hello JUBU Cleaning Service! 👋`,
+      ``,
+      `I'd like to request a free quote:`,
+      ``,
+      `👤 *Name:* ${submittedName}`,
+      `📞 *Phone:* ${submittedMobile}`,
+      `🧹 *Service:* ${currentService}`,
+    ];
+    if (submittedMessage?.trim()) {
+      waLines.push(`📝 *Details:* ${submittedMessage.trim()}`);
     }
+
+    const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+      waLines.join("\n")
+    )}`;
+
+    // Open WhatsApp in new tab
+    window.open(waUrl, "_blank", "noopener,noreferrer");
+
+    // Show success state
+    setSubmittedData({
+      name: submittedName,
+      mobile: submittedMobile,
+      serviceName: currentService
+    });
+    setStatus("success");
   };
 
   const resetForm = () => {
@@ -491,7 +468,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     )}
                   </div>
 
-                  {/* Mobile Number with UAE format */}
+                  {/* Mobile Number */}
                   <div>
                     <label
                       htmlFor="mobile"
@@ -499,35 +476,30 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     >
                       Mobile Number
                     </label>
-                    <div className="flex gap-2">
-                      <div className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 py-3 text-xs font-bold text-white">
-                        <span>🇦🇪</span>
-                        <span>+971</span>
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                        <Phone className="h-4 w-4" />
                       </div>
-                      <div className="relative flex-1">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                          <Phone className="h-4 w-4" />
-                        </div>
-                        <input
-                          type="tel"
-                          id="mobile"
-                          name="mobile"
-                          required
-                          disabled={status === "submitting"}
-                          value={formData.mobile}
-                          onChange={handleChange}
-                          placeholder="54 299 5191"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
-                        />
-                      </div>
+                      <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        required
+                        disabled={status === "submitting"}
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        placeholder="e.g. +971 50 123 4567"
+                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
+                          ? "border-red-400 bg-red-950/30"
+                          : "border-white/15 hover:border-white/30"
+                          }`}
+                      />
                     </div>
                     {fieldErrors.mobile && (
                       <p className="mt-1 text-[11px] text-red-300">{fieldErrors.mobile[0]}</p>
                     )}
                   </div>
+
 
                   {/* Select Cleaning Service */}
                   <div className="relative" ref={dropdownRef}>
