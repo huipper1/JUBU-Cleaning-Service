@@ -134,8 +134,11 @@ export interface ServiceArea {
   id: string;
   name: string;
   slug: string;
+  lat?: number;
+  lng?: number;
   order: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
+
