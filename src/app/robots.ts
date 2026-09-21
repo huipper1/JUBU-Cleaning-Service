@@ -3,9 +3,19 @@ import type { MetadataRoute } from "next";
 import { env } from "@/env";
 
 export default function robots(): MetadataRoute.Robots {
-  // FIXME: Point sitemap to your public site URL (consider using NEXT_PUBLIC_SITE_URL)
+  const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
+
   return {
-    rules: [{ userAgent: "*", allow: "/" }],
-    sitemap: `${env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/"
+      },
+      {
+        userAgent: ["GPTBot", "Claude-Web", "ClaudeBot", "PerplexityBot", "Google-Extended", "Applebot-Extended"],
+        allow: "/"
+      }
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`
   };
 }

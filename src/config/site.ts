@@ -3,27 +3,35 @@ import { env } from "@/env";
 
 // FIXME: Update site branding, theme color, social links, and OG image
 export const siteConfig: SiteConfig = {
-  name: "JUBU Cleaning Service",
+  name: "JUBU Cleaning Service | Professional Cleaning Company in Dubai",
   description:
-    "Professional and reliable cleaning services for homes, offices, villas and commercial spaces across Dubai. Request your free quote today.",
+    "Licensed Dubai cleaning company providing deep cleaning, residential cleaning, office cleaning, sofa & carpet cleaning, and move-in sanitization across 10 Dubai communities. Free custom quotes via WhatsApp or phone.",
   url: env.NEXT_PUBLIC_SITE_URL,
-  author: "JUBU Cleaning Service",
-  locale: "en",
+  author: "JUBU Cleaning Service LLC",
+  locale: "en_AE",
   themeColor: "#0A1E3B",
   keywords: [
     "cleaning services dubai",
-    "home cleaning dubai",
+    "professional cleaning company dubai",
+    "licensed cleaners dubai",
+    "home cleaning services dubai",
     "office cleaning dubai",
-    "deep cleaning dubai",
-    "villa cleaning dubai",
-    "sofa cleaning dubai",
-    "carpet cleaning dubai",
-    "move in cleaning dubai"
+    "deep cleaning services dubai",
+    "villa deep cleaning dubai",
+    "carpet extractor cleaning dubai",
+    "sofa steam cleaning dubai",
+    "move in cleaning dubai",
+    "post construction cleaning dubai",
+    "downtown dubai cleaning",
+    "business bay cleaning",
+    "dubai marina cleaning service",
+    "jlt cleaning services",
+    "palm jumeirah cleaning company"
   ],
   social: {
     twitter: "",
     github: "",
     linkedin: ""
   },
-  ogImage: "/images/placeholder/og-image.svg"
+  ogImage: "/images/logo.png"
 } as const;

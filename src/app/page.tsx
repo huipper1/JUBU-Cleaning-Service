@@ -39,36 +39,111 @@ export default async function Home() {
     settings.whatsappDefaultMessage
   )}`;
 
-  // JSON-LD LocalBusiness Structured Data strictly matching real client facts
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "HouseCleaningService",
-    name: settings.businessName,
-    image: `${settings.defaultSeo.ogImage || "/images/logo.png"}`,
-    telephone: settings.phoneTel,
-    email: settings.email,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Office No. 95-804, Naif",
-      addressLocality: "Dubai",
-      addressRegion: "Dubai",
-      addressCountry: "AE"
+  // Enhanced JSON-LD Structured Data (LocalBusiness + Service Catalog + FAQPage) for SEO & AI SEO / GEO
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "HouseCleaningService",
+      "@id": "https://jubucleaning.com/#localbusiness",
+      name: settings.businessName,
+      alternateName: "JUBU Cleaning Service LLC",
+      url: "https://jubucleaning.com",
+      logo: "https://jubucleaning.com/images/logo.png",
+      image: "https://jubucleaning.com/images/logo.png",
+      telephone: settings.phoneTel,
+      email: settings.email,
+      priceRange: "$$",
+      paymentAccepted: "Cash, Card, Bank Transfer",
+      currenciesAccepted: "AED",
+      description:
+        "Licensed Dubai cleaning service company offering residential, office, deep cleaning, sofa & carpet extraction, and move-in cleaning across Dubai.",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Office No. 95-804, Naif",
+        addressLocality: "Dubai",
+        addressRegion: "Dubai",
+        addressCountry: "AE"
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 25.276987,
+        longitude: 55.308253
+      },
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+          opens: "08:00",
+          closes: "20:00"
+        }
+      ],
+      areaServed: areas.map((area) => ({
+        "@type": "AdministrativeArea",
+        name: area.name
+      })),
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Cleaning Services in Dubai",
+        itemListElement: services.map((service, index) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: service.title,
+            description: service.shortDescription
+          },
+          position: index + 1
+        }))
+      },
+      sameAs: settings.socialLinks
+        .filter((s) => Boolean(s.url))
+        .map((s) => s.url)
     },
-    areaServed: areas.map((area) => ({
-      "@type": "AdministrativeArea",
-      name: area.name
-    })),
-    sameAs: settings.socialLinks
-      .filter((s) => Boolean(s.url))
-      .map((s) => s.url)
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Which areas in Dubai does JUBU Cleaning Service cover?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "JUBU Cleaning Service covers 10 primary communities across Dubai including Downtown Dubai, Business Bay, Dubai Marina, Jumeirah Lake Towers (JLT), Jumeirah Beach Residence (JBR), Jumeirah, Palm Jumeirah, Al Barsha, Jumeirah Village Circle (JVC), and Dubai Hills Estate."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "Is JUBU Cleaning Service licensed in Dubai?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, JUBU Cleaning Service is an LLC licensed by the Dubai Department of Economy and Tourism under Trade Licence No. 1026183, active since 25 January 2022."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "What cleaning equipment does JUBU use?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "JUBU Cleaning Service uses professional machines including Wet & Dry Vacuum Cleaners, Floor Scrubbers, Single Disc Machines, High Pressure Washers, Carpet and Sofa Extractor Machines, Steam Cleaners, and complete safety equipment."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "How can I request a quote for cleaning in Dubai?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "You can request a free custom cleaning quote online via our website form, call us at +971 54 299 5191, or send an instant message on WhatsApp at +971 54 299 5191."
+          }
+        }
+      ]
+    }
+  ];
 
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-[#041633] pb-16 md:pb-0">
       {/* Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       {/* 1. Header (sticky, anchor nav, actions) */}
