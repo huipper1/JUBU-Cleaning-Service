@@ -90,7 +90,7 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
   };
 
   return (
-    <div className="relative h-[380px] w-full overflow-hidden rounded-lg  sm:h-[420px] lg:h-[480px]">
+    <div className="relative h-full w-full overflow-hidden">
       <MapContainer
         center={DUBAI_CENTER}
         zoom={DEFAULT_ZOOM}
@@ -98,8 +98,8 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
         className="h-full w-full"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         <MapController activeArea={activeArea} resetTrigger={resetCount} />

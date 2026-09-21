@@ -96,7 +96,7 @@ export default async function Home() {
       <QuoteForm services={services} settings={settings} />
 
       {/* 9. Dubai Service Areas */}
-      <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} />
+      <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} settings={settings} />
 
       <div className="bg-white">
         {/* 10. Contact Us */}
