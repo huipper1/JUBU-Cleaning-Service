@@ -15,7 +15,7 @@ interface WhyChooseUsProps {
 export function WhyChooseUs({
   items,
   image = {
-    src: "/images/placeholder/about-detail.svg",
+    src: "/images/placeholder/why-choose-us.png",
     alt: "Professional JUBU cleaner sanitizing residential surface with care in Dubai",
     width: 800,
     height: 600
@@ -27,48 +27,46 @@ export function WhyChooseUs({
   return (
     <section
       id="why-choose"
-      className="border-y border-brand-mint-border/60 bg-brand-mint/50 py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[#eafaf5]"
       aria-label="Why Choose JUBU Cleaning Service"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="grid grid-cols-1 items-stretch lg:grid-cols-12">
           {/* Left Column: Image */}
-          <div className="order-2 lg:order-1 lg:col-span-5">
-            <figure className="relative m-0 aspect-[4/3] w-full overflow-hidden rounded-3xl border border-brand-mint-border/80 shadow-xl sm:aspect-[16/11] lg:aspect-[4/4]">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 500px"
-                className="object-cover object-center"
-              />
-              <figcaption className="sr-only">{image.alt}</figcaption>
-            </figure>
+          <div className="relative min-h-[320px] w-full overflow-hidden sm:min-h-[420px] lg:col-span-5 lg:min-h-[500px]">
+            <Image
+              src={image.src || "/images/placeholder/why-choose-us.png"}
+              alt={image.alt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="object-cover object-center"
+              priority
+            />
           </div>
 
-          {/* Right Column: Content and 4 Pillars */}
-          <div className="order-1 flex flex-col items-start text-left lg:order-2 lg:col-span-7">
-            <span className="mb-2.5 text-xs font-bold tracking-wider text-brand-green uppercase sm:text-sm">
+          {/* Right Column: Content and 4 Icons */}
+          <div className="flex flex-col justify-center py-12 lg:col-span-7 lg:py-16 lg:pl-14 lg:pr-4">
+            <span className="mb-2 text-xs font-bold tracking-wider text-[#00a651] uppercase sm:text-sm">
               {badge}
             </span>
-            <h2 className="mb-3 text-2xl leading-tight font-extrabold tracking-tight text-brand-navy sm:text-3xl lg:text-4xl">
+            <h2 className="mb-3 text-2xl font-black tracking-tight text-[#081839] sm:text-3xl lg:text-4xl">
               {title}
             </h2>
-            <p className="mb-8 max-w-xl text-sm leading-relaxed font-normal text-brand-muted sm:mb-10 sm:text-base">
+            <p className="mb-10 max-w-xl text-sm leading-relaxed text-[#4a5f78] sm:text-base">
               {description}
             </p>
 
             {/* 4 Feature Items */}
-            <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-4">
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col items-center rounded-2xl border border-brand-mint-border/60 bg-white/80 p-4 text-center shadow-2xs transition-all duration-200 hover:bg-white hover:shadow-md"
+                  className="flex flex-col items-center text-center"
                 >
-                  <div className="mb-3 flex h-13 w-13 items-center justify-center rounded-full border border-brand-border bg-white text-brand-blue shadow-xs sm:h-14 sm:w-14">
-                    <Icon name={item.icon} className="h-6 w-6" />
+                  <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white text-[#0070ba] shadow-[0_4px_16px_rgba(0,112,186,0.12)] transition-transform duration-200 hover:scale-105 sm:h-18 sm:w-18">
+                    <Icon name={item.icon} className="h-7 w-7 stroke-[2.2]" />
                   </div>
-                  <h3 className="text-xs leading-snug font-bold text-brand-navy sm:text-sm">
+                  <h3 className="text-xs font-bold leading-tight text-[#081839] sm:text-sm">
                     {item.title}
                   </h3>
                 </div>
@@ -80,3 +78,4 @@ export function WhyChooseUs({
     </section>
   );
 }
+
