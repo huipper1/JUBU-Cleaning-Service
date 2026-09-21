@@ -302,7 +302,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                 </a>
 
                 {/* Cursive text accent "Cleaner Dubai Brighter Lives" */}
-                <div className="relative -rotate-20 select-none">
+                <div className="relative -rotate-20 select-none hidden md:block">
                   <span className="block font-serif text-lg italic tracking-wide text-center text-white/90 sm:text-xl">
                     Cleaner<br /> Dubai<br /> Brighter<br /> Lives
                   </span>
@@ -421,11 +421,10 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="e.g. John Doe"
-                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
-                          fieldErrors.fullName
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                        }`}
+                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.fullName
+                          ? "border-red-400 bg-red-950/30"
+                          : "border-white/15 hover:border-white/30"
+                          }`}
                       />
                     </div>
                     {fieldErrors.fullName && (
@@ -459,11 +458,10 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                           value={formData.mobile}
                           onChange={handleChange}
                           placeholder="54 299 5191"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
-                            fieldErrors.mobile
-                              ? "border-red-400 bg-red-950/30"
-                              : "border-white/15 hover:border-white/30"
-                          }`}
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                            }`}
                         />
                       </div>
                     </div>
