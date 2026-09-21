@@ -328,20 +328,20 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
 
           {/* Right Column: Lead Form Card */}
           <div className="lg:col-span-6">
-            <div className="rounded-3xl border border-[#071933]/30 bg-[#071933]/20 backdrop-blur-xl p-6 text-brand-navy shadow-2xl sm:p-8 md:p-10">
+            <div className="rounded-3xl border border-white/15 bg-[#071933]/40 p-6 text-white shadow-2xl backdrop-blur-xl sm:p-8 md:p-10">
               {status === "success" ? (
                 /* Success Confirmation State */
                 <div className="flex animate-in flex-col items-center py-6 text-center duration-300 zoom-in-95 fade-in">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-green-light text-brand-green">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-green/20 text-brand-green border border-brand-green/30">
                     <CheckCircle2 className="h-10 w-10" />
                   </div>
-                  <h3 className="mb-2 text-2xl font-extrabold text-brand-navy">
+                  <h3 className="mb-2 text-2xl font-extrabold text-white">
                     Quote Request Received!
                   </h3>
-                  <p className="mb-6 max-w-sm text-sm leading-relaxed text-brand-muted">
-                    Thank you, <strong className="text-brand-navy">{submittedData?.name}</strong>.
+                  <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-200">
+                    Thank you, <strong className="text-white font-bold">{submittedData?.name}</strong>.
                     Our cleaning team is reviewing your request for{" "}
-                    <strong className="text-brand-navy">{submittedData?.serviceName}</strong> and
+                    <strong className="text-brand-sky font-bold">{submittedData?.serviceName}</strong> and
                     will get back to you shortly.
                   </p>
 
@@ -360,7 +360,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-brand-border bg-brand-pale-blue/60 px-6 py-3 text-xs font-semibold text-brand-navy transition-colors hover:bg-brand-pale-blue"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-xs font-semibold text-white transition-colors hover:bg-white/20"
                     >
                       <RotateCcw className="h-4 w-4" />
                       <span>Submit another inquiry</span>
@@ -374,17 +374,17 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     <span className="mb-1 block text-xs font-bold tracking-wider text-brand-green uppercase">
                       REQUEST A FREE QUOTE
                     </span>
-                    <h3 className="text-2xl font-extrabold tracking-tight text-brand-navy">
+                    <h3 className="text-2xl font-extrabold tracking-tight text-white">
                       Get Your Custom Quote
                     </h3>
-                    <p className="mt-1 text-xs text-brand-muted sm:text-sm">
+                    <p className="mt-1 text-xs text-slate-300 sm:text-sm">
                       Fill in the details below and we&apos;ll get back to you shortly.
                     </p>
                   </div>
 
                   {/* Top Error Alert */}
                   {status === "error" && errorMessage && (
-                    <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+                    <div className="rounded-xl border border-red-500/40 bg-red-950/60 p-3 text-xs text-red-200">
                       {errorMessage}
                     </div>
                   )}
@@ -405,12 +405,12 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   <div>
                     <label
                       htmlFor="fullName"
-                      className="mb-1.5 block text-xs font-bold text-brand-navy"
+                      className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
                       Full Name
                     </label>
                     <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-brand-muted">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                         <User className="h-4 w-4" />
                       </div>
                       <input
@@ -422,14 +422,15 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="e.g. John Doe"
-                        className={`w-full rounded-xl border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none ${fieldErrors.fullName
-                          ? "border-red-500 bg-red-50/20"
-                          : "border-brand-border"
-                          }`}
+                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          fieldErrors.fullName
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                        }`}
                       />
                     </div>
                     {fieldErrors.fullName && (
-                      <p className="mt-1 text-[11px] text-red-600">{fieldErrors.fullName[0]}</p>
+                      <p className="mt-1 text-[11px] text-red-300">{fieldErrors.fullName[0]}</p>
                     )}
                   </div>
 
@@ -437,17 +438,17 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   <div>
                     <label
                       htmlFor="mobile"
-                      className="mb-1.5 block text-xs font-bold text-brand-navy"
+                      className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
                       Mobile Number
                     </label>
                     <div className="flex gap-2">
-                      <div className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-brand-border bg-brand-pale-blue/40 px-3 py-3 text-xs font-bold text-brand-navy">
+                      <div className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 py-3 text-xs font-bold text-white">
                         <span>🇦🇪</span>
                         <span>+971</span>
                       </div>
                       <div className="relative flex-1">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-brand-muted">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                           <Phone className="h-4 w-4" />
                         </div>
                         <input
@@ -459,15 +460,16 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                           value={formData.mobile}
                           onChange={handleChange}
                           placeholder="50 123 4567"
-                          className={`w-full rounded-xl border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none ${fieldErrors.mobile
-                            ? "border-red-500 bg-red-50/20"
-                            : "border-brand-border"
-                            }`}
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                            fieldErrors.mobile
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15 hover:border-white/30"
+                          }`}
                         />
                       </div>
                     </div>
                     {fieldErrors.mobile && (
-                      <p className="mt-1 text-[11px] text-red-600">{fieldErrors.mobile[0]}</p>
+                      <p className="mt-1 text-[11px] text-red-300">{fieldErrors.mobile[0]}</p>
                     )}
                   </div>
 
@@ -475,12 +477,12 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   <div>
                     <label
                       htmlFor="serviceId"
-                      className="mb-1.5 block text-xs font-bold text-brand-navy"
+                      className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
                       Select Cleaning Service
                     </label>
                     <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-brand-muted">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                         <Calendar className="h-4 w-4" />
                       </div>
                       <select
@@ -489,14 +491,16 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                         disabled={status === "submitting"}
                         value={formData.serviceId}
                         onChange={handleChange}
-                        className="w-full cursor-pointer appearance-none rounded-xl border border-brand-border bg-white py-3 pr-8 pl-10 text-sm text-brand-navy transition-all focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none"
+                        className="w-full cursor-pointer appearance-none rounded-xl border border-white/15 bg-[#0b2447] py-3 pr-8 pl-10 text-sm text-white transition-all hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none [&_option]:bg-[#081839] [&_option]:text-white"
                       >
                         {services.map((svc) => (
-                          <option key={svc.id} value={svc.id}>
+                          <option key={svc.id} value={svc.id} className="bg-[#081839] text-white">
                             {svc.title}
                           </option>
                         ))}
-                        <option value="other">Other / Custom Service</option>
+                        <option value="other" className="bg-[#081839] text-white">
+                          Other / Custom Service
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -505,13 +509,13 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   <div>
                     <label
                       htmlFor="message"
-                      className="mb-1.5 block text-xs font-bold text-brand-navy"
+                      className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
                       Message / Details{" "}
-                      <span className="font-normal text-brand-muted">(Optional)</span>
+                      <span className="font-normal text-slate-400">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <div className="pointer-events-none absolute top-3.5 left-3.5 text-brand-muted">
+                      <div className="pointer-events-none absolute top-3.5 left-3.5 text-slate-400">
                         <MessageSquare className="h-4 w-4" />
                       </div>
                       <textarea
@@ -522,7 +526,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                         value={formData.message}
                         onChange={handleChange}
                         placeholder="Tell us more about your cleaning needs, property size or date..."
-                        className="w-full resize-none rounded-xl border border-brand-border py-3 pr-4 pl-10 text-sm text-brand-navy transition-all placeholder:text-slate-400 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/30 focus:outline-none"
+                        className="w-full resize-none rounded-xl border border-white/15 bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -536,11 +540,11 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                       checked={formData.whatsappOptIn}
                       onChange={handleChange}
                       disabled={status === "submitting"}
-                      className="h-4 w-4 cursor-pointer rounded-sm border-brand-border text-brand-green accent-brand-green focus:ring-brand-green"
+                      className="h-4 w-4 cursor-pointer rounded-sm border-white/30 bg-white/10 text-brand-green accent-brand-green focus:ring-brand-green"
                     />
                     <label
                       htmlFor="whatsappOptIn"
-                      className="cursor-pointer text-xs font-semibold text-brand-navy select-none"
+                      className="cursor-pointer text-xs font-medium text-slate-200 select-none"
                     >
                       Contact me on WhatsApp
                     </label>
@@ -550,7 +554,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   <button
                     type="submit"
                     disabled={status === "submitting"}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover hover:shadow-lg active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover hover:shadow-brand-green/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {status === "submitting" ? (
                       <>
@@ -566,7 +570,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   </button>
 
                   {/* Privacy note */}
-                  <div className="mt-1 flex items-center justify-center gap-1.5 text-center text-[11px] text-brand-muted">
+                  <div className="mt-1 flex items-center justify-center gap-1.5 text-center text-[11px] text-slate-400">
                     <Lock className="h-3.5 w-3.5 shrink-0" />
                     <span>Your information is safe with us. We never share your details with third parties.</span>
                   </div>
