@@ -18,4 +18,5 @@ export interface ContentRepository {
   getTeam(): Promise<TeamMember[]>;
   getGallery(): Promise<GalleryItem[]>;
   getAreas(): Promise<ServiceArea[]>;
+  getTestimonials(): Promise<import("@/types/testimonial").TestimonialItem[]>;
 }

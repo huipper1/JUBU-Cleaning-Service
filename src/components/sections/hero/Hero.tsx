@@ -11,12 +11,28 @@ interface HeroProps {
   phoneDisplay?: string;
 }
 
-// Avatars for social proof
+// Avatars for social proof (real customer portraits)
 const SOCIAL_PROOF_AVATARS = [
-  { id: "1", src: "/images/placeholder/team-ahmed.png", alt: "Customer" },
-  { id: "2", src: "/images/placeholder/team-sara.png", alt: "Customer" },
-  { id: "3", src: "/images/placeholder/team-rahim.png", alt: "Customer" },
-  { id: "4", src: "/images/placeholder/team-imran.png", alt: "Customer" }
+  {
+    id: "1",
+    src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+    alt: "Elena - Homeowner in Dubai Marina"
+  },
+  {
+    id: "2",
+    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
+    alt: "Marcus - Resident in Downtown Dubai"
+  },
+  {
+    id: "3",
+    src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80",
+    alt: "Amina - Villa Owner in Arabian Ranches"
+  },
+  {
+    id: "4",
+    src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80",
+    alt: "Tariq - Resident in Palm Jumeirah"
+  }
 ];
 
 export function Hero({ content }: HeroProps) {

@@ -6,4 +6,5 @@ export * from "./hero";
 export * from "./quote";
 export * from "./services";
 export * from "./team";
+export * from "./testimonials";
 export * from "./why-choose";

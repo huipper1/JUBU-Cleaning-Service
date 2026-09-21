@@ -10,7 +10,7 @@ interface TeamProps {
 
 export function Team({ members }: TeamProps) {
   return (
-    <section id="team" className="bg-white py-16 sm:py-20 lg:py-24" aria-label="Our Team">
+    <section id="team" className=" bg-[#eafaf5] py-16 sm:py-20 lg:py-24 " aria-label="Our Team">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           badge="OUR TEAM"
@@ -35,14 +35,14 @@ export function Team({ members }: TeamProps) {
                 <figcaption className="sr-only">{member.name}</figcaption>
               </figure>
 
-              <div className="flex flex-1 flex-col items-center p-5 pt-4 text-center">
-                <h3 className="mb-1 text-base font-bold text-brand-navy transition-colors group-hover:text-brand-blue sm:text-lg">
+              <div className="flex flex-1 flex-col items-start p-5 pt-4 text-start">
+                <h3 className="mb-1 text-xl font-bold text-brand-navy transition-colors group-hover:text-brand-blue">
                   {member.name}
                 </h3>
-                <p className="text-xs font-semibold text-brand-blue sm:text-sm">{member.role}</p>
+                <p className=" text-brand-blue sm:text-md">{member.role}</p>
 
                 {member.bio && (
-                  <p className="mt-2.5 line-clamp-2 text-xs leading-relaxed font-normal text-brand-muted">
+                  <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed font-normal text-brand-muted">
                     {member.bio}
                   </p>
                 )}

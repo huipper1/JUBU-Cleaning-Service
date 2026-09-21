@@ -18,6 +18,7 @@ import { mockHeroData } from "./data/hero";
 import { mockServicesData } from "./data/services";
 import { mockSettingsData } from "./data/settings";
 import { mockTeamData } from "./data/team";
+import { mockTestimonialsData } from "./data/testimonials";
 import { mockWhyChooseData } from "./data/why-choose";
 
 export class MockContentRepository implements ContentRepository {
@@ -61,6 +62,10 @@ export class MockContentRepository implements ContentRepository {
     return Promise.resolve(
       mockAreasData.filter((a) => a.isActive).sort((a, b) => a.order - b.order)
     );
+  }
+
+  async getTestimonials(): Promise<import("@/types/testimonial").TestimonialItem[]> {
+    return Promise.resolve(mockTestimonialsData);
   }
 }
 

@@ -13,7 +13,7 @@ export function Contact({ settings }: ContactProps) {
   return (
     <section
       id="contact"
-      className="relative z-30 -mb-32 sm:-mb-44 lg:-mb-52 pointer-events-none pt-50"
+      className="relative z-30 -mb-32 sm:-mb-44 lg:-mb-52 pointer-events-none "
       aria-label="Contact JUBU Cleaning Service"
     >
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
@@ -25,7 +25,7 @@ export function Contact({ settings }: ContactProps) {
           <div className="pointer-events-none absolute bottom-0 right-1/4 h-56 w-56 rounded-full bg-brand-green/15 blur-[90px]" />
 
           <div className="relative z-10 flex flex-col items-center gap-8 lg:grid lg:grid-cols-12 lg:gap-4">
-            
+
             {/* Content Column */}
             <div className="flex w-full flex-col items-start text-left lg:col-span-7 xl:col-span-7">
               <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/50 px-3.5 py-1 text-xs font-bold tracking-wider text-sky-300 uppercase backdrop-blur-xs sm:text-sm">

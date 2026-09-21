@@ -37,5 +37,9 @@ export async function getAreas() {
   return contentRepository.getAreas();
 }
 
+export async function getTestimonials() {
+  return contentRepository.getTestimonials();
+}
+
 export * from "./repository";
 export * from "./types";

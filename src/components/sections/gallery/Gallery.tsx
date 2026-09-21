@@ -84,13 +84,14 @@ export function Gallery({ items }: GalleryProps) {
               Our Recent Work
             </h2>
           </div>
-
           <Link
             href="#gallery"
-            className="inline-flex items-center gap-2 self-start rounded-full border-2 border-brand-blue bg-white px-6 py-2.5 text-xs font-bold text-brand-blue transition-all duration-200 hover:bg-brand-blue-light sm:text-sm md:self-auto"
+            className="group inline-flex items-center gap-3 rounded-full bg-[#00a651] py-2.5 pr-2.5 pl-6 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#008f45] active:scale-98 sm:text-sm"
           >
             <span>View All Projects</span>
-            <ArrowRight className="h-4 w-4" />
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0a1e3b] text-white transition-transform duration-200 group-hover:translate-x-0.5">
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
           </Link>
         </div>
 
@@ -252,22 +253,20 @@ export function Gallery({ items }: GalleryProps) {
                   <button
                     type="button"
                     onClick={() => setActiveTab("before")}
-                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
-                      activeTab === "before"
-                        ? "bg-amber-500 text-white shadow-xs"
-                        : "text-brand-navy hover:text-brand-blue"
-                    }`}
+                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${activeTab === "before"
+                      ? "bg-amber-500 text-white shadow-xs"
+                      : "text-brand-navy hover:text-brand-blue"
+                      }`}
                   >
                     Before
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("after")}
-                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
-                      activeTab === "after"
-                        ? "bg-brand-green text-white shadow-xs"
-                        : "text-brand-navy hover:text-brand-blue"
-                    }`}
+                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${activeTab === "after"
+                      ? "bg-brand-green text-white shadow-xs"
+                      : "text-brand-navy hover:text-brand-blue"
+                      }`}
                   >
                     After
                   </button>

@@ -6,6 +6,7 @@ import {
   getServices,
   getSettings,
   getTeam,
+  getTestimonials,
   getWhyChoose
 } from "@/lib/content";
 
@@ -19,20 +20,23 @@ import {
   ServiceAreas,
   Services,
   Team,
+  Testimonials,
   WhyChooseUs
 } from "@/components/sections";
 
 export default async function Home() {
-  const [settings, hero, services, whyChoose, about, team, gallery, areas] = await Promise.all([
-    getSettings(),
-    getHero(),
-    getServices(),
-    getWhyChoose(),
-    getAbout(),
-    getTeam(),
-    getGallery(),
-    getAreas()
-  ]);
+  const [settings, hero, services, whyChoose, about, team, gallery, areas, testimonials] =
+    await Promise.all([
+      getSettings(),
+      getHero(),
+      getServices(),
+      getWhyChoose(),
+      getAbout(),
+      getTeam(),
+      getGallery(),
+      getAreas(),
+      getTestimonials()
+    ]);
 
   const defaultWhatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     settings.whatsappDefaultMessage
@@ -61,22 +65,25 @@ export default async function Home() {
       {/* 7. Projects / Gallery (with accessible lightbox) */}
       <Gallery items={gallery} />
 
-
-      {/* 9. Get a Free Quote (Lead Form) */}
+      {/* 8. Get a Free Quote (Lead Form) */}
       <QuoteForm services={services} settings={settings} />
-      {/* 8. Dubai Service Areas */}
+
+      {/* 9. Dubai Service Areas */}
       <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} />
 
-      <div className="bg-white">
-        {/* 10. Contact Us */}
+      {/* 10. Client Testimonials */}
+      <Testimonials testimonials={testimonials} />
+
+      <div className="bg-white ">
+        {/* 11. Contact Us */}
         <Contact settings={settings} />
 
-        {/* 11. Footer */}
+        {/* 12. Footer */}
         <Footer settings={settings} />
       </div>
 
       {/* 12. Sticky Mobile Bottom Bar */}
-      <StickyBottomBar settings={settings} />
+      {/* <StickyBottomBar settings={settings} /> */}
     </div>
   );
 }

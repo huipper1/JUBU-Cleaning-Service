@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
       }
     }
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   webpack(config) {
     const rules = config.module.rules as RuleSetRule[];
     const fileLoaderRule = rules.find(
