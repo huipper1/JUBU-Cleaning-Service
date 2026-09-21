@@ -17,7 +17,6 @@ interface FooterProps {
 const QUICK_LINKS = [
   { label: "Home", href: "#top" },
   { label: "Services", href: "#services" },
-  { label: "Why Us", href: "#why-choose" },
   { label: "About", href: "#about" },
   { label: "Gallery", href: "#gallery" },
   { label: "Areas", href: "#areas" },
@@ -38,7 +37,7 @@ export function Footer({ settings }: FooterProps) {
 
   return (
     <footer
-      className="relative overflow-hidden border-t border-white/10 bg-[#061833] pt-16 pb-12 text-white sm:pb-8"
+      className="relative overflow-hidden text-white"
       aria-label="Site Footer"
     >
       {/* Dubai City Skyline Background */}
@@ -48,44 +47,37 @@ export function Footer({ settings }: FooterProps) {
           alt="Dubai skyline illuminated at night"
           fill
           sizes="100vw"
-          className="object-cover object-bottom"
+          className="object-cover object-center"
+          priority
         />
-        {/* Navy Overlay to maintain high legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#061833]/94 via-[#071e3d]/82 to-[#040e1e]/90" />
-        <div className="absolute inset-0 bg-[#05142b]/40 mix-blend-multiply" />
+        {/* Navy gradient wash matching the screenshot */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#051733]/40 via-[#061d40]/60 to-[#041126]/40" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 border-b border-white/15 pb-14 md:grid-cols-12 lg:gap-14">
-          {/* Column 1: Brand details & Socials */}
-          <div className="flex flex-col items-start text-left md:col-span-5">
+      {/* Main Footer Content */}
+      <div className="container relative z-10 mx-auto px-4 pt-16 pb-14 sm:px-6 sm:pt-20 sm:pb-16 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-0">
+          {/* Column 1: Brand & Bio & Socials */}
+          <div className="flex flex-col items-start text-left md:col-span-5 md:pr-12 lg:pr-16">
             <Link
               href="#top"
-              className="mb-4 flex items-center gap-2 rounded-md focus-visible:outline-2 focus-visible:outline-brand-sky"
+              className="mb-5 block"
               aria-label={`${settings.businessName} Home`}
             >
-              <figure className="relative m-0 flex items-center">
-                <Image
-                  src={settings.logo.src}
-                  alt={settings.logo.alt}
-                  width={settings.logo.width}
-                  height={settings.logo.height}
-                  className="h-10 w-auto object-contain brightness-110 sm:h-11"
-                />
-              </figure>
+              <Image
+                src="/images/logo-white-transparent.png"
+                alt="JUBU Cleaning Services Logo"
+                width={180}
+                height={180}
+                className="h-28 w-auto object-contain drop-shadow-md sm:h-32"
+              />
             </Link>
 
-            <span className="mb-3 block text-xs font-bold tracking-widest text-brand-sky uppercase">
-              {settings.tagline}
-            </span>
-
-            <p className="mb-6 max-w-sm text-xs leading-relaxed font-normal text-slate-300 sm:text-sm">
-              JUBU Cleaning Service is a Dubai-based cleaning company dedicated to providing
-              high-quality, reliable and affordable cleaning solutions for homes, offices, villas
-              and commercial spaces.
+            <p className="mb-8 max-w-sm text-xs leading-relaxed font-normal text-slate-200 sm:text-sm">
+              JUBU Cleaning Service is a Dubai-based cleaning company dedicated to providing high-quality, reliable and affordable cleaning solutions for homes, offices, villas and commercial spaces.
             </p>
 
-            {/* Social Links Row */}
+            {/* Circular Outline Social Media Icons */}
             <div className="flex items-center gap-3">
               {settings.socialLinks.map((social) => (
                 <a
@@ -94,25 +86,25 @@ export function Footer({ settings }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Follow JUBU on ${social.platform}`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors hover:bg-brand-blue hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white backdrop-blur-xs transition-all duration-200 hover:border-white hover:bg-white hover:text-[#0070ba]"
                 >
-                  <Icon name={social.icon} className="h-4 w-4" />
+                  <Icon name={social.icon} className="h-4 w-4 stroke-[2]" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div className="flex flex-col items-start text-left md:col-span-3">
-            <h3 className="mb-5 text-sm font-bold tracking-wider text-white uppercase sm:text-base">
+          {/* Column 2: Quick Links (with left border on desktop) */}
+          <div className="flex flex-col items-start text-left md:col-span-3 md:border-l md:border-white/15 md:pl-10 lg:pl-14">
+            <h3 className="mb-5 text-base font-bold tracking-tight text-white sm:text-lg">
               Quick Links
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="inline-block py-0.5 text-xs font-medium text-slate-300 transition-colors hover:text-brand-sky sm:text-sm"
+                    className="inline-block text-sm text-slate-200 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -121,24 +113,27 @@ export function Footer({ settings }: FooterProps) {
             </ul>
           </div>
 
-          {/* Column 3: Newsletter */}
-          <div className="flex flex-col items-start text-left md:col-span-4">
-            <h3 className="mb-4 text-sm font-bold tracking-wider text-white uppercase sm:text-base">
+          {/* Column 3: Newsletter (with left border on desktop) */}
+          <div className="flex flex-col items-start text-left md:col-span-4 md:border-l md:border-white/15 md:pl-10 lg:pl-14">
+            <h3 className="mb-3 text-base font-bold tracking-tight text-white sm:text-lg">
               Newsletter
             </h3>
-            <p className="mb-5 text-xs leading-relaxed font-normal text-slate-300 sm:text-sm">
+            <p className="mb-6 text-xs leading-relaxed font-normal text-slate-200 sm:text-sm">
               Subscribe to our newsletter for cleaning tips, special offers and latest updates.
             </p>
 
             {isSubscribed ? (
-              <div className="flex w-full items-center gap-2 rounded-xl border border-brand-green/40 bg-brand-green/20 p-3 text-xs text-brand-green">
-                <Check className="h-4 w-4 shrink-0" />
+              <div className="flex w-full items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500/20 p-3 text-xs font-semibold text-emerald-200">
+                <Check className="h-4 w-4 shrink-0 text-emerald-400" />
                 <span>Thank you for subscribing!</span>
               </div>
             ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex w-full items-center rounded-xl bg-white p-1.5 shadow-md">
-                <div className="pl-3 pr-2 text-slate-400">
-                  <Mail className="h-4 w-4" />
+              <form
+                onSubmit={handleNewsletterSubmit}
+                className="flex w-full max-w-md items-center overflow-hidden rounded-xl bg-white shadow-lg"
+              >
+                <div className="pl-3.5 pr-2 text-[#081839]">
+                  <Mail className="h-5 w-5 text-slate-700" />
                 </div>
                 <input
                   type="email"
@@ -146,29 +141,34 @@ export function Footer({ settings }: FooterProps) {
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
                   placeholder="Your email address"
-                  className="flex-1 bg-transparent py-2 pr-2 text-xs text-brand-navy placeholder:text-slate-400 focus:outline-none sm:text-sm"
+                  className="flex-1 bg-transparent py-3 pr-3 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none sm:text-sm"
                 />
                 <button
                   type="submit"
                   aria-label="Subscribe to newsletter"
-                  className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-brand-blue text-white shadow-sm transition-colors hover:bg-brand-blue-hover"
+                  className="flex h-11 w-12 shrink-0 cursor-pointer items-center justify-center rounded-r-xl bg-[#0070ba] text-white transition-colors hover:bg-[#005e9e] sm:h-12 sm:w-14"
                 >
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-5 w-5" />
                 </button>
               </form>
             )}
           </div>
         </div>
+      </div>
 
-        {/* Bottom Bar: Copyright and Tagline */}
-        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-slate-400 sm:flex-row">
-          <p>{settings.copyrightText}</p>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold tracking-wider text-slate-300 uppercase">{settings.tagline}</span>
-            <span className="inline-block h-0.5 w-8 rounded-full bg-brand-green" />
+      {/* Bottom Copyright Bar with subtle navy shade */}
+      <div className="relative z-10 border-t border-white/10 bg-[#030d1d]/60 backdrop-blur-xs">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-slate-300 sm:flex-row sm:px-6 lg:px-8">
+          <p>© 2026 JUBU Cleaning Service. All rights reserved.</p>
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] font-semibold tracking-widest text-slate-300 uppercase sm:text-xs">
+              CLEANER SPACES &nbsp;•&nbsp; BRIGHTER LIVES
+            </span>
+            <span className="inline-block h-0.5 w-10 rounded-full bg-[#00a651]" />
           </div>
         </div>
       </div>
     </footer>
   );
 }
+
