@@ -13,8 +13,8 @@ export const mockSettingsData: SiteSettings = {
   phone: "+971 54 299 5191",
   phoneDisplay: "+971 54 299 5191",
   phoneTel: "+971542995191",
-  whatsapp: "+971 54 299 5191",
-  whatsappNumber: "971542995191",
+  whatsapp: "+880 17 5660 1431",
+  whatsappNumber: "8801756601431",
   whatsappDefaultMessage:
     "Hello JUBU Cleaning Service, I would like to inquire about a free quote for your cleaning services in Dubai.",
   email: "sajibulislam679@gmail.com",

@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import Image from "next/image";
 
 import {
   ArrowRight,
   Calendar,
+  Check,
   CheckCircle2,
+  ChevronDown,
   ExternalLink,
   Loader2,
   Lock,
@@ -16,12 +18,14 @@ import {
   RotateCcw,
   Settings,
   ShieldCheck,
+  Sparkles,
   User
 } from "lucide-react";
 
 import type { Service, SiteSettings } from "@/types/content";
 import type { CreateLeadInput } from "@/types/lead";
 
+import { Icon } from "@/ui";
 import { createLeadInputSchema } from "@/lib/content/types";
 
 interface QuoteFormProps {
@@ -55,6 +59,32 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
     mobile: string;
     serviceName: string;
   } | null>(null);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close custom dropdown on outside click or escape
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   // Listen to hash change and custom service selection events
   useEffect(() => {
@@ -159,13 +189,34 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
         services.find((s) => s.id === formData.serviceId)?.title ??
         (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service");
 
+      const submittedName = formData.fullName;
+      const submittedMobile = formData.mobile;
+      const submittedMessage = formData.message;
+
       setSubmittedData({
-        name: formData.fullName,
-        mobile: formData.mobile,
+        name: submittedName,
+        mobile: submittedMobile,
         serviceName: currentService
       });
 
       setStatus("success");
+
+      // Auto-open WhatsApp with pre-filled message from the user's side
+      const waMessage = [
+        `Hello JUBU Cleaning Service! 👋`,
+        ``,
+        `I just submitted a quote request and would like to follow up:`,
+        ``,
+        `👤 *Name:* ${submittedName}`,
+        `📞 *Phone:* +${submittedMobile}`,
+        `🧹 *Service:* ${currentService}`,
+        submittedMessage ? `📝 *Details:* ${submittedMessage}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
     } catch {
       setStatus("error");
       setErrorMessage(
@@ -184,9 +235,17 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
     }));
   };
 
-  // WhatsApp follow-up URL with pre-filled message
+  // WhatsApp follow-up URL with pre-filled message (used by success-state button)
   const followUpMessage = submittedData
-    ? `Hello JUBU Cleaning Service, I just requested a quote for ${submittedData.serviceName}. My phone number is ${submittedData.mobile}.`
+    ? [
+        `Hello JUBU Cleaning Service! 👋`,
+        ``,
+        `I just submitted a quote request and would like to follow up:`,
+        ``,
+        `👤 *Name:* ${submittedData.name}`,
+        `📞 *Phone:* +${submittedData.mobile}`,
+        `🧹 *Service:* ${submittedData.serviceName}`,
+      ].join("\n")
     : settings.whatsappDefaultMessage;
 
   const followUpWhatsAppUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
@@ -471,35 +530,192 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                   </div>
 
                   {/* Select Cleaning Service */}
-                  <div>
+                  <div className="relative" ref={dropdownRef}>
                     <label
-                      htmlFor="serviceId"
+                      id="service-select-label"
                       className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
                       Select Cleaning Service
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                        <Calendar className="h-4 w-4" />
+
+                    {/* Hidden input to maintain native form compatibility */}
+                    <input
+                      type="hidden"
+                      name="serviceId"
+                      value={formData.serviceId}
+                    />
+
+                    {/* Custom Dropdown Trigger Button */}
+                    <button
+                      type="button"
+                      id="serviceId"
+                      aria-haspopup="listbox"
+                      aria-expanded={isDropdownOpen}
+                      aria-labelledby="service-select-label serviceId"
+                      disabled={status === "submitting"}
+                      onClick={() => setIsDropdownOpen((prev) => !prev)}
+                      className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                        isDropdownOpen
+                          ? "border-brand-sky ring-2 ring-brand-sky/30 shadow-lg shadow-sky-950/40"
+                          : "border-white/15"
+                      }`}
+                    >
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-sky transition-colors group-hover:bg-brand-sky/20">
+                          {formData.serviceId === "other" ? (
+                            <Sparkles className="h-4 w-4" />
+                          ) : (
+                            <Icon
+                              name={services.find((s) => s.id === formData.serviceId)?.icon || "calendar"}
+                              className="h-4 w-4"
+                            />
+                          )}
+                        </div>
+                        <span className="truncate font-medium text-white">
+                          {formData.serviceId === "other"
+                            ? "Other / Custom Service"
+                            : services.find((s) => s.id === formData.serviceId)?.title ?? "Select a service"}
+                        </span>
                       </div>
-                      <select
-                        id="serviceId"
-                        name="serviceId"
-                        disabled={status === "submitting"}
-                        value={formData.serviceId}
-                        onChange={handleChange}
-                        className="w-full cursor-pointer appearance-none rounded-xl border border-white/15 bg-[#0b2447] py-3 pr-8 pl-10 text-sm text-white transition-all hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none [&_option]:bg-[#081839] [&_option]:text-white"
+
+                      <div className="flex items-center pl-2 text-slate-400 transition-colors group-hover:text-white">
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform duration-200 ${
+                            isDropdownOpen ? "rotate-180 text-brand-sky" : ""
+                          }`}
+                        />
+                      </div>
+                    </button>
+
+                    {/* Custom Dropdown Menu Panel */}
+                    {isDropdownOpen && (
+                      <div
+                        role="listbox"
+                        aria-labelledby="service-select-label"
+                        className="absolute z-50 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-white/20 bg-[#081839]/95 p-1.5 shadow-2xl backdrop-blur-xl ring-1 ring-black/40 focus:outline-none scrollbar-thin scrollbar-thumb-white/20 animate-in fade-in zoom-in-95 duration-150"
                       >
-                        {services.map((svc) => (
-                          <option key={svc.id} value={svc.id} className="bg-[#081839] text-white">
-                            {svc.title}
-                          </option>
-                        ))}
-                        <option value="other" className="bg-[#081839] text-white">
-                          Other / Custom Service
-                        </option>
-                      </select>
-                    </div>
+                        <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                          Available Services
+                        </div>
+
+                        {services.map((svc) => {
+                          const isSelected = formData.serviceId === svc.id;
+                          return (
+                            <div
+                              key={svc.id}
+                              role="option"
+                              aria-selected={isSelected}
+                              tabIndex={0}
+                              onClick={() => {
+                                setFormData((prev) => ({ ...prev, serviceId: svc.id }));
+                                setIsDropdownOpen(false);
+                                if (fieldErrors.serviceId) {
+                                  setFieldErrors((prev) => {
+                                    const next = { ...prev };
+                                    delete next.serviceId;
+                                    return next;
+                                  });
+                                }
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  setFormData((prev) => ({ ...prev, serviceId: svc.id }));
+                                  setIsDropdownOpen(false);
+                                }
+                              }}
+                              className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
+                                isSelected
+                                  ? "bg-brand-sky/20 text-white"
+                                  : "text-slate-200 hover:bg-white/10 hover:text-white"
+                              }`}
+                            >
+                              <div className="flex min-w-0 items-center gap-3">
+                                <div
+                                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                                    isSelected
+                                      ? "bg-brand-sky text-white shadow-sm"
+                                      : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
+                                  }`}
+                                >
+                                  <Icon name={svc.icon} className="h-4 w-4" />
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="truncate text-sm font-semibold leading-tight text-white">
+                                    {svc.title}
+                                  </div>
+                                  {svc.shortDescription && (
+                                    <div className="truncate text-[11px] text-slate-400 group-hover/item:text-slate-300">
+                                      {svc.shortDescription}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {isSelected && (
+                                <Check className="h-4 w-4 shrink-0 text-brand-sky" />
+                              )}
+                            </div>
+                          );
+                        })}
+
+                        <div className="my-1 border-t border-white/10" />
+
+                        {/* Other / Custom Option */}
+                        <div
+                          role="option"
+                          aria-selected={formData.serviceId === "other"}
+                          tabIndex={0}
+                          onClick={() => {
+                            setFormData((prev) => ({ ...prev, serviceId: "other" }));
+                            setIsDropdownOpen(false);
+                            if (fieldErrors.serviceId) {
+                              setFieldErrors((prev) => {
+                                const next = { ...prev };
+                                delete next.serviceId;
+                                return next;
+                              });
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              setFormData((prev) => ({ ...prev, serviceId: "other" }));
+                              setIsDropdownOpen(false);
+                            }
+                          }}
+                          className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
+                            formData.serviceId === "other"
+                              ? "bg-brand-sky/20 text-white"
+                              : "text-slate-200 hover:bg-white/10 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex min-w-0 items-center gap-3">
+                            <div
+                              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                                formData.serviceId === "other"
+                                  ? "bg-brand-sky text-white shadow-sm"
+                                  : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
+                              }`}
+                            >
+                              <Sparkles className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-sm font-semibold leading-tight text-white">
+                                Other / Custom Service
+                              </div>
+                              <div className="text-[11px] text-slate-400 group-hover/item:text-slate-300">
+                                Need specialized cleaning or multiple premises
+                              </div>
+                            </div>
+                          </div>
+
+                          {formData.serviceId === "other" && (
+                            <Check className="h-4 w-4 shrink-0 text-brand-sky" />
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Message / Details (Optional) */}
