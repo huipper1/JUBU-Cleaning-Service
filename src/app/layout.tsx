@@ -31,7 +31,7 @@ export const metadata: Metadata = seoConfig;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={siteConfig.locale} suppressHydrationWarning>
+    <html lang={siteConfig.locale} className="scroll-smooth" suppressHydrationWarning>
       <body
         className={`${plusJakartaSans.variable} ${caveat.variable} flex min-h-screen w-full flex-col font-sans antialiased`}
       >
