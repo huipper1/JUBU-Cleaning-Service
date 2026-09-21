@@ -1,4 +1,7 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { MessageCircle, Phone } from "lucide-react";
 
 import type { SiteSettings } from "@/types/content";
 
@@ -10,100 +13,65 @@ export function Contact({ settings }: ContactProps) {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-[#f3f9fd] py-14 sm:py-16 lg:py-20"
+      className="relative z-30 -mb-32 sm:-mb-44 lg:-mb-52 pointer-events-none pt-50"
       aria-label="Contact JUBU Cleaning Service"
     >
-      {/* Subtle organic background accent shapes matching screenshot */}
-      <div
-        className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#dcf1fb]/60 blur-2xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -top-24 -right-16 h-80 w-80 rounded-full bg-[#dcf1fb]/70 blur-2xl"
-        aria-hidden="true"
-      />
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
+        {/* Main Floating Banner Card matching website theme */}
+        <div className="relative overflow-visible rounded-3xl border border-white/15 bg-gradient-to-br from-[#061e45] via-[#041530] to-[#020b18] px-6 pt-10 pb-10 shadow-[0_25px_50px_-12px_rgba(2,11,24,0.7)] sm:px-12 sm:pt-14 sm:pb-14 lg:px-16 lg:py-16">
 
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Left-aligned Header matching screenshot */}
-        <div className="mb-8 flex flex-col items-start text-left sm:mb-10">
-          <span className="mb-1 text-xs font-bold tracking-wider text-[#00a651] uppercase sm:text-sm">
-            CONTACT US
-          </span>
-          <h2 className="mb-2 text-2xl font-black tracking-tight text-[#081839] sm:text-3xl lg:text-4xl">
-            Get in Touch
-          </h2>
-          <p className="text-sm font-normal text-[#4a5f78] sm:text-base">
-            We&apos;re here to help! Reach out to us through any of the following channels.
-          </p>
-        </div>
+          {/* Subtle ambient lighting glows within card */}
+          <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-[80px]" />
+          <div className="pointer-events-none absolute bottom-0 right-1/4 h-56 w-56 rounded-full bg-brand-green/15 blur-[90px]" />
 
-        {/* 3 Contact Cards */}
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
-          {/* Phone Card */}
-          <article className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-[0_2px_12px_rgba(0,112,186,0.06)] transition-all duration-300 hover:shadow-md sm:p-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#0070ba] text-white shadow-sm sm:h-16 sm:w-16">
-              <Phone className="h-6 w-6 stroke-[2.2] fill-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold text-[#0070ba] sm:text-sm">
-                Phone
+          <div className="relative z-10 flex flex-col items-center gap-8 lg:grid lg:grid-cols-12 lg:gap-4">
+            
+            {/* Content Column */}
+            <div className="flex w-full flex-col items-start text-left lg:col-span-7 xl:col-span-7">
+              <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/50 px-3.5 py-1 text-xs font-bold tracking-wider text-sky-300 uppercase backdrop-blur-xs sm:text-sm">
+                Get In Touch With JUBU
               </span>
-              <a
-                href={`tel:${settings.phoneTel}`}
-                className="text-base font-extrabold text-[#081839] transition-colors hover:text-[#0070ba] sm:text-lg"
-              >
-                {settings.phoneDisplay}
-              </a>
-              <p className="mt-1 text-[11px] text-[#64748b] sm:text-xs">
-                Call or WhatsApp us anytime.
-              </p>
-            </div>
-          </article>
+              <h2 className="mb-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.12]">
+                Experience Your <br className="hidden sm:inline" />
+                <span className="text-[#34d399]">Cleanest Home</span> Yet
+              </h2>
 
-          {/* Email Card */}
-          <article className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-[0_2px_12px_rgba(0,112,186,0.06)] transition-all duration-300 hover:shadow-md sm:p-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#0070ba] text-white shadow-sm sm:h-16 sm:w-16">
-              <Mail className="h-6 w-6 stroke-[2.2]" />
-            </div>
-            <div className="flex min-w-0 flex-col">
-              <span className="text-xs font-bold text-[#0070ba] sm:text-sm">
-                Email
-              </span>
-              <a
-                href={`mailto:${settings.email}`}
-                className="block truncate text-base font-extrabold text-[#081839] transition-colors hover:text-[#0070ba] sm:text-lg"
-              >
-                {settings.email}
-              </a>
-              <p className="mt-1 text-[11px] text-[#64748b] sm:text-xs">
-                We typically respond within 24 hours.
-              </p>
-            </div>
-          </article>
+              {/* Action Buttons styled to match site theme */}
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+                <Link
+                  href="#quote"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Get Instant Price</span>
+                </Link>
 
-          {/* Location Card */}
-          <article className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-[0_2px_12px_rgba(0,112,186,0.06)] transition-all duration-300 hover:shadow-md sm:p-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#0070ba] text-white shadow-sm sm:h-16 sm:w-16">
-              <MapPin className="h-6 w-6 stroke-[2.2]" />
+                <a
+                  href={`tel:${settings.phoneTel}`}
+                  className="inline-flex items-center justify-center gap-2.5 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-xs transition-all duration-200 hover:border-sky-400 hover:bg-white/10 active:scale-98 sm:text-base"
+                >
+                  <Phone className="h-4 w-4 text-sky-400" />
+                  <span>{settings.phoneDisplay}</span>
+                </a>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold text-[#0070ba] sm:text-sm">
-                Location
-              </span>
-              <a
-                href={settings.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-base font-extrabold text-[#081839] transition-colors hover:text-[#0070ba] sm:text-lg"
-              >
-                {settings.address}
-              </a>
-              <p className="mt-1 text-[11px] text-[#64748b] sm:text-xs">
-                Working hours: <br className="sm:hidden" />
-                {settings.workingHours}
-              </p>
-            </div>
-          </article>
+
+            {/* Spacer for desktop grid to preserve right-side column room */}
+            <div className="hidden h-56 lg:col-span-5 lg:block xl:col-span-5" />
+
+          </div>
+
+          {/* Cleaner Image: Stacks below text on mobile/tablet, anchors to bottom right on desktop */}
+          <div className="pointer-events-none -mb-10 flex w-full max-w-[280px] items-end justify-center self-center sm:-mb-14 sm:max-w-[340px] md:max-w-[380px] lg:pointer-events-none lg:absolute lg:right-6 lg:bottom-0 lg:mb-0 lg:w-[460px] lg:max-w-none xl:right-12 xl:w-[500px]">
+            <Image
+              src="/images/placeholder/contact-cleaner.png"
+              alt="Friendly professional JUBU cleaner giving OK gesture with spray and microfibre cloth"
+              width={700}
+              height={700}
+              priority
+              className="block h-auto w-full object-contain object-bottom drop-shadow-[0_25px_35px_rgba(0,0,0,0.5)]"
+            />
+          </div>
         </div>
       </div>
     </section>

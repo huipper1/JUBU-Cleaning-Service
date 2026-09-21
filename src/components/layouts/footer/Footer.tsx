@@ -37,7 +37,7 @@ export function Footer({ settings }: FooterProps) {
 
   return (
     <footer
-      className="relative overflow-hidden text-white"
+      className="relative overflow-hidden text-white bg-white"
       aria-label="Site Footer"
     >
       {/* Dubai City Skyline Background */}
@@ -54,8 +54,8 @@ export function Footer({ settings }: FooterProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-[#051733]/40 via-[#061d40]/60 to-[#041126]/40" />
       </div>
 
-      {/* Main Footer Content */}
-      <div className="container relative z-10 mx-auto px-4 pt-16 pb-14 sm:px-6 sm:pt-20 sm:pb-16 lg:px-8">
+      {/* Main Footer Content - Generous top padding so the overlapping Contact card doesn't cover any footer content */}
+      <div className="container relative z-10 mx-auto px-4 pt-48 pb-14 sm:px-6 sm:pt-60 sm:pb-16 lg:px-8 lg:pt-72">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-0">
           {/* Column 1: Brand & Bio & Socials */}
           <div className="flex flex-col items-start text-left md:col-span-5 md:pr-12 lg:pr-16">

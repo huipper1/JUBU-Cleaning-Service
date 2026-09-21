@@ -61,17 +61,19 @@ export default async function Home() {
       {/* 7. Projects / Gallery (with accessible lightbox) */}
       <Gallery items={gallery} />
 
-      {/* 8. Dubai Service Areas */}
-      <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} />
 
       {/* 9. Get a Free Quote (Lead Form) */}
       <QuoteForm services={services} settings={settings} />
+      {/* 8. Dubai Service Areas */}
+      <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} />
 
-      {/* 10. Contact Us */}
-      <Contact settings={settings} />
+      <div className="bg-white">
+        {/* 10. Contact Us */}
+        <Contact settings={settings} />
 
-      {/* 11. Footer */}
-      <Footer settings={settings} />
+        {/* 11. Footer */}
+        <Footer settings={settings} />
+      </div>
 
       {/* 12. Sticky Mobile Bottom Bar */}
       <StickyBottomBar settings={settings} />
