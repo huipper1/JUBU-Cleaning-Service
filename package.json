@@ -1,12 +1,12 @@
 {
-  "name": "fam",
+  "name": "Jubu-Cleaning-Service",
   "version": "16.0.0",
   "private": true,
-  "description": "Production-ready Next.js 16+ starter built with Tailwind CSS 4 and TypeScript.",
+  "description": "Jubu Cleaning Service",
   "author": {
-    "name": "Shariar Sultan",
-    "email": "shariarsfahim@gmail.com",
-    "url": "https://fa-m.dev"
+    "name": "huipper",
+    "email": "huipper.business@gmail.com",
+    "url": "https://huipper.com"
   },
   "engines": {
     "node": "22.x"
