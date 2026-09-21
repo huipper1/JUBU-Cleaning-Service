@@ -36,22 +36,23 @@ export const mockAboutData: AboutContent = {
   secondaryBadge: "Clean Homes Happy Families", // DUMMY
   images: [
     {
-      src: "/images/placeholder/about-team.svg", // DUMMY
+      src: "/images/placeholder/about-team.png", // DUMMY
       alt: "Pristine modern living room cleaned by JUBU specialists in Dubai",
       width: 800,
       height: 600
     },
     {
-      src: "/images/placeholder/about-detail.svg", // DUMMY
+      src: "/images/placeholder/about-detail.png", // DUMMY
       alt: "Gloved hands sanitizing luxury marble surface",
       width: 600,
       height: 600
     },
     {
-      src: "/images/placeholder/about-cleaning.svg", // DUMMY
+      src: "/images/placeholder/about-cleaning.png", // DUMMY
       alt: "JUBU uniformed staff vacuuming luxury rug",
       width: 600,
       height: 600
     }
   ]
 };
+
