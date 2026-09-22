@@ -51,9 +51,9 @@ export function Footer({ settings }: FooterProps) {
 
       {/* Main Footer Content */}
       <div className="container relative z-10 mx-auto px-4 pt-48 pb-14 sm:px-6 sm:pt-60 sm:pb-16 lg:px-8 lg:pt-72">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-0">
+        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-12 md:gap-0">
           {/* Column 1: Brand & Bio & Socials */}
-          <div className="flex flex-col items-start text-left md:col-span-5 md:pr-12 lg:pr-16">
+          <div className="flex flex-col items-center text-center md:col-span-5 md:items-start md:pr-12 md:text-left lg:pr-16">
             <Link
               href="#top"
               className="mb-5 block"
@@ -102,7 +102,7 @@ export function Footer({ settings }: FooterProps) {
             </div>
 
             {/* Circular Outline Social Media Icons (renders only platforms with valid URLs) */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center gap-3 md:justify-start">
               {settings.socialLinks
                 .filter((social) => Boolean(social.url))
                 .map((social) => (
@@ -121,11 +121,11 @@ export function Footer({ settings }: FooterProps) {
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="flex flex-col items-start text-left md:col-span-3 md:border-l md:border-white/15 md:pl-10 lg:pl-14">
+          <div className="flex flex-col items-center text-center md:col-span-3 md:items-start md:border-l md:border-white/15 md:pl-10 md:text-left lg:pl-14">
             <h3 className="mb-5 text-base font-bold tracking-tight text-white sm:text-lg">
               Quick Links
             </h3>
-            <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-1">
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-2.5 sm:gap-x-12 md:grid-cols-1">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -140,7 +140,7 @@ export function Footer({ settings }: FooterProps) {
           </div>
 
           {/* Column 3: Direct Quote & WhatsApp CTA */}
-          <div className="flex flex-col items-start text-left md:col-span-4 md:border-l md:border-white/15 md:pl-10 lg:pl-14">
+          <div className="flex flex-col items-center text-center md:col-span-4 md:items-start md:border-l md:border-white/15 md:pl-10 md:text-left lg:pl-14">
             <h3 className="mb-3 text-base font-bold tracking-tight text-white sm:text-lg">
               Get in Touch
             </h3>
