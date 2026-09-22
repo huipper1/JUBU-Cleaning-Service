@@ -50,7 +50,7 @@ export function Hero({ content }: HeroProps) {
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-4 xl:gap-6">
           {/* Left Column: Copy, Trust Badges, CTAs, Social Proof (Vertically Centered) */}
-          <div className="flex flex-col items-start text-left sm:py-10 lg:col-span-5 lg:self-center lg:py-16 xl:col-span-5">
+          <div className="flex flex-col items-center text-center sm:py-10 lg:col-span-5 lg:items-start lg:self-center lg:py-16 lg:text-left xl:col-span-5">
             {/* Pill Tag: Professional Cleaning Services in Dubai */}
             {/* <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/40 px-4 py-1.5 text-xs font-medium text-sky-200 shadow-sm backdrop-blur-md sm:text-sm">
               <span>{content.badge || "Professional Cleaning Services in Dubai"}</span>
@@ -66,58 +66,67 @@ export function Hero({ content }: HeroProps) {
             </h1>
 
             {/* Subheadline description */}
-            <p className="mb-8 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base">
+            <p className="mb-8 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base lg:text-left">
               {content.subheadline}
             </p>
 
             {/* Trust Badges: Licensed in Dubai, Professional Equipment, Reliable Service */}
-            <div className="mb-8 flex flex-wrap items-center gap-2.5 sm:gap-3.5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400">
-                <ShieldCheck className="h-8 w-8" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold leading-tight text-white">Licensed in</span>
-                <span className="text-[11px] leading-tight text-slate-300">Dubai</span>
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400">
-                <Wrench className="h-7 w-7 text-sky-400" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold leading-tight text-white">Professional</span>
-                <span className="text-[11px] leading-tight text-slate-300">Equipment</span>
+            <div className="mb-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:justify-start">
+              {/* Badge 1 */}
+              <div className="flex items-center gap-2">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400">
+                  <ShieldCheck className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold leading-tight text-white">Licensed in</span>
+                  <span className="text-[11px] leading-tight text-slate-300">Dubai</span>
+                </div>
               </div>
 
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
-                <Users className="h-7 w-7 text-emerald-400" />
+              {/* Badge 2 */}
+              <div className="flex items-center gap-2">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400">
+                  <Wrench className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold leading-tight text-white">Professional</span>
+                  <span className="text-[11px] leading-tight text-slate-300">Equipment</span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold leading-tight text-white">Reliable</span>
-                <span className="text-[11px] leading-tight text-slate-300">Service</span>
+
+              {/* Badge 3 */}
+              <div className="flex items-center gap-2">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
+                  <Users className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold leading-tight text-white">Reliable</span>
+                  <span className="text-[11px] leading-tight text-slate-300">Service</span>
+                </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="mb-10 flex flex-wrap items-center gap-4">
+            <div className="mb-10 flex flex-row items-center justify-center gap-2 sm:gap-3 lg:justify-start">
               <Link
                 href={content.primaryCta.href}
-                className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand-green px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-base"
               >
-                <MessageCircle className="h-5 w-5" />
-                <span>{content.primaryCta.label}</span>
+                <MessageCircle className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
+                <span className="whitespace-nowrap">{content.primaryCta.label}</span>
               </Link>
 
               <Link
                 href={content.secondaryCta.href}
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-[#092348]/90 px-7 py-3.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:border-sky-400 hover:bg-[#0d2f5e] active:scale-98 sm:text-base"
+                className="group inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/20 bg-[#092348]/90 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:border-sky-400 hover:bg-[#0d2f5e] active:scale-98 sm:gap-2 sm:px-7 sm:py-3.5 sm:text-base"
               >
-                <span>{content.secondaryCta.label}</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                <span className="whitespace-nowrap">{content.secondaryCta.label}</span>
+                <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-1 sm:h-4 sm:w-4" />
               </Link>
             </div>
 
             {/* Social Proof: Serving 10 Communities */}
-            <div className="flex items-center gap-3.5">
+            <div className="flex items-center justify-center gap-3.5 lg:justify-start">
               <div className="flex -space-x-2.5 overflow-hidden">
                 {SOCIAL_PROOF_AVATARS.map((avatar) => (
                   <div
