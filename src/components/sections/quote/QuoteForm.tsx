@@ -26,6 +26,7 @@ import type { CreateLeadInput } from "@/types/lead";
 
 import { Icon } from "@/ui";
 import { createLeadInputSchema } from "@/lib/content/types";
+import { env } from "@/env";
 
 interface QuoteFormProps {
   services: Service[];
@@ -179,7 +180,8 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
     const utmSource = fullPayload.utmSource || "Direct";
     const utmCampaign = fullPayload.utmCampaign || "N/A";
     const pageUrl =
-      typeof window !== "undefined" ? window.location.pathname : "Unknown";
+      (env.NEXT_PUBLIC_SITE_URL ?? "") +
+      (typeof window !== "undefined" ? window.location.pathname : "/");
 
     // Build plain-text WhatsApp message per spec
     const waMessage = [

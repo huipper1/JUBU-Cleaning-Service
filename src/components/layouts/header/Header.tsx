@@ -71,7 +71,7 @@ export function Header({ settings }: HeaderProps) {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden items-center gap-4 sm:flex lg:gap-6">
+        <div className="hidden items-center gap-4 lg:flex lg:gap-6">
           {/* Direct Call / WhatsApp Link */}
           <a
             href={`tel:${settings.phoneTel}`}
