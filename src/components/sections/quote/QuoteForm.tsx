@@ -5,7 +5,6 @@ import Image from "next/image";
 
 import {
   ArrowRight,
-  Calendar,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -54,6 +53,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [redirectUrl, setRedirectUrl] = useState<string>("");
   const [submittedData, setSubmittedData] = useState<{
     name: string;
     mobile: string;
@@ -170,40 +170,60 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
 
     const submittedName = formData.fullName;
     const submittedMobile = formData.mobile;
-    const submittedMessage = formData.message;
+    const submittedMessage = formData.message?.trim() || "N/A";
+    const contactPreference = formData.whatsappOptIn
+      ? "Prefers WhatsApp contact"
+      : "Prefers phone contact";
 
-    // Build WhatsApp pre-filled message
-    const waLines = [
-      `Hello JUBU Cleaning Service! 👋`,
-      ``,
-      `I'd like to request a free quote:`,
-      ``,
-      `👤 *Name:* ${submittedName}`,
-      `📞 *Phone:* ${submittedMobile}`,
-      `🧹 *Service:* ${currentService}`,
-    ];
-    if (submittedMessage?.trim()) {
-      waLines.push(`📝 *Details:* ${submittedMessage.trim()}`);
-    }
+    // UTM / tracking values (already captured in fullPayload)
+    const utmSource = fullPayload.utmSource || "Direct";
+    const utmCampaign = fullPayload.utmCampaign || "N/A";
+    const pageUrl =
+      typeof window !== "undefined" ? window.location.pathname : "Unknown";
 
-    const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
-      waLines.join("\n")
-    )}`;
+    // Build plain-text WhatsApp message per spec
+    const waMessage = [
+      `New Quote Request - JUBU Cleaning Service`,
+      `Name: ${submittedName}`,
+      `Phone: ${submittedMobile}`,
+      `Service: ${currentService}`,
+      `Message: ${submittedMessage}`,
+      `Contact: ${contactPreference}`,
+      `Source: ${utmSource} / ${utmCampaign}`,
+      `Page: ${pageUrl}`
+    ].join("\n");
 
-    // Open WhatsApp in new tab
-    window.open(waUrl, "_blank", "noopener,noreferrer");
+    const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
 
-    // Show success state
+    // Fire /api/lead in background (non-blocking) — preserves PLAN.md §3.5 architecture
+    void fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fullPayload)
+    }).catch((err: unknown) => {
+      console.error("[QuoteForm] Background lead log failed:", err);
+    });
+
+    // Show redirecting state then navigate (same tab — mobile-safe)
+    setRedirectUrl(waUrl);
     setSubmittedData({
       name: submittedName,
       mobile: submittedMobile,
       serviceName: currentService
     });
     setStatus("success");
+
+    const redirectTimer = setTimeout(() => {
+      window.location.href = waUrl;
+    }, 700);
+
+    // Store timer id so resetForm can clear it if user clicks "Submit another"
+    void redirectTimer;
   };
 
   const resetForm = () => {
     setStatus("idle");
+    setRedirectUrl("");
     setFormData((prev) => ({
       ...prev,
       fullName: "",
@@ -211,23 +231,6 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
       message: ""
     }));
   };
-
-  // WhatsApp follow-up URL with pre-filled message (used by success-state button)
-  const followUpMessage = submittedData
-    ? [
-        `Hello JUBU Cleaning Service! 👋`,
-        ``,
-        `I just submitted a quote request and would like to follow up:`,
-        ``,
-        `👤 *Name:* ${submittedData.name}`,
-        `📞 *Phone:* +${submittedData.mobile}`,
-        `🧹 *Service:* ${submittedData.serviceName}`,
-      ].join("\n")
-    : settings.whatsappDefaultMessage;
-
-  const followUpWhatsAppUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
-    followUpMessage
-  )}`;
 
   return (
     <section
@@ -365,30 +368,28 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
           <div className="lg:col-span-6">
             <div className="rounded-3xl border border-white/15 bg-[#071933]/40 p-6 text-white shadow-2xl backdrop-blur-xl sm:p-8 md:p-10">
               {status === "success" ? (
-                /* Success Confirmation State */
+                /* Redirecting / Success State */
                 <div className="flex animate-in flex-col items-center py-6 text-center duration-300 zoom-in-95 fade-in">
                   <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-green/20 text-brand-green border border-brand-green/30">
-                    <CheckCircle2 className="h-10 w-10" />
+                    <MessageCircle className="h-10 w-10 animate-pulse" />
                   </div>
                   <h3 className="mb-2 text-2xl font-extrabold text-white">
-                    Quote Request Received!
+                    Redirecting to WhatsApp…
                   </h3>
                   <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-200">
-                    Thank you, <strong className="text-white font-bold">{submittedData?.name}</strong>.
-                    Our cleaning team is reviewing your request for{" "}
-                    <strong className="text-brand-sky font-bold">{submittedData?.serviceName}</strong> and
-                    will get back to you shortly.
+                    Your request for{" "}
+                    <strong className="text-brand-sky font-bold">{submittedData?.serviceName}</strong>{" "}
+                    is ready. Opening WhatsApp now to connect you with our team.
                   </p>
 
                   <div className="flex w-full flex-col gap-3">
+                    {/* Fallback — in case browser blocks automatic redirect */}
                     <a
-                      href={followUpWhatsAppUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={redirectUrl}
                       className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover"
                     >
                       <MessageCircle className="h-5 w-5" />
-                      <span>Chat on WhatsApp now</span>
+                      <span>Continue to WhatsApp</span>
                       <ExternalLink className="ml-1 h-4 w-4" />
                     </a>
 
