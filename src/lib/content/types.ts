@@ -201,7 +201,25 @@ export const createLeadInputSchema = z.object({
     .refine((val) => phoneRegex.test(val), {
       message: "Please enter a valid mobile number"
     }),
+  whatsappNumber: z
+    .string()
+    .max(20, "WhatsApp number is too long")
+    .optional()
+    .or(z.literal("")),
   serviceId: z.string().min(1, "Please select a cleaning service"),
+  location: z
+    .string()
+    .max(120, "Location must be under 120 characters")
+    .optional()
+    .or(z.literal("")),
+  propertyType: z
+    .enum(["apartment", "villa", "office", "shop", "other", ""])
+    .optional(),
+  preferredDate: z
+    .string()
+    .max(30, "Preferred date is too long")
+    .optional()
+    .or(z.literal("")),
   message: z.string().max(1000, "Message is too long").optional(),
   whatsappOptIn: z.boolean().default(true),
   honeypot: z.string().max(0, "Bot detected").optional(),

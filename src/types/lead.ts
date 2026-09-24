@@ -4,7 +4,11 @@ export interface Lead {
   id: string;
   fullName: string;
   mobile: string;
+  whatsappNumber?: string;
   serviceId: string;
+  location?: string;
+  propertyType?: string;
+  preferredDate?: string;
   message?: string;
   whatsappOptIn: boolean;
   utmSource?: string;
@@ -20,7 +24,11 @@ export interface Lead {
 export interface CreateLeadInput {
   fullName: string;
   mobile: string;
+  whatsappNumber?: string;
   serviceId: string;
+  location?: string;
+  propertyType?: string;
+  preferredDate?: string;
   message?: string;
   whatsappOptIn?: boolean;
   honeypot?: string;

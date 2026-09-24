@@ -5,12 +5,15 @@ import Image from "next/image";
 
 import {
   ArrowRight,
+  Building2,
+  Calendar,
   Check,
   CheckCircle2,
   ChevronDown,
   ExternalLink,
   Loader2,
   Lock,
+  MapPin,
   MessageCircle,
   MessageSquare,
   Phone,
@@ -39,7 +42,11 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
   const [formData, setFormData] = useState<CreateLeadInput>(() => ({
     fullName: "",
     mobile: "",
+    whatsappNumber: "",
     serviceId: services[0]?.id ?? "home-cleaning",
+    location: "",
+    propertyType: "",
+    preferredDate: "",
     message: "",
     whatsappOptIn: true,
     honeypot: "",
@@ -171,6 +178,12 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
 
     const submittedName = formData.fullName;
     const submittedMobile = formData.mobile;
+    const submittedWhatsApp = formData.whatsappNumber?.trim() || submittedMobile;
+    const submittedLocation = formData.location?.trim() || "N/A";
+    const submittedPropertyType = formData.propertyType
+      ? formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1)
+      : "N/A";
+    const submittedPreferredDate = formData.preferredDate?.trim() || "N/A";
     const submittedMessage = formData.message?.trim() || "N/A";
     const contactPreference = formData.whatsappOptIn
       ? "Prefers WhatsApp contact"
@@ -188,8 +201,12 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
       `New Quote Request - JUBU Cleaning Service`,
       `Name: ${submittedName}`,
       `Phone: ${submittedMobile}`,
+      `WhatsApp: ${submittedWhatsApp}`,
       `Service: ${currentService}`,
-      `Message: ${submittedMessage}`,
+      `Location: ${submittedLocation}`,
+      `Property: ${submittedPropertyType}`,
+      `Preferred Date: ${submittedPreferredDate}`,
+      `Details: ${submittedMessage}`,
       `Contact: ${contactPreference}`,
       `Source: ${utmSource} / ${utmCampaign}`,
       `Page: ${pageUrl}`
@@ -230,6 +247,10 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
       ...prev,
       fullName: "",
       mobile: "",
+      whatsappNumber: "",
+      location: "",
+      propertyType: "",
+      preferredDate: "",
       message: ""
     }));
   };
@@ -471,36 +492,71 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     )}
                   </div>
 
-                  {/* Mobile Number */}
-                  <div>
-                    <label
-                      htmlFor="mobile"
-                      className="mb-1.5 block text-xs font-bold text-slate-200"
-                    >
-                      Mobile Number
-                    </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                        <Phone className="h-4 w-4" />
+                  {/* Mobile Number & WhatsApp Number — side by side */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label
+                        htmlFor="mobile"
+                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                      >
+                        Mobile Number
+                      </label>
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                          <Phone className="h-4 w-4" />
+                        </div>
+                        <input
+                          type="tel"
+                          id="mobile"
+                          name="mobile"
+                          required
+                          disabled={status === "submitting"}
+                          value={formData.mobile}
+                          onChange={handleChange}
+                          placeholder="e.g. +971 50 123 4567"
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                            }`}
+                        />
                       </div>
-                      <input
-                        type="tel"
-                        id="mobile"
-                        name="mobile"
-                        required
-                        disabled={status === "submitting"}
-                        value={formData.mobile}
-                        onChange={handleChange}
-                        placeholder="e.g. +971 50 123 4567"
-                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
-                          ? "border-red-400 bg-red-950/30"
-                          : "border-white/15 hover:border-white/30"
-                          }`}
-                      />
+                      {fieldErrors.mobile && (
+                        <p className="mt-1 text-[11px] text-red-300">{fieldErrors.mobile[0]}</p>
+                      )}
                     </div>
-                    {fieldErrors.mobile && (
-                      <p className="mt-1 text-[11px] text-red-300">{fieldErrors.mobile[0]}</p>
-                    )}
+
+                    <div>
+                      <label
+                        htmlFor="whatsappNumber"
+                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                      >
+                        WhatsApp Number{" "}
+                        <span className="font-normal text-slate-400">(if different)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                          <MessageCircle className="h-4 w-4" />
+                        </div>
+                        <input
+                          type="tel"
+                          id="whatsappNumber"
+                          name="whatsappNumber"
+                          disabled={status === "submitting"}
+                          value={formData.whatsappNumber}
+                          onChange={handleChange}
+                          placeholder="e.g. +971 55 987 6543"
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.whatsappNumber
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                            }`}
+                        />
+                      </div>
+                      {fieldErrors.whatsappNumber && (
+                        <p className="mt-1 text-[11px] text-red-300">
+                          {fieldErrors.whatsappNumber[0]}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
 
@@ -693,13 +749,136 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                     )}
                   </div>
 
-                  {/* Message / Details (Optional) */}
+                  {/* Location / Area & Property Type — side by side */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label
+                        htmlFor="location"
+                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                      >
+                        Location / Area{" "}
+                        <span className="font-normal text-slate-400">(Optional)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                          <MapPin className="h-4 w-4" />
+                        </div>
+                        <input
+                          type="text"
+                          id="location"
+                          name="location"
+                          disabled={status === "submitting"}
+                          value={formData.location}
+                          onChange={handleChange}
+                          placeholder="e.g. Dubai Marina, JBR"
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.location
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                            }`}
+                        />
+                      </div>
+                      {fieldErrors.location && (
+                        <p className="mt-1 text-[11px] text-red-300">{fieldErrors.location[0]}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="propertyType"
+                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                      >
+                        Property Type{" "}
+                        <span className="font-normal text-slate-400">(Optional)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                          <Building2 className="h-4 w-4" />
+                        </div>
+                        <select
+                          id="propertyType"
+                          name="propertyType"
+                          disabled={status === "submitting"}
+                          value={formData.propertyType}
+                          onChange={handleChange}
+                          className={`w-full appearance-none rounded-xl border bg-white/10 py-3 pr-10 pl-10 text-sm text-white transition-all focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${formData.propertyType
+                            ? "text-white"
+                            : "text-slate-400"
+                          } ${fieldErrors.propertyType
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                          }`}
+                        >
+                          <option value="" className="bg-[#0b2447] text-slate-400">
+                            Select property type
+                          </option>
+                          <option value="apartment" className="bg-[#0b2447] text-white">
+                            Apartment
+                          </option>
+                          <option value="villa" className="bg-[#0b2447] text-white">
+                            Villa
+                          </option>
+                          <option value="office" className="bg-[#0b2447] text-white">
+                            Office
+                          </option>
+                          <option value="shop" className="bg-[#0b2447] text-white">
+                            Shop
+                          </option>
+                          <option value="other" className="bg-[#0b2447] text-white">
+                            Other
+                          </option>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                          <ChevronDown className="h-4 w-4" />
+                        </div>
+                      </div>
+                      {fieldErrors.propertyType && (
+                        <p className="mt-1 text-[11px] text-red-300">
+                          {fieldErrors.propertyType[0]}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Preferred Date */}
+                  <div>
+                    <label
+                      htmlFor="preferredDate"
+                      className="mb-1.5 block text-xs font-bold text-slate-200"
+                    >
+                      Preferred Date{" "}
+                      <span className="font-normal text-slate-400">(Optional)</span>
+                    </label>
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                        <Calendar className="h-4 w-4" />
+                      </div>
+                      <input
+                        type="date"
+                        id="preferredDate"
+                        name="preferredDate"
+                        disabled={status === "submitting"}
+                        value={formData.preferredDate}
+                        onChange={handleChange}
+                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none [color-scheme:dark] ${fieldErrors.preferredDate
+                          ? "border-red-400 bg-red-950/30"
+                          : "border-white/15 hover:border-white/30"
+                          }`}
+                      />
+                    </div>
+                    {fieldErrors.preferredDate && (
+                      <p className="mt-1 text-[11px] text-red-300">
+                        {fieldErrors.preferredDate[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Additional Details (Optional) */}
                   <div>
                     <label
                       htmlFor="message"
                       className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
-                      Message / Details{" "}
+                      Additional Details{" "}
                       <span className="font-normal text-slate-400">(Optional)</span>
                     </label>
                     <div className="relative">
@@ -713,7 +892,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
                         disabled={status === "submitting"}
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="Tell us more about your cleaning needs, property size or date..."
+                        placeholder="Any special requirements, preferred time, number of rooms, etc."
                         className="w-full resize-none rounded-xl border border-white/15 bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none"
                       />
                     </div>
