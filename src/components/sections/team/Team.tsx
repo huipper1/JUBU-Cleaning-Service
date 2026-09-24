@@ -14,8 +14,8 @@ export function Team({ members }: TeamProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           badge="OUR TEAM"
-          title="Meet Our Team"
-          description="Trained, friendly and reliable professionals"
+          title="Our Professional Team"
+          description="Our team is selected and trained to handle residential, commercial, deep cleaning and post-construction cleaning requirements."
         />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-4">

@@ -35,9 +35,10 @@ export function Contact({ settings }: ContactProps) {
                 Get In Touch With JUBU
               </span>
               <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.12]">
-                Experience Your <br className="hidden sm:inline" />
-                <span className="text-[#34d399]">Cleanest Home</span> Yet
+                Need Cleaning? <br className="hidden sm:inline" />
+                <span className="text-[#34d399]">We’re Ready</span> to Help!
               </h2>
+              <p className="text-slate-300 mb-3 max-w-xl">Tell us your location, property type and cleaning requirements. We’ll provide a free quote based on your needs.</p>
 
               {/* Full Contact Details from SiteSettings */}
               <div className="mb-6 flex flex-col gap-2.5 text-xs text-slate-200 sm:text-sm">
@@ -79,7 +80,7 @@ export function Contact({ settings }: ContactProps) {
                   className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  <span>Get Free Quote</span>
+                  <span>WhatsApp Us</span>
                 </Link>
 
                 <a

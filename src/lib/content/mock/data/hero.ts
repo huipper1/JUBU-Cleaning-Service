@@ -3,16 +3,16 @@ import type { HeroContent } from "@/types/content";
 // Mock hero section content supported by verified client facts
 export const mockHeroData: HeroContent = {
   badge: "Professional Cleaning Services in Dubai",
-  headline: "Turning Houses into Fresh Homes",
+  headline: "Professional Cleaning Services in Dubai",
   subheadline:
-    "Professional residential and commercial cleaning across Dubai. Operating as a licensed LLC with specialized machines and free quotes.",
+    "Home, Villa, Office, Deep Cleaning & Post-Construction Cleaning. Reliable service with professional equipment.",
   primaryCta: {
     label: "Get a Free Quote",
     href: "#quote"
   },
   secondaryCta: {
-    label: "Our Services",
-    href: "#services"
+    label: "WhatsApp Us",
+    href: "https://wa.me/971542995191"
   },
   trustBadges: [
     {

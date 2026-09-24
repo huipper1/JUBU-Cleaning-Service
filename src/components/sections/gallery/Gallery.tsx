@@ -78,7 +78,7 @@ export function Gallery({ items }: GalleryProps) {
         {/* Header with Title and View All Link */}
         <SectionHeading
           badge="OUR PROJECTS"
-          title="Our Recent Work"
+          title="Our Cleaning Services"
           align="left"
           action={
             <Link

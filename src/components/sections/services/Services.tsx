@@ -33,7 +33,7 @@ export function Services({ services }: ServicesProps) {
         <SectionHeading
           badge="OUR SERVICES"
           title="Cleaning Solutions for Every Space"
-          description="From deep home sanitization to specialized commercial cleaning, our certified crew ensures every inch is fresh and pristine."
+          description="From deep home sanitization to specialized commercial cleaning, Our trained cleaning team delivers reliable and professional cleaning results with care and attention to detail."
         />
 
         {/* 6 Services Grid matching reference split card style */}

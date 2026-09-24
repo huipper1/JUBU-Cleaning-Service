@@ -50,7 +50,7 @@ export function Hero({ content }: HeroProps) {
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-4 xl:gap-6">
           {/* Left Column: Copy, Trust Badges, CTAs, Social Proof (Vertically Centered) */}
-          <div className="flex flex-col items-center text-center sm:py-10 lg:col-span-5 lg:items-start lg:self-center lg:py-16 lg:text-left xl:col-span-5">
+          <div className="flex flex-col items-center text-center sm:py-10 lg:col-span-6 lg:items-start lg:self-center lg:py-16 lg:text-left xl:col-span-6">
             {/* Pill Tag: Professional Cleaning Services in Dubai */}
             {/* <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/40 px-4 py-1.5 text-xs font-medium text-sky-200 shadow-sm backdrop-blur-md sm:text-sm">
               <span>{content.badge || "Professional Cleaning Services in Dubai"}</span>
@@ -58,10 +58,10 @@ export function Hero({ content }: HeroProps) {
 
             {/* Main Headline */}
             <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
-              Turning Houses <br className="hidden sm:inline" />
-              into{" "}
+              Professional Cleaning <br className="hidden sm:inline" />
+              Services in{" "}
               <span className="relative inline-block text-[#34d399]">
-                Fresh Homes
+                Dubai
               </span>
             </h1>
 
@@ -118,6 +118,8 @@ export function Hero({ content }: HeroProps) {
 
               <Link
                 href={content.secondaryCta.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/20 bg-[#092348]/90 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:border-sky-400 hover:bg-[#0d2f5e] active:scale-98 sm:gap-2 sm:px-7 sm:py-3.5 sm:text-base"
               >
                 <span className="whitespace-nowrap">{content.secondaryCta.label}</span>
@@ -151,7 +153,7 @@ export function Hero({ content }: HeroProps) {
           </div>
 
           {/* Right/Center Column: Enlaarged Cleaner Cutout & Shifted Floating Badges */}
-          <div className="relative flex items-end justify-center self-end lg:col-span-7 lg:-ml-6 lg:justify-start xl:col-span-7 xl:-ml-10">
+          <div className="relative flex items-end justify-center self-end lg:col-span-6 lg:-ml-6 lg:justify-start xl:col-span-6 xl:-ml-10">
 
             {/* Cleaner visual wrapper with relative badge positioning */}
             <div className="relative mx-auto flex w-full max-w-[420px] items-end justify-center sm:max-w-[520px] lg:mx-0 lg:max-w-[620px] xl:max-w-[680px]">
@@ -257,8 +259,7 @@ export function Hero({ content }: HeroProps) {
               </div>
 
               {/* Floating Badge 3: Bottom Right - Google Review Badge */}
-              <div className="absolute right-0 bottom-8 z-20 flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-3 shadow-2xl backdrop-blur-md transition-transform hover:scale-105 sm:right-4 sm:bottom-10 lg:-right-4 xl:-right-8">
-                {/* Google G Logo SVG */}
+              {/* <div className="absolute right-0 bottom-8 z-20 flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-3 shadow-2xl backdrop-blur-md transition-transform hover:scale-105 sm:right-4 sm:bottom-10 lg:-right-4 xl:-right-8">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
                   <svg className="h-5 w-5" viewBox="0 0 24 24">
                     <path
@@ -290,7 +291,7 @@ export function Hero({ content }: HeroProps) {
                   </div>
                   <span className="text-xs font-bold text-white">4.9 out of 5 rating</span>
                 </div>
-              </div>
+              </div> */}
 
             </div>
 
