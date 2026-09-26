@@ -224,27 +224,32 @@ export function QuoteForm({
 
     const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
 
-    // Fire /api/lead in background (non-blocking) — preserves PLAN.md §3.5 architecture
-    void fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(fullPayload)
-    }).catch((err: unknown) => {
-      console.error("[QuoteForm] Background lead log failed:", err);
-    });
-
-    // Show redirecting state then navigate (same tab — mobile-safe)
-    setRedirectUrl(waUrl);
+    // Show submitting state
     setSubmittedData({
       name: submittedName,
       mobile: submittedMobile,
       serviceName: currentService
     });
+    setRedirectUrl(waUrl);
+
+    // Save lead to database before redirecting to WhatsApp (with keepalive: true so browser navigation doesn't cancel it)
+    try {
+      await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fullPayload),
+        keepalive: true
+      });
+    } catch (err: unknown) {
+      console.error("[QuoteForm] Lead submission save failed:", err);
+    }
+
+    // Mark as success and redirect to WhatsApp
     setStatus("success");
 
     const redirectTimer = setTimeout(() => {
       window.location.href = waUrl;
-    }, 700);
+    }, 600);
 
     // Store timer id so resetForm can clear it if user clicks "Submit another"
     void redirectTimer;
