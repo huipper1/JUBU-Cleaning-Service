@@ -1,0 +1,322 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -------------------------------------------------------------
+// ENUMS
+// -------------------------------------------------------------
+
+enum AdminRole {
+  ADMIN
+  EDITOR
+  STAFF
+}
+
+enum LeadStatus {
+  pending
+  contacted
+  closed
+}
+
+// -------------------------------------------------------------
+// AUTH & ADMIN MODELS
+// -------------------------------------------------------------
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  supabaseUid  String    @unique // Maps 1:1 with auth.users.id in Supabase Auth
+  email        String    @unique
+  fullName     String
+  role         AdminRole @default(ADMIN)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([supabaseUid])
+}
+
+// -------------------------------------------------------------
+// SINGLETON CONFIGURATION ENTITIES
+// Enforced via fixed ID "default" in repository & DB constraint
+// -------------------------------------------------------------
+
+model SiteSettings {
+  id                      String   @id @default("default")
+  businessName            String   @default("JUBU Cleaning Service")
+  tagline                 String   @default("Cleaner Spaces, Brighter Lives")
+  badgeText               String   @default("Licensed Cleaning Services in Dubai")
+  
+  // Embedded Logo
+  logoSrc                 String   @default("/images/logo.png")
+  logoAlt                 String   @default("JUBU Cleaning Service Logo")
+  logoWidth               Int      @default(180)
+  logoHeight              Int      @default(60)
+
+  phone                   String   @default("+971 54 299 5191")
+  phoneDisplay            String   @default("+971 54 299 5191")
+  phoneTel                String   @default("+971542995191")
+  whatsapp                String   @default("+971 54 299 5191")
+  whatsappNumber          String   @default("971542995191")
+  whatsappDefaultMessage  String   @default("Hello JUBU Cleaning Service, I would like to inquire about a free quote for your cleaning services in Dubai.")
+  email                   String   @default("sajibulislam679@gmail.com")
+  address                 String   @default("Setadel Building, Office # 201, Al Quoz-4, Dubai, United Arab Emirates")
+  mapUrl                  String   @default("https://www.google.com/maps/search/?api=1&query=Setadel+Building+Al+Quoz+4+Dubai")
+  workingHours            String   @default("Sat to Thu, 8:00 AM - 8:00 PM")
+
+  // Social Links JSON: Array of { platform: string, url: string, icon: string }
+  socialLinks             Json     @default("[]")
+
+  // SEO Metadata
+  seoTitle                String   @default("JUBU Cleaning Service | Professional Cleaning Company in Dubai")
+  seoDescription          String   @default("Licensed Dubai cleaning company providing deep cleaning, residential cleaning, office cleaning, and move-in sanitization across Dubai.")
+  seoOgImage              String?  @default("/images/logo.png")
+
+  copyrightText           String   @default("© 2026 JUBU Cleaning Service LLC. All rights reserved.")
+
+  // Trade Licence
+  licenceNumber           String   @default("1026183")
+  licenceStructure        String   @default("Limited Liability Company (LLC)")
+  licenceAuthority        String   @default("Dubai Department of Economy and Tourism (DET)")
+  licenceIssueDate        String   @default("25 January 2022")
+
+  updatedAt               DateTime @updatedAt
+}
+
+model HeroContent {
+  id             String   @id @default("default")
+  badge          String   @default("Professional Cleaning Services in Dubai")
+  headline       String   @default("Professional Cleaning Services in Dubai")
+  subheadline    String   @default("Home, Villa, Office, Deep Cleaning & Post-Construction Cleaning. Reliable service with professional equipment.")
+  
+  primaryCtaLabel   String @default("Get a Free Quote")
+  primaryCtaHref    String @default("#quote")
+  secondaryCtaLabel String @default("WhatsApp Us")
+  secondaryCtaHref  String @default("https://wa.me/971542995191")
+
+  // Trust Badges JSON: Array of { id: string, label: string, icon: string }
+  trustBadges    Json     @default("[]")
+
+  // Hero Cutout Image
+  heroImageSrc   String   @default("/images/placeholder/hero-cleaner.png")
+  heroImageAlt   String   @default("JUBU Professional Cleaner in uniform with spray bottle and cloth")
+  heroImageWidth  Int      @default(800)
+  heroImageHeight Int      @default(950)
+
+  floatingBadge  String   @default("Cleaner Spaces Brighter Lives")
+  updatedAt      DateTime @updatedAt
+}
+
+model AboutContent {
+  id             String   @id @default("default")
+  badge          String   @default("ABOUT JUBU CLEANING SERVICE")
+  heading        String   @default("Professional Cleaning in Dubai")
+  paragraphs     String[] // Postgres text array
+  ctaLabel       String   @default("Get a Free Quote")
+  ctaHref        String   @default("#quote")
+  
+  // Highlights JSON: Array of { id: string, title: string, description?: string, icon: string }
+  highlights     Json     @default("[]")
+
+  taglineBadge   String?  @default("Quality Cleaning")
+  secondaryBadge String?  @default("Verified Equipment")
+
+  // Images JSON: Array of ImageItem { src, alt, width, height }
+  images         Json     @default("[]")
+
+  // Equipment Checklist Array
+  equipment      String[]
+
+  updatedAt      DateTime @updatedAt
+}
+
+// -------------------------------------------------------------
+// COLLECTION LIST ENTITIES
+// -------------------------------------------------------------
+
+model Service {
+  id               String        @id // e.g. "home-cleaning"
+  slug             String        @unique // e.g. "home-cleaning"
+  title            String
+  shortDescription String
+  longDescription  String?
+  icon             String        // lucide icon identifier
+  
+  imageSrc         String
+  imageAlt         String
+  imageWidth       Int           @default(800)
+  imageHeight      Int           @default(600)
+
+  order            Int           @default(0)
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  galleryItems     GalleryItem[]
+
+  @@index([isActive, order])
+}
+
+model WhyChooseItem {
+  id          String   @id // e.g. "trained-team"
+  title       String
+  description String
+  icon        String   // icon identifier
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String?
+  
+  photoSrc  String
+  photoAlt  String
+  photoWidth Int     @default(400)
+  photoHeight Int    @default(400)
+
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+model GalleryItem {
+  id            String   @id @default(cuid())
+  title         String
+  caption       String?
+  serviceId     String
+  service       Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  
+  imageSrc      String
+  imageAlt      String
+  imageWidth    Int      @default(800)
+  imageHeight   Int      @default(600)
+
+  beforeImageSrc String?
+  beforeImageAlt String?
+  afterImageSrc  String?
+  afterImageAlt  String?
+  isBeforeAfter Boolean  @default(false)
+
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([serviceId])
+  @@index([isActive, order])
+}
+
+model ServiceArea {
+  id        String   @id // e.g. "business-bay"
+  name      String   // e.g. "Business Bay"
+  slug      String   @unique
+  lat       Float?
+  lng       Float?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+model AreaLandingPage {
+  id                   String   @id // matches slug, e.g. "business-bay"
+  slug                 String   @unique
+  areaName             String   // "Business Bay"
+  metaTitle            String
+  metaDescription      String
+  heroHeadline         String
+  heroIntro            String
+  
+  heroImageSrc         String?
+  heroImageAlt         String?
+  heroImageWidth       Int?
+  heroImageHeight      Int?
+
+  servicesSectionTitle String
+  servicesList         String[] // Descriptive bullet strings
+
+  featuredBlockTitle   String
+  // Stored as JSON: string | Array<{ title: string, text: string }>
+  featuredBlockText    Json
+
+  nearYouTitle         String
+  nearYouText          String
+  finalCtaTitle        String
+
+  // FAQs JSON: Array<{ question: string, answer: string }>
+  faqs                 Json
+
+  order                Int      @default(0)
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String
+  location   String
+  service    String
+  rating     Int      @default(5)
+  quote      String
+  avatarSrc  String?
+  order      Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+// -------------------------------------------------------------
+// LEAD MANAGEMENT
+// -------------------------------------------------------------
+
+model Lead {
+  id             String     @id @default(cuid())
+  fullName       String
+  mobile         String
+  whatsappNumber String?
+  serviceId      String
+  location       String?
+  propertyType   String?
+  preferredDate  String?
+  message        String?
+  whatsappOptIn  Boolean    @default(true)
+  sourceArea     String?    @default("main-page")
+  
+  // Campaign & Tracking
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmContent     String?
+  fbclid         String?
+  landingUrl     String?
+
+  status         LeadStatus @default(pending)
+  adminNotes     String?    // Internal CRM remarks
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([status, createdAt])
+  @@index([sourceArea])
+  @@index([serviceId])
+}
