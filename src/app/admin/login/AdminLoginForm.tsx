@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import { Lock, Mail, ShieldAlert, Loader2 } from "lucide-react";
+import { useState, useActionState } from "react";
+import { Lock, Mail, ShieldAlert, Loader2, Eye, EyeOff } from "lucide-react";
 import { loginAction } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ interface AdminLoginFormProps {
 
 export function AdminLoginForm({ branding }: AdminLoginFormProps) {
   const [state, formAction, isPending] = useActionState(loginAction, null);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-slate-100 selection:bg-emerald-500 selection:text-white">
@@ -80,16 +81,28 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                  <Lock className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-500 pointer-events-none" />
                   <Input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     required
                     placeholder="••••••••••••"
-                    className="pl-10 bg-slate-950/60 border-slate-800 text-white"
+                    className="pl-10 pr-10 bg-slate-950/60 border-slate-800 text-white"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-4" />
+                    ) : (
+                      <Eye className="size-4" />
+                    )}
+                  </button>
                 </div>
               </div>
 

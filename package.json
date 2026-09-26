@@ -12,6 +12,7 @@
     "node": "22.x"
   },
   "scripts": {
+    "seed": "tsx prisma/seed.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
