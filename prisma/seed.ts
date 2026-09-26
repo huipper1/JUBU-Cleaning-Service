@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { mockSettingsData } from "../src/lib/content/mock/data/settings";
 import { mockHeroData } from "../src/lib/content/mock/data/hero";
 import { mockAboutData } from "../src/lib/content/mock/data/about";
@@ -39,7 +39,7 @@ async function main() {
       address: mockSettingsData.address,
       mapUrl: mockSettingsData.mapUrl,
       workingHours: mockSettingsData.workingHours,
-      socialLinks: mockSettingsData.socialLinks,
+      socialLinks: mockSettingsData.socialLinks as unknown as Prisma.InputJsonValue,
       seoTitle: mockSettingsData.defaultSeo.title,
       seoDescription: mockSettingsData.defaultSeo.description,
       seoOgImage: mockSettingsData.defaultSeo.ogImage ?? "/images/logo.png",
@@ -65,7 +65,7 @@ async function main() {
       primaryCtaHref: mockHeroData.primaryCta.href,
       secondaryCtaLabel: mockHeroData.secondaryCta.label,
       secondaryCtaHref: mockHeroData.secondaryCta.href,
-      trustBadges: mockHeroData.trustBadges,
+      trustBadges: mockHeroData.trustBadges as unknown as Prisma.InputJsonValue,
       heroImageSrc: mockHeroData.heroImage.src,
       heroImageAlt: mockHeroData.heroImage.alt,
       heroImageWidth: mockHeroData.heroImage.width,
@@ -86,10 +86,10 @@ async function main() {
       paragraphs: mockAboutData.paragraphs,
       ctaLabel: mockAboutData.cta.label,
       ctaHref: mockAboutData.cta.href,
-      highlights: mockAboutData.highlights,
+      highlights: mockAboutData.highlights as unknown as Prisma.InputJsonValue,
       taglineBadge: mockAboutData.taglineBadge ?? "Licensed & Reliable",
       secondaryBadge: mockAboutData.secondaryBadge ?? "Dubai-Wide Service",
-      images: mockAboutData.images,
+      images: mockAboutData.images as unknown as Prisma.InputJsonValue,
       equipment: mockAboutData.equipment
     }
   });
@@ -218,13 +218,13 @@ async function main() {
         heroImageWidth: page.heroImage?.width ?? null,
         heroImageHeight: page.heroImage?.height ?? null,
         servicesSectionTitle: page.servicesSectionTitle,
-        servicesList: page.servicesList,
+        servicesList: page.servicesList ?? [],
         featuredBlockTitle: page.featuredBlockTitle,
-        featuredBlockText: page.featuredBlockText,
+        featuredBlockText: page.featuredBlockText as unknown as Prisma.InputJsonValue,
         nearYouTitle: page.nearYouTitle,
         nearYouText: page.nearYouText,
         finalCtaTitle: page.finalCtaTitle,
-        faqs: page.faqs,
+        faqs: page.faqs as unknown as Prisma.InputJsonValue,
         order: 0,
         isActive: true
       }
@@ -240,8 +240,8 @@ async function main() {
       create: {
         id: t.id,
         name: t.name,
-        location: t.location,
-        service: t.service,
+        location: t.location ?? "Dubai",
+        service: t.service ?? "Deep Cleaning",
         rating: t.rating,
         quote: t.review,
         avatarSrc: t.avatar ?? null,

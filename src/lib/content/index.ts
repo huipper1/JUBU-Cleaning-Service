@@ -1,8 +1,11 @@
+import { env } from "@/env";
 import { mockContentRepository } from "./mock/repository";
+import { prismaContentRepository } from "./prisma/repository";
 import type { ContentRepository } from "./repository";
 
-// Active repository instance (can be swapped in the future with CMS/API without component changes)
-export const contentRepository: ContentRepository = mockContentRepository;
+// Dynamic content repository controlled by environment variable
+export const contentRepository: ContentRepository =
+  env.CONTENT_SOURCE === "prisma" ? prismaContentRepository : mockContentRepository;
 
 // Helper accessor functions
 export async function getSettings() {
