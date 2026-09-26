@@ -11,9 +11,15 @@ import { Icon, SectionHeading } from "@/ui";
 
 interface ServicesProps {
   services: Service[];
+  title?: string;
+  description?: string;
 }
 
-export function Services({ services }: ServicesProps) {
+export function Services({
+  services,
+  title = "Cleaning Solutions for Every Space",
+  description = "From deep home sanitization to specialized commercial cleaning, Our trained cleaning team delivers reliable and professional cleaning results with care and attention to detail."
+}: ServicesProps) {
   const handleSelectService = (serviceId: string) => {
     if (typeof window !== "undefined") {
       // Dispatch custom event for the QuoteForm listener
@@ -32,8 +38,8 @@ export function Services({ services }: ServicesProps) {
         {/* Section Header */}
         <SectionHeading
           badge="OUR SERVICES"
-          title="Cleaning Solutions for Every Space"
-          description="From deep home sanitization to specialized commercial cleaning, Our trained cleaning team delivers reliable and professional cleaning results with care and attention to detail."
+          title={title}
+          description={description}
         />
 
         {/* 6 Services Grid matching reference split card style */}

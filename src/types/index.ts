@@ -1,6 +1,9 @@
 export type {
   AboutContent,
   AboutHighlightItem,
+  AreaLandingPage,
+  FaqItem,
+  FeaturedContentBlock,
   GalleryItem,
   HeroContent,
   ImageItem,

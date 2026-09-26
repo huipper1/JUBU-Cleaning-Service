@@ -36,10 +36,21 @@ interface ServiceAreasProps {
   areas: ServiceArea[];
   whatsappUrl: string;
   settings?: SiteSettings;
+  initialActiveAreaId?: string;
+  headline?: string;
+  nearYouText?: string;
 }
 
-export function ServiceAreas({ areas, settings }: ServiceAreasProps) {
-  const [activeId, setActiveId] = useState<string | null>(null);
+export function ServiceAreas({
+  areas,
+  settings,
+  initialActiveAreaId,
+  headline,
+  nearYouText
+}: ServiceAreasProps) {
+  const [activeId, setActiveId] = useState<string | null>(
+    initialActiveAreaId ?? null
+  );
 
   const handleAreaClick = (id: string) => {
     setActiveId((prev) => (prev === id ? null : id));
@@ -108,12 +119,13 @@ export function ServiceAreas({ areas, settings }: ServiceAreasProps) {
 
             {/* Headline matching site theme */}
             <h2 className="text-3xl font-black tracking-tight text-[#0a1e3b] sm:text-4xl lg:text-[2.6rem] lg:leading-[1.18]">
-              Professional Cleaning Services Across Dubai
+              {headline || "Professional Cleaning Services Across Dubai"}
             </h2>
 
             {/* Introductory Paragraph matching site theme */}
             <p className="mt-4 text-xs leading-relaxed text-[#4a5f78] sm:text-sm lg:text-[14px]">
-              We understand the challenges of keeping residential homes and commercial spaces spotless in Dubai. Our dedicated JUBU cleaning team provides reliable, licensed cleaning services tailored to your schedule. Whether you need deep cleaning, move-in sanitization, or regular home upkeep, we bring professional equipment and free custom quotes directly to you.
+              {nearYouText ||
+                "We understand the challenges of keeping residential homes and commercial spaces spotless in Dubai. Our dedicated JUBU cleaning team provides reliable, licensed cleaning services tailored to your schedule. Whether you need deep cleaning, move-in sanitization, or regular home upkeep, we bring professional equipment and free custom quotes directly to you."}
             </p>
 
             {/* 2x2 Soft Feature Cards matching site theme */}

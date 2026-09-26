@@ -34,11 +34,18 @@ import { env } from "@/env";
 interface QuoteFormProps {
   services: Service[];
   settings: SiteSettings;
+  sourceArea?: string;
+  finalCtaTitle?: string;
 }
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
-export function QuoteForm({ services, settings }: QuoteFormProps) {
+export function QuoteForm({
+  services,
+  settings,
+  sourceArea = "main-page",
+  finalCtaTitle
+}: QuoteFormProps) {
   const [formData, setFormData] = useState<CreateLeadInput>(() => ({
     fullName: "",
     mobile: "",
@@ -50,6 +57,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
     message: "",
     whatsappOptIn: true,
     honeypot: "",
+    sourceArea,
     utmSource: "",
     utmMedium: "",
     utmCampaign: "",
@@ -154,6 +162,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
       typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
     const fullPayload: CreateLeadInput = {
       ...formData,
+      sourceArea: formData.sourceArea || sourceArea,
       utmSource: searchParams?.get("utm_source") ?? formData.utmSource,
       utmMedium: searchParams?.get("utm_medium") ?? formData.utmMedium,
       utmCampaign: searchParams?.get("utm_campaign") ?? formData.utmCampaign,
@@ -195,6 +204,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
     const pageUrl =
       (env.NEXT_PUBLIC_SITE_URL ?? "") +
       (typeof window !== "undefined" ? window.location.pathname : "/");
+    const activeSourceArea = fullPayload.sourceArea || sourceArea || "main-page";
 
     // Build plain-text WhatsApp message per spec
     const waMessage = [
@@ -208,7 +218,7 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
       `Preferred Date: ${submittedPreferredDate}`,
       `Details: ${submittedMessage}`,
       `Contact: ${contactPreference}`,
-      `Source: ${utmSource} / ${utmCampaign}`,
+      `Source: ${activeSourceArea} (${utmSource} / ${utmCampaign})`,
       `Page: ${pageUrl}`
     ].join("\n");
 
@@ -284,11 +294,18 @@ export function QuoteForm({ services, settings }: QuoteFormProps) {
               <span>CLEANER SPACES • BRIGHTER LIVES</span>
             </span>
 
-            <h2 className="mb-4 flex flex-wrap items-center gap-2 text-3xl leading-tight font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
-              <span>Get a Free Quote</span>
-              <span className="text-brand-sky">Today</span>
-              <span className="inline-block h-1 w-12 rounded-full bg-brand-green sm:w-16" />
-            </h2>
+            {finalCtaTitle ? (
+              <h2 className="mb-4 flex flex-wrap items-center gap-2 text-3xl leading-tight font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <span>{finalCtaTitle}</span>
+                <span className="inline-block h-1 w-12 rounded-full bg-brand-green sm:w-16" />
+              </h2>
+            ) : (
+              <h2 className="mb-4 flex flex-wrap items-center gap-2 text-3xl leading-tight font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <span>Get a Free Quote</span>
+                <span className="text-brand-sky">Today</span>
+                <span className="inline-block h-1 w-12 rounded-full bg-brand-green sm:w-16" />
+              </h2>
+            )}
 
             <p className="mb-8 max-w-lg text-sm leading-relaxed font-normal text-slate-200 sm:text-base">
               Tell us your cleaning needs and we&apos;ll provide the best solution for your space,

@@ -3,6 +3,9 @@ import { z } from "zod";
 import type {
   AboutContent,
   AboutHighlightItem,
+  AreaLandingPage,
+  FaqItem,
+  FeaturedContentBlock,
   GalleryItem,
   HeroContent,
   ImageItem,
@@ -185,6 +188,43 @@ export const serviceAreaSchema = z.object({
   updatedAt: z.string().min(1)
 });
 
+// FAQ Item Schema
+export const faqItemSchema = z.object({
+  question: z.string().min(1),
+  answer: z.string().min(1)
+});
+
+// Featured Content Block Schema
+export const featuredContentBlockSchema = z.object({
+  title: z.string().min(1),
+  text: z.string().min(1)
+});
+
+// Area Landing Page Schema
+export const areaLandingPageSchema = z.object({
+  id: z.string().min(1),
+  slug: z.string().min(1),
+  areaName: z.string().min(1),
+  metaTitle: z.string().min(1),
+  metaDescription: z.string().min(1),
+  heroHeadline: z.string().min(1),
+  heroIntro: z.string().min(1),
+  heroImage: imageSchema.optional(),
+  servicesSectionTitle: z.string().min(1),
+  servicesList: z.array(z.string().min(1)).optional(),
+  featuredBlockTitle: z.string().min(1),
+  featuredBlockText: z.union([
+    z.string().min(1),
+    z.array(featuredContentBlockSchema).min(1)
+  ]),
+  nearYouTitle: z.string().min(1),
+  nearYouText: z.string().min(1),
+  finalCtaTitle: z.string().min(1),
+  faqs: z.array(faqItemSchema),
+  isActive: z.boolean(),
+  order: z.number().int().nonnegative()
+});
+
 // International phone regex: accepts 7-15 digits, optional +, spaces, dashes, parentheses
 export const phoneRegex = /^[+]?[\d\s\-().]{7,20}$/;
 
@@ -223,6 +263,7 @@ export const createLeadInputSchema = z.object({
   message: z.string().max(1000, "Message is too long").optional(),
   whatsappOptIn: z.boolean().default(true),
   honeypot: z.string().max(0, "Bot detected").optional(),
+  sourceArea: z.string().optional(),
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),
   utmCampaign: z.string().optional(),
@@ -235,7 +276,10 @@ export const createLeadInputSchema = z.object({
 export type {
   AboutContent,
   AboutHighlightItem,
+  AreaLandingPage,
   CreateLeadInput,
+  FaqItem,
+  FeaturedContentBlock,
   GalleryItem,
   HeroContent,
   ImageItem,

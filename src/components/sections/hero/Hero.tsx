@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight, Check, MessageCircle, ShieldCheck, Star, Users, Wrench } from "lucide-react";
+import { ArrowRight, Check, MessageCircle, ShieldCheck, Users, Wrench } from "lucide-react";
 
 import type { HeroContent } from "@/types/content";
 
@@ -9,6 +9,10 @@ interface HeroProps {
   content: HeroContent;
   phoneTel?: string;
   phoneDisplay?: string;
+  headline?: string;
+  intro?: string;
+  heroImage?: import("@/types/content").ImageItem;
+  socialProofText?: string;
 }
 
 // Avatars for social proof (real customer portraits)
@@ -35,7 +39,22 @@ const SOCIAL_PROOF_AVATARS = [
   }
 ];
 
-export function Hero({ content }: HeroProps) {
+export function Hero({
+  content,
+  headline,
+  intro,
+  heroImage,
+  socialProofText
+}: HeroProps) {
+  const displayImage = heroImage || content.heroImage || {
+    src: "/images/placeholder/hero-cleaner.png",
+    alt: "JUBU Professional Cleaner in uniform with spray bottle and microfibre cloth",
+    width: 800,
+    height: 950
+  };
+
+  const displayIntro = intro || content.subheadline;
+
   return (
     <section
       id="top"
@@ -57,17 +76,23 @@ export function Hero({ content }: HeroProps) {
             </div> */}
 
             {/* Main Headline */}
-            <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
-              Professional Cleaning <br className="hidden sm:inline" />
-              Services in{" "}
-              <span className="relative inline-block text-[#34d399]">
-                Dubai
-              </span>
-            </h1>
+            {headline ? (
+              <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
+                {headline}
+              </h1>
+            ) : (
+              <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
+                Professional Cleaning <br className="hidden sm:inline" />
+                Services in{" "}
+                <span className="relative inline-block text-[#34d399]">
+                  Dubai
+                </span>
+              </h1>
+            )}
 
             {/* Subheadline description */}
             <p className="mb-8 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base lg:text-left">
-              {content.subheadline}
+              {displayIntro}
             </p>
 
             {/* Trust Badges: Licensed in Dubai, Professional Equipment, Reliable Service */}
@@ -146,7 +171,7 @@ export function Hero({ content }: HeroProps) {
                 ))}
               </div>
               <p className="text-xs font-semibold text-slate-200 sm:text-sm">
-                Serving 10 major residential & commercial areas in Dubai
+                {socialProofText || "Serving 10 major residential & commercial areas in Dubai"}
               </p>
             </div>
 
@@ -177,10 +202,10 @@ export function Hero({ content }: HeroProps) {
 
               {/* Central Cleaner Cutout Photo: Enlarged and touching bottom of hero */}
               <Image
-                src="/images/placeholder/hero-cleaner.png"
-                alt="JUBU Professional Cleaner in uniform with spray bottle and microfibre cloth"
-                width={800}
-                height={950}
+                src={displayImage.src}
+                alt={displayImage.alt}
+                width={displayImage.width || 800}
+                height={displayImage.height || 950}
                 priority
                 className="relative z-10 block h-auto w-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
               />

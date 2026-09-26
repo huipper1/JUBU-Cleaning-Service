@@ -41,5 +41,15 @@ export async function getTestimonials() {
   return contentRepository.getTestimonials();
 }
 
+export async function getAreaLandingPages() {
+  return contentRepository.getAreaLandingPages();
+}
+
+export async function getAreaLandingPage(slug: string) {
+  return contentRepository.getAreaLandingPage(slug);
+}
+
+export * from "./mock/data/area-landing-pages";
 export * from "./repository";
 export * from "./types";
+

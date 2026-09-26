@@ -1,5 +1,6 @@
 import type {
   AboutContent,
+  AreaLandingPage,
   GalleryItem,
   HeroContent,
   Service,
@@ -19,4 +20,7 @@ export interface ContentRepository {
   getGallery(): Promise<GalleryItem[]>;
   getAreas(): Promise<ServiceArea[]>;
   getTestimonials(): Promise<import("@/types/testimonial").TestimonialItem[]>;
+  getAreaLandingPages(): Promise<AreaLandingPage[]>;
+  getAreaLandingPage(slug: string): Promise<AreaLandingPage | null>;
 }
+

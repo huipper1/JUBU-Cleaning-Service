@@ -151,3 +151,34 @@ export interface ServiceArea {
   updatedAt: string;
 }
 
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface FeaturedContentBlock {
+  title: string;
+  text: string;
+}
+
+export interface AreaLandingPage {
+  id: string;
+  slug: string;
+  areaName: string;
+  metaTitle: string;
+  metaDescription: string;
+  heroHeadline: string;
+  heroIntro: string;
+  heroImage?: ImageItem;
+  servicesSectionTitle: string;
+  servicesList?: string[];
+  featuredBlockTitle: string;
+  featuredBlockText: string | FeaturedContentBlock[];
+  nearYouTitle: string;
+  nearYouText: string;
+  finalCtaTitle: string;
+  faqs: FaqItem[];
+  isActive: boolean;
+  order: number;
+}
+

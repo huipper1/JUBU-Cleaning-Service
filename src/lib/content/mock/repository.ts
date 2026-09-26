@@ -1,5 +1,6 @@
 import type {
   AboutContent,
+  AreaLandingPage,
   GalleryItem,
   HeroContent,
   Service,
@@ -12,6 +13,7 @@ import type {
 import type { ContentRepository } from "@/lib/content/repository";
 
 import { mockAboutData } from "./data/about";
+import { mockAreaLandingPagesData } from "./data/area-landing-pages";
 import { mockAreasData } from "./data/areas";
 import { mockGalleryData } from "./data/gallery";
 import { mockHeroData } from "./data/hero";
@@ -67,6 +69,22 @@ export class MockContentRepository implements ContentRepository {
   async getTestimonials(): Promise<import("@/types/testimonial").TestimonialItem[]> {
     return Promise.resolve(mockTestimonialsData);
   }
+
+  async getAreaLandingPages(): Promise<AreaLandingPage[]> {
+    return Promise.resolve(
+      mockAreaLandingPagesData
+        .filter((page) => page.isActive)
+        .sort((a, b) => a.order - b.order)
+    );
+  }
+
+  async getAreaLandingPage(slug: string): Promise<AreaLandingPage | null> {
+    const page = mockAreaLandingPagesData.find(
+      (p) => p.slug === slug && p.isActive
+    );
+    return Promise.resolve(page ?? null);
+  }
 }
 
 export const mockContentRepository = new MockContentRepository();
+

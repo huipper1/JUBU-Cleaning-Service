@@ -11,6 +11,7 @@ export interface Lead {
   preferredDate?: string;
   message?: string;
   whatsappOptIn: boolean;
+  sourceArea?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -32,6 +33,7 @@ export interface CreateLeadInput {
   message?: string;
   whatsappOptIn?: boolean;
   honeypot?: string;
+  sourceArea?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
