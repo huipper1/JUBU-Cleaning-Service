@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { ShieldCheck, CheckCircle2, XCircle, Edit2, Save, X, Loader2 } from "lucide-react";
+import { ShieldCheck, CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
 import { toggleWhyChooseActiveAction, updateWhyChooseAction } from "./actions";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface WhyChooseItem {
   id: string;
@@ -28,12 +32,18 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
 
   const handleToggle = async (item: WhyChooseItem) => {
     const nextVal = !item.isActive;
-    setItems(items.map((i) => (i.id === item.id ? { ...i, isActive: nextVal } : i)));
+    setItems(
+      items.map((i) => (i.id === item.id ? { ...i, isActive: nextVal } : i))
+    );
 
     const res = await toggleWhyChooseActiveAction(item.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
-      setItems(items.map((i) => (i.id === item.id ? { ...i, isActive: !nextVal } : i)));
+      setItems(
+        items.map((i) =>
+          i.id === item.id ? { ...i, isActive: !nextVal } : i
+        )
+      );
     } else {
       toast.success(`${item.title} is now ${nextVal ? "active" : "disabled"}`);
     }
@@ -53,7 +63,7 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
         title: editTitle,
         description: editDesc,
         order: editOrder,
-        isActive: item.isActive
+        isActive: item.isActive,
       });
 
       if (res.success) {
@@ -64,7 +74,7 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
                   ...i,
                   title: editTitle,
                   description: editDesc,
-                  order: editOrder
+                  order: editOrder,
                 }
               : i
           )
@@ -80,109 +90,121 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl pb-12">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Why Choose Us Highlights</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Edit the 4 core trust pillars displayed across the website.
-          </p>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {items.map((item) => {
+        const isEdit = editingId === item.id;
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {items.map((item) => {
-          const isEdit = editingId === item.id;
-
-          return (
-            <div
-              key={item.id}
-              className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 backdrop-blur-xl flex flex-col justify-between"
-            >
+        return (
+          <Card key={item.id} className="flex flex-col justify-between">
+            <CardContent className="p-5">
               {isEdit ? (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white text-xs">Editing #{item.order}</span>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between pb-2 border-b">
+                    <span className="font-semibold text-foreground text-xs">
+                      Editing Pillar #{item.order}
+                    </span>
                     <div className="flex items-center gap-1.5">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setEditingId(null)}
-                        className="rounded-lg p-1 text-slate-400 hover:text-white"
                       >
-                        <X className="h-4 w-4" />
-                      </button>
-                      <button
+                        <X className="size-4" />
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
                         onClick={() => handleSave(item)}
                         disabled={isSaving}
-                        className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
                       >
-                        {isSaving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                        {isSaving ? (
+                          <Loader2 className="size-3.5 animate-spin mr-1" />
+                        ) : (
+                          <Save className="size-3.5 mr-1" />
+                        )}
                         <span>Save</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-medium text-slate-300">Title</label>
-                    <input
-                      type="text"
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-foreground">
+                      Title
+                    </label>
+                    <Input
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-medium text-slate-300">Description</label>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-foreground">
+                      Description
+                    </label>
                     <textarea
                       rows={3}
                       value={editDesc}
                       onChange={(e) => setEditDesc(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                     />
                   </div>
                 </div>
               ) : (
-                <div>
+                <div className="flex flex-col gap-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-800/80 text-emerald-400">
-                        <ShieldCheck className="h-4 w-4" />
+                      <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <ShieldCheck className="size-4" />
                       </div>
-                      <div>
-                        <h3 className="text-sm font-semibold text-white">{item.title}</h3>
-                        <span className="text-[10px] text-slate-500 font-mono">Order #{item.order}</span>
+                      <div className="flex flex-col">
+                        <h3 className="text-sm font-semibold text-foreground">
+                          {item.title}
+                        </h3>
+                        <span className="text-[10px] text-muted-foreground font-mono">
+                          Order #{item.order}
+                        </span>
                       </div>
                     </div>
 
-                    <button
+                    <Button
+                      variant={item.isActive ? "secondary" : "outline"}
+                      size="sm"
                       onClick={() => handleToggle(item)}
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                        item.isActive
-                          ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                          : "bg-red-500/10 text-red-400 ring-1 ring-red-500/20"
-                      }`}
                     >
-                      {item.isActive ? "Active" : "Disabled"}
-                    </button>
+                      {item.isActive ? (
+                        <>
+                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
+                          <span>Active</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
+                          <span>Disabled</span>
+                        </>
+                      )}
+                    </Button>
                   </div>
 
-                  <p className="mt-3 text-xs text-slate-300 leading-relaxed">{item.description}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
 
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex justify-end">
-                    <button
+                  <div className="pt-2 border-t flex justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => startEdit(item)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-800/60 px-3 py-1 text-xs text-slate-300 hover:text-white"
                     >
-                      <Edit2 className="h-3 w-3" />
+                      <Pencil className="size-3.5 mr-1" />
                       <span>Edit</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
-            </div>
-          );
-        })}
-      </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

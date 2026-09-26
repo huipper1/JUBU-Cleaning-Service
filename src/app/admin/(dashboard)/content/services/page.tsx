@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/db/prisma";
 import { ServicesClient } from "./ServicesClient";
+import { AdminPageHeader } from "@/components/admin/page-header";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminServicesPage() {
   const dbServices = await prisma.service.findMany({
-    orderBy: { order: "asc" }
+    orderBy: { order: "asc" },
   });
 
   const serialized = dbServices.map((s) => ({
@@ -18,8 +19,16 @@ export default async function AdminServicesPage() {
     imageSrc: s.imageSrc,
     imageAlt: s.imageAlt,
     order: s.order,
-    isActive: s.isActive
+    isActive: s.isActive,
   }));
 
-  return <ServicesClient initialServices={serialized} />;
+  return (
+    <div className="flex flex-col gap-6">
+      <AdminPageHeader
+        title="Services Management"
+        description="Edit cleaning service titles, descriptions, display order, and live visibility."
+      />
+      <ServicesClient initialServices={serialized} />
+    </div>
+  );
 }

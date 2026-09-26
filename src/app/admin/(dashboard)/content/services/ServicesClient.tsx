@@ -4,15 +4,18 @@ import { useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import {
-  Layers,
-  CheckCircle2,
-  XCircle,
-  Edit2,
   Save,
   X,
-  Loader2
+  Loader2,
+  CheckCircle2,
+  XCircle,
+  Pencil,
 } from "lucide-react";
 import { toggleServiceActiveAction, updateServiceAction } from "./actions";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface ServiceItem {
   id: string;
@@ -42,12 +45,20 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
 
   const handleToggle = async (s: ServiceItem) => {
     const nextVal = !s.isActive;
-    setServices(services.map((item) => (item.id === s.id ? { ...item, isActive: nextVal } : item)));
+    setServices(
+      services.map((item) =>
+        item.id === s.id ? { ...item, isActive: nextVal } : item
+      )
+    );
 
     const res = await toggleServiceActiveAction(s.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
-      setServices(services.map((item) => (item.id === s.id ? { ...item, isActive: !nextVal } : item)));
+      setServices(
+        services.map((item) =>
+          item.id === s.id ? { ...item, isActive: !nextVal } : item
+        )
+      );
     } else {
       toast.success(`${s.title} is now ${nextVal ? "active" : "disabled"}`);
     }
@@ -69,7 +80,7 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
         shortDescription: editShortDesc,
         longDescription: editLongDesc || undefined,
         order: editOrder,
-        isActive: s.isActive
+        isActive: s.isActive,
       });
 
       if (res.success) {
@@ -81,7 +92,7 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
                   title: editTitle,
                   shortDescription: editShortDesc,
                   longDescription: editLongDesc || undefined,
-                  order: editOrder
+                  order: editOrder,
                 }
               : item
           )
@@ -97,93 +108,86 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Services Management</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Edit cleaning service titles, descriptions, display order, and live status.
-          </p>
-        </div>
-      </div>
+    <div className="flex flex-col gap-4">
+      {services.map((s) => {
+        const isEdit = editingId === s.id;
 
-      <div className="grid grid-cols-1 gap-5">
-        {services.map((s) => {
-          const isEdit = editingId === s.id;
-
-          return (
-            <div
-              key={s.id}
-              className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl"
-            >
+        return (
+          <Card key={s.id}>
+            <CardContent className="p-6">
               {isEdit ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white">Editing {s.title}</span>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between pb-2 border-b">
+                    <span className="font-semibold text-foreground">
+                      Editing: {s.title}
+                    </span>
                     <div className="flex items-center gap-2">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setEditingId(null)}
-                        className="rounded-lg p-1.5 text-slate-400 hover:text-white"
                       >
-                        <X className="h-4 w-4" />
-                      </button>
-                      <button
+                        <X className="size-4" />
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
                         onClick={() => handleSave(s)}
                         disabled={isSaving}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
                       >
                         {isSaving ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          <Loader2 className="size-3.5 animate-spin" />
                         ) : (
-                          <Save className="h-3.5 w-3.5" />
+                          <Save className="size-3.5" />
                         )}
-                        <span>Save</span>
-                      </button>
+                        <span>Save Changes</span>
+                      </Button>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-medium text-slate-300">Title</label>
-                      <input
-                        type="text"
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-foreground">
+                        Title
+                      </label>
+                      <Input
                         value={editTitle}
                         onChange={(e) => setEditTitle(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-medium text-slate-300">Display Order</label>
-                      <input
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-medium text-foreground">
+                        Display Order
+                      </label>
+                      <Input
                         type="number"
                         value={editOrder}
                         onChange={(e) => setEditOrder(Number(e.target.value))}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </div>
 
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium text-slate-300">
+                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                      <label className="text-xs font-medium text-foreground">
                         Short Description
                       </label>
                       <textarea
                         rows={2}
                         value={editShortDesc}
                         onChange={(e) => setEditShortDesc(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                        className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                       />
                     </div>
 
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium text-slate-300">
+                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                      <label className="text-xs font-medium text-foreground">
                         Long Description
                       </label>
                       <textarea
                         rows={3}
                         value={editLongDesc}
                         onChange={(e) => setEditLongDesc(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                        className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                       />
                     </div>
                   </div>
@@ -191,7 +195,7 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
               ) : (
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-start gap-4">
-                    <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+                    <div className="relative size-16 shrink-0 overflow-hidden rounded-lg border bg-muted">
                       <Image
                         src={s.imageSrc}
                         alt={s.imageAlt}
@@ -199,54 +203,58 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
                         className="object-cover"
                       />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-white">{s.title}</span>
-                        <span className="font-mono text-[10px] text-slate-500">/{s.slug}</span>
-                        <span className="rounded-md bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
-                          #{s.order}
+                        <span className="font-semibold text-foreground">
+                          {s.title}
                         </span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          /{s.slug}
+                        </span>
+                        <Badge variant="outline" className="text-[10px]">
+                          Order #{s.order}
+                        </Badge>
                       </div>
-                      <p className="mt-1 text-xs text-slate-300 line-clamp-2">{s.shortDescription}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {s.shortDescription}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 self-end sm:self-center">
-                    <button
+                  <div className="flex items-center gap-2 self-end sm:self-center">
+                    <Button
+                      variant={s.isActive ? "secondary" : "outline"}
+                      size="sm"
                       onClick={() => handleToggle(s)}
-                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                        s.isActive
-                          ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                          : "bg-red-500/10 text-red-400 ring-1 ring-red-500/20"
-                      }`}
                     >
                       {s.isActive ? (
                         <>
-                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
                           <span>Active</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="h-3.5 w-3.5" />
+                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
                           <span>Disabled</span>
                         </>
                       )}
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => startEdit(s)}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-800/60 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white"
                     >
-                      <Edit2 className="h-3.5 w-3.5" />
+                      <Pencil className="size-3.5 mr-1" />
                       <span>Edit</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
-            </div>
-          );
-        })}
-      </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }
