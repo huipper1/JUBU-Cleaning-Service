@@ -25,6 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 
 interface AreaLandingPageEditorProps {
   pageData: {
@@ -35,6 +36,8 @@ interface AreaLandingPageEditorProps {
     metaDescription: string;
     heroHeadline: string;
     heroIntro: string;
+    heroImageSrc?: string;
+    heroImageAlt?: string;
     servicesSectionTitle: string;
     servicesList: string[];
     featuredBlockTitle: string;
@@ -57,6 +60,8 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
   const [metaDescription, setMetaDescription] = useState(pageData.metaDescription);
   const [heroHeadline, setHeroHeadline] = useState(pageData.heroHeadline);
   const [heroIntro, setHeroIntro] = useState(pageData.heroIntro);
+  const [heroImageSrc, setHeroImageSrc] = useState(pageData.heroImageSrc || "");
+  const [heroImageAlt, setHeroImageAlt] = useState(pageData.heroImageAlt || "");
   const [servicesSectionTitle, setServicesSectionTitle] = useState(pageData.servicesSectionTitle);
   const [servicesList, setServicesList] = useState<string[]>(pageData.servicesList);
   const [newServiceItem, setNewServiceItem] = useState("");
@@ -108,6 +113,8 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
         metaDescription,
         heroHeadline,
         heroIntro,
+        heroImageSrc: heroImageSrc || undefined,
+        heroImageAlt: heroImageAlt || undefined,
         servicesSectionTitle,
         servicesList,
         featuredBlockTitle,
@@ -135,10 +142,10 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-5xl pb-12">
+    <div className="flex flex-col gap-6 pb-12">
       <AdminPageHeader
         title={`${pageData.areaName} Landing Page`}
-        description={`Customize ad landing headlines, local copy, services list, and FAQs for /${pageData.slug}`}
+        description={`Customize ad landing headlines, images, local copy, services list, and FAQs for /${pageData.slug}`}
       >
         <Button variant="outline" size="sm" asChild>
           <Link href="/admin/content/landing-pages">
@@ -199,6 +206,29 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                   onChange={(e) => setHeroIntro(e.target.value)}
                   className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                 />
+              </div>
+
+              {/* Area Cutout/Hero Image */}
+              <div className="pt-3 border-t flex flex-col gap-3">
+                <ImageCropUploader
+                  currentImageUrl={heroImageSrc}
+                  folder="areas"
+                  label="Area Hero Cleaner Photo / Cutout (Leave empty to use main default)"
+                  onUploadComplete={(url) => setHeroImageSrc(url)}
+                />
+
+                {heroImageSrc && (
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-medium text-foreground">
+                      Hero Image Alt Text
+                    </label>
+                    <Input
+                      value={heroImageAlt}
+                      onChange={(e) => setHeroImageAlt(e.target.value)}
+                      placeholder="e.g. Professional cleaners in Business Bay Dubai"
+                    />
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

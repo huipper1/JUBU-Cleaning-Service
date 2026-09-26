@@ -5,6 +5,7 @@ import { env } from "@/env";
 import {
   getAbout,
   getAreaLandingPage,
+  getAreaLandingPages,
   getAreas,
   getGallery,
   getHero,
@@ -12,8 +13,6 @@ import {
   getSettings,
   getTeam,
   getWhyChoose,
-  isValidAreaSlug,
-  VALID_AREA_SLUGS
 } from "@/lib/content";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
@@ -37,21 +36,17 @@ interface AreaPageProps {
   }>;
 }
 
-// 1. Static generation for the 5 client-specified area slugs
+// 1. Static generation for existing area landing pages
 export async function generateStaticParams() {
-  return VALID_AREA_SLUGS.map((slug) => ({
-    area: slug
+  const pages = await getAreaLandingPages();
+  return pages.map((p) => ({
+    area: p.slug
   }));
 }
 
 // 2. SEO Metadata per area page
 export async function generateMetadata({ params }: AreaPageProps): Promise<Metadata> {
   const { area } = await params;
-
-  if (!isValidAreaSlug(area)) {
-    return {};
-  }
-
   const areaData = await getAreaLandingPage(area);
   if (!areaData || !areaData.isActive) {
     return {};
@@ -85,12 +80,6 @@ export async function generateMetadata({ params }: AreaPageProps): Promise<Metad
 // 3. Dynamic Area Landing Page Handler
 export default async function AreaPage({ params }: AreaPageProps) {
   const { area } = await params;
-
-  // Strict allow-list check: 404 cleanly on invalid slugs
-  if (!isValidAreaSlug(area)) {
-    notFound();
-  }
-
   const areaData = await getAreaLandingPage(area);
   if (!areaData || !areaData.isActive) {
     notFound();

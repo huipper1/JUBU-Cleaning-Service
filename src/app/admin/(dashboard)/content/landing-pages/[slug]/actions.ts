@@ -9,6 +9,8 @@ export interface UpdateAreaLandingPageData {
   metaDescription: string;
   heroHeadline: string;
   heroIntro: string;
+  heroImageSrc?: string;
+  heroImageAlt?: string;
   servicesSectionTitle: string;
   servicesList: string[];
   featuredBlockTitle: string;
@@ -32,6 +34,10 @@ export async function updateAreaLandingPageAction(
         metaDescription: data.metaDescription,
         heroHeadline: data.heroHeadline,
         heroIntro: data.heroIntro,
+        heroImageSrc: data.heroImageSrc || null,
+        heroImageAlt: data.heroImageAlt || (data.heroImageSrc ? `${data.heroHeadline} in Dubai` : null),
+        heroImageWidth: data.heroImageSrc ? 800 : null,
+        heroImageHeight: data.heroImageSrc ? 600 : null,
         servicesSectionTitle: data.servicesSectionTitle,
         servicesList: data.servicesList,
         featuredBlockTitle: data.featuredBlockTitle,
@@ -48,6 +54,7 @@ export async function updateAreaLandingPageAction(
     revalidatePath(`/${slug}`);
     revalidatePath("/[area]", "page");
     revalidatePath("/");
+    revalidatePath("/admin/content/landing-pages");
 
     return { success: true };
   } catch (err: unknown) {

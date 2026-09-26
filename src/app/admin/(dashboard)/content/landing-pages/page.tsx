@@ -13,6 +13,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+import { CreateAreaLandingPageDialog } from "./CreateAreaLandingPageDialog";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminAreaLandingPagesHub() {
@@ -25,7 +27,9 @@ export default async function AdminAreaLandingPagesHub() {
       <AdminPageHeader
         title="Area Landing Pages (Ad Targets)"
         description="Dedicated landing pages designed for Google and Facebook Ads campaigns with area-targeted copy."
-      />
+      >
+        <CreateAreaLandingPageDialog />
+      </AdminPageHeader>
 
       {/* Pages Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

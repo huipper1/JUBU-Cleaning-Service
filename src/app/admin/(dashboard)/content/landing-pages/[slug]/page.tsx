@@ -29,6 +29,8 @@ export default async function AdminAreaLandingPageEditPage({
     metaDescription: page.metaDescription,
     heroHeadline: page.heroHeadline,
     heroIntro: page.heroIntro,
+    heroImageSrc: page.heroImageSrc ?? undefined,
+    heroImageAlt: page.heroImageAlt ?? undefined,
     servicesSectionTitle: page.servicesSectionTitle,
     servicesList: page.servicesList,
     featuredBlockTitle: page.featuredBlockTitle,
