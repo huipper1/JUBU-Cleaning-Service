@@ -253,61 +253,98 @@ async function main() {
   }
 
   // 11. Admin User Seeding (Credentials from .env)
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@jubucleaning.ae";
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@jubucleaning.ae").toLowerCase().trim();
   const adminPassword = process.env.ADMIN_PASSWORD || "Admin@JubuCleaning2026!";
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   console.log(`Seeding Admin User (${adminEmail})...`);
 
-  let supabaseUid: string | null = null;
+  // Remove any stale admin users from Prisma and Supabase auth to ensure clean credentials
+  await prisma.adminUser.deleteMany();
 
-  if (supabaseUrl && supabaseAnonKey) {
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: { persistSession: false, autoRefreshToken: false }
-    });
+  // Create confirmed Supabase Auth user directly via PostgreSQL with crypt()
+  await prisma.$executeRawUnsafe(`
+    DELETE FROM auth.users WHERE LOWER(email) = LOWER('${adminEmail}');
+  `);
 
-    // Try signing up or signing in to ensure credentials work in Supabase Auth
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email: adminEmail,
-      password: adminPassword,
-      options: {
-        data: {
-          fullName: "JUBU Admin"
-        }
-      }
-    });
+  const users: Array<{ id: string }> = await prisma.$queryRawUnsafe(`
+    INSERT INTO auth.users (
+      instance_id,
+      id,
+      aud,
+      role,
+      email,
+      encrypted_password,
+      email_confirmed_at,
+      recovery_sent_at,
+      last_sign_in_at,
+      raw_app_meta_data,
+      raw_user_meta_data,
+      created_at,
+      updated_at,
+      confirmation_token,
+      email_change,
+      email_change_token_new,
+      recovery_token
+    ) VALUES (
+      '00000000-0000-0000-0000-000000000000',
+      gen_random_uuid(),
+      'authenticated',
+      'authenticated',
+      '${adminEmail}',
+      crypt('${adminPassword}', gen_salt('bf')),
+      NOW(),
+      NOW(),
+      NOW(),
+      '{"provider":"email","providers":["email"]}'::jsonb,
+      '{"full_name":"JUBU Admin"}'::jsonb,
+      NOW(),
+      NOW(),
+      '',
+      '',
+      '',
+      ''
+    )
+    RETURNING id;
+  `);
 
-    if (signUpData?.user) {
-      supabaseUid = signUpData.user.id;
-    } else if (signUpError) {
-      // User may already exist in Supabase Auth; verify by signing in
-      const { data: signInData } = await supabase.auth.signInWithPassword({
-        email: adminEmail,
-        password: adminPassword
-      });
-      if (signInData?.user) {
-        supabaseUid = signInData.user.id;
-      }
-    }
-  }
+  const supabaseUid = users[0]?.id;
 
-  // If Supabase Auth is not directly queryable or already configured, check existing AdminUser or generate UUID
   if (!supabaseUid) {
-    const existing = await prisma.adminUser.findUnique({
-      where: { email: adminEmail }
-    });
-    supabaseUid = existing?.supabaseUid || "5d6cfdca-0a0b-4490-8b2f-a0b6ed0a1c8e";
+    throw new Error("Failed to insert user into auth.users");
   }
 
-  await prisma.adminUser.upsert({
-    where: { email: adminEmail },
-    update: {
-      supabaseUid,
-      fullName: "JUBU Admin",
-      role: "ADMIN"
-    },
-    create: {
+  // Also add identity row if auth.identities exists
+  try {
+    await prisma.$executeRawUnsafe(`
+      DELETE FROM auth.identities WHERE user_id = '${supabaseUid}'::uuid;
+    `);
+    await prisma.$executeRawUnsafe(`
+      INSERT INTO auth.identities (
+        id,
+        user_id,
+        identity_data,
+        provider,
+        provider_id,
+        last_sign_in_at,
+        created_at,
+        updated_at
+      ) VALUES (
+        gen_random_uuid(),
+        '${supabaseUid}'::uuid,
+        json_build_object('sub', '${supabaseUid}', 'email', '${adminEmail}'),
+        'email',
+        '${supabaseUid}',
+        NOW(),
+        NOW(),
+        NOW()
+      );
+    `);
+  } catch (identErr) {
+    console.warn("Notice on auth.identities:", identErr);
+  }
+
+  await prisma.adminUser.create({
+    data: {
       email: adminEmail,
       supabaseUid,
       fullName: "JUBU Admin",
@@ -316,6 +353,7 @@ async function main() {
   });
 
   console.log(`✅ Admin user seeded: ${adminEmail}`);
+  console.log(`🔑 Password ready from .env: ${adminPassword}`);
   console.log("✅ Seed completed successfully!");
 }
 
