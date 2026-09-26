@@ -1,0 +1,28 @@
+import { prisma } from "@/lib/db/prisma";
+import { HeroClient } from "./HeroClient";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminHeroPage() {
+  const hero = await prisma.heroContent.findUnique({
+    where: { id: "default" }
+  });
+
+  const initialHero = {
+    badge: hero?.badge ?? "Professional Cleaning Services in Dubai",
+    headline: hero?.headline ?? "Professional Cleaning Services in Dubai",
+    subheadline:
+      hero?.subheadline ??
+      "Home, Villa, Office, Deep Cleaning & Post-Construction Cleaning. Reliable service with professional equipment.",
+    primaryCtaLabel: hero?.primaryCtaLabel ?? "Get a Free Quote",
+    primaryCtaHref: hero?.primaryCtaHref ?? "#quote",
+    secondaryCtaLabel: hero?.secondaryCtaLabel ?? "WhatsApp Us",
+    secondaryCtaHref: hero?.secondaryCtaHref ?? "https://wa.me/971542995191",
+    heroImageSrc: hero?.heroImageSrc ?? "/images/placeholder/hero-cleaner.png",
+    heroImageAlt:
+      hero?.heroImageAlt ?? "JUBU Professional Cleaner in uniform with spray bottle and cloth",
+    floatingBadge: hero?.floatingBadge ?? "Cleaner Spaces Brighter Lives"
+  };
+
+  return <HeroClient initialHero={initialHero} />;
+}
