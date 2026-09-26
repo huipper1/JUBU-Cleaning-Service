@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -15,7 +16,6 @@ import {
   Users,
   Image as ImageIcon,
   ExternalLink,
-  Brush,
   ChevronRight
 } from "lucide-react";
 import { NavUser } from "@/components/nav-user";
@@ -46,12 +46,19 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
     email: string;
     avatar?: string;
   };
+  branding?: {
+    logoSrc: string;
+    logoAlt: string;
+    businessName: string;
+  };
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
   const pathname = usePathname();
 
   const isContentActive = pathname.startsWith("/admin/content");
+  const logoUrl = branding?.logoSrc || "/images/logo.png";
+  const businessName = branding?.businessName || "JUBU Cleaning";
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -60,11 +67,16 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/admin">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Sparkles className="size-4" />
+                <div className="relative flex aspect-square size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-card border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={logoUrl}
+                    alt={branding?.logoAlt || businessName}
+                    className="size-full object-contain p-1"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">JUBU Cleaning</span>
+                  <span className="truncate font-semibold">{businessName}</span>
                   <span className="truncate text-xs text-muted-foreground">Admin CMS</span>
                 </div>
               </Link>

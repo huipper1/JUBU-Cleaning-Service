@@ -12,6 +12,8 @@ export default async function AdminSettingsPage() {
     businessName: settings?.businessName ?? "JUBU Cleaning Service",
     tagline: settings?.tagline ?? "Cleaner Spaces, Brighter Lives",
     badgeText: settings?.badgeText ?? "Licensed Cleaning Services in Dubai",
+    logoSrc: settings?.logoSrc ?? "/images/logo.png",
+    logoAlt: settings?.logoAlt ?? "JUBU Cleaning Service Logo",
     phone: settings?.phone ?? "+971 54 299 5191",
     phoneDisplay: settings?.phoneDisplay ?? "+971 54 299 5191",
     phoneTel: settings?.phoneTel ?? "+971542995191",

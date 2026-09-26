@@ -7,6 +7,8 @@ export interface UpdateSettingsData {
   businessName: string;
   tagline: string;
   badgeText: string;
+  logoSrc: string;
+  logoAlt: string;
   phone: string;
   phoneDisplay: string;
   phoneTel: string;
@@ -35,6 +37,8 @@ export async function updateSettingsAction(data: UpdateSettingsData) {
 
     revalidatePath("/");
     revalidatePath("/[area]", "page");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/admin/login");
     return { success: true };
   } catch (err: unknown) {
     return {

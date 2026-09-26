@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/db/prisma";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -24,9 +25,18 @@ interface AdminLayoutProps {
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [
+    {
+      data: { user },
+    },
+    settings,
+  ] = await Promise.all([
+    supabase.auth.getUser(),
+    prisma.siteSettings.findUnique({
+      where: { id: "default" },
+      select: { logoSrc: true, logoAlt: true, businessName: true },
+    }),
+  ]);
 
   // Route protection
   if (!user) {
@@ -43,9 +53,15 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     avatar: "/brand/logo.png",
   };
 
+  const branding = {
+    logoSrc: settings?.logoSrc || "/images/logo.png",
+    logoAlt: settings?.logoAlt || "JUBU Cleaning Service",
+    businessName: settings?.businessName || "JUBU Cleaning",
+  };
+
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar user={userData} />
+      <AppSidebar user={userData} branding={branding} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">

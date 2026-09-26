@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 
 interface SettingsClientProps {
   initialSettings: UpdateSettingsData;
@@ -46,10 +47,10 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   };
 
   return (
-    <form onSubmit={handleSave} className="flex flex-col gap-6 max-w-4xl pb-12">
+    <form onSubmit={handleSave} className="flex flex-col gap-6 pb-12">
       <AdminPageHeader
         title="General Site Settings"
-        description="Manage company details, Dubai trade licence, contact info, and default SEO."
+        description="Manage company details, official branding logo, Dubai trade licence, contact info, and default SEO."
       >
         <Button type="submit" disabled={isSaving}>
           {isSaving ? (
@@ -66,12 +67,44 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
         </Button>
       </AdminPageHeader>
 
-      <Tabs defaultValue="contact" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs defaultValue="branding" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="branding">Branding & Logo</TabsTrigger>
           <TabsTrigger value="contact">Contact & Address</TabsTrigger>
           <TabsTrigger value="licence">Trade Licence</TabsTrigger>
           <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
         </TabsList>
+
+        {/* Branding & Logo Tab */}
+        <TabsContent value="branding" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Company Logo & Identity</CardTitle>
+              <CardDescription>
+                Upload the official company logo used across the website, admin login, and sidebar header.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-5">
+              <ImageCropUploader
+                currentImageUrl={formData.logoSrc}
+                folder="branding"
+                label="Site Logo (PNG/WebP recommended)"
+                onUploadComplete={(url) => setFormData((prev) => ({ ...prev, logoSrc: url }))}
+              />
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Logo Alt Text (SEO & Accessibility)
+                </label>
+                <Input
+                  value={formData.logoAlt}
+                  onChange={(e) => handleChange("logoAlt", e.target.value)}
+                  placeholder="e.g. JUBU Cleaning Service Logo"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Contact Tab */}
         <TabsContent value="contact" className="mt-4">
