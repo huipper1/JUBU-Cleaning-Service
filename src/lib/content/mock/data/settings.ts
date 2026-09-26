@@ -18,9 +18,8 @@ export const mockSettingsData: SiteSettings = {
   whatsappDefaultMessage:
     "Hello JUBU Cleaning Service, I would like to inquire about a free quote for your cleaning services in Dubai.",
   email: "sajibulislam679@gmail.com",
-  address: "Office No. 95-804, Naif, Dubai, United Arab Emirates",
-  // DUMMY: replace with real Maps link
-  mapUrl: "https://www.google.com/maps/search/?api=1&query=Office+95-804+Naif+Dubai",
+  address: "Setadel Building, Office # 201, Al Quoz-4, Dubai, United Arab Emirates",
+  mapUrl: "https://www.google.com/maps/search/?api=1&query=Setadel+Building+Al+Quoz+4+Dubai",
   // DUMMY: confirm with client
   workingHours: "Sat to Thu, 8:00 AM - 8:00 PM",
   socialLinks: [

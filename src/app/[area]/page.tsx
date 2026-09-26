@@ -135,7 +135,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
       description: areaData.metaDescription,
       address: {
         "@type": "PostalAddress",
-        streetAddress: "Office No. 95-804, Naif",
+        streetAddress: "Setadel Building, Office # 201, Al Quoz-4",
         addressLocality: "Dubai",
         addressRegion: "Dubai",
         addressCountry: "AE"

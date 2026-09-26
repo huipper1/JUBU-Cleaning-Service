@@ -59,7 +59,7 @@ export default async function Home() {
         "Licensed Dubai cleaning service company offering residential, office, deep cleaning, sofa & carpet extraction, and move-in cleaning across Dubai.",
       address: {
         "@type": "PostalAddress",
-        streetAddress: "Office No. 95-804, Naif",
+        streetAddress: "Setadel Building, Office # 201, Al Quoz-4",
         addressLocality: "Dubai",
         addressRegion: "Dubai",
         addressCountry: "AE"

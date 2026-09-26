@@ -5,7 +5,7 @@ export const mockAboutData: AboutContent = {
   badge: "ABOUT JUBU CLEANING SERVICE",
   heading: "Professional Cleaning in Dubai",
   paragraphs: [
-    "JUBU Cleaning Service is a Dubai-based Limited Liability Company (LLC), licensed by the Dubai Department of Economy and Tourism since January 2022. Operating from our office in Naif, Dubai, we provide trusted cleaning solutions for residential and commercial spaces across the city.",
+    "JUBU Cleaning Service is a Dubai-based Limited Liability Company (LLC), licensed by the Dubai Department of Economy and Tourism since January 2022. Operating from our office in Al Quoz-4, Dubai, we provide trusted cleaning solutions for residential and commercial spaces across the city.",
     "Our professional team delivers six dedicated cleaning services: Home Cleaning, Office Cleaning, Deep Cleaning, Sofa & Carpet Cleaning, Post Construction Cleaning, and Move In / Move Out Cleaning. Equipped with professional cleaning machines and specialized tools, we serve our 10 service areas across Dubai with reliable quality and free quotes via WhatsApp, phone, or online inquiry."
   ],
   cta: {
