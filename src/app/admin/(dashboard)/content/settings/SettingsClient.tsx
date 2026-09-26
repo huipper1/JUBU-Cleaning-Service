@@ -132,12 +132,12 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       </AdminPageHeader>
 
       <Tabs defaultValue="branding" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="branding">Branding & Logo</TabsTrigger>
-          <TabsTrigger value="sections">Page Sections</TabsTrigger>
-          <TabsTrigger value="contact">Contact & Address</TabsTrigger>
-          <TabsTrigger value="licence">Trade Licence</TabsTrigger>
-          <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
+        <TabsList className="inline-flex md:grid md:grid-cols-5 w-auto min-w-full justify-start md:justify-center p-1">
+          <TabsTrigger value="branding" className="px-3.5 py-1.5 whitespace-nowrap">Branding & Logo</TabsTrigger>
+          <TabsTrigger value="sections" className="px-3.5 py-1.5 whitespace-nowrap">Page Sections</TabsTrigger>
+          <TabsTrigger value="contact" className="px-3.5 py-1.5 whitespace-nowrap">Contact & Address</TabsTrigger>
+          <TabsTrigger value="licence" className="px-3.5 py-1.5 whitespace-nowrap">Trade Licence</TabsTrigger>
+          <TabsTrigger value="seo" className="px-3.5 py-1.5 whitespace-nowrap">SEO & Metadata</TabsTrigger>
         </TabsList>
 
         {/* Branding & Logo Tab */}
