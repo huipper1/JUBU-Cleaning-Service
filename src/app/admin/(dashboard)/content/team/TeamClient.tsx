@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { toast } from "sonner";
-import { Users, CheckCircle2, XCircle, Edit2, Save, X, Loader2 } from "lucide-react";
+import { CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 import { toggleTeamMemberActiveAction, updateTeamMemberAction } from "./actions";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface TeamMemberItem {
   id: string;
@@ -34,12 +38,20 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
 
   const handleToggle = async (m: TeamMemberItem) => {
     const nextVal = !m.isActive;
-    setMembers(members.map((item) => (item.id === m.id ? { ...item, isActive: nextVal } : item)));
+    setMembers(
+      members.map((item) =>
+        item.id === m.id ? { ...item, isActive: nextVal } : item
+      )
+    );
 
     const res = await toggleTeamMemberActiveAction(m.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
-      setMembers(members.map((item) => (item.id === m.id ? { ...item, isActive: !nextVal } : item)));
+      setMembers(
+        members.map((item) =>
+          item.id === m.id ? { ...item, isActive: !nextVal } : item
+        )
+      );
     } else {
       toast.success(`${m.name} is now ${nextVal ? "active" : "disabled"}`);
     }
@@ -63,7 +75,7 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
         bio: editBio || undefined,
         photoSrc: editPhotoSrc,
         order: editOrder,
-        isActive: m.isActive
+        isActive: m.isActive,
       });
 
       if (res.success) {
@@ -76,7 +88,7 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
                   role: editRole,
                   bio: editBio || undefined,
                   photoSrc: editPhotoSrc,
-                  order: editOrder
+                  order: editOrder,
                 }
               : item
           )
@@ -92,134 +104,145 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl pb-12">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Team Members</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Manage staff profiles and 1:1 square portrait photos with client-side cropping.
-          </p>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {members.map((m) => {
+        const isEdit = editingId === m.id;
+        const initials = m.name.slice(0, 2).toUpperCase();
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {members.map((m) => {
-          const isEdit = editingId === m.id;
-
-          return (
-            <div
-              key={m.id}
-              className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 backdrop-blur-xl flex flex-col justify-between"
-            >
+        return (
+          <Card key={m.id} className="flex flex-col justify-between">
+            <CardContent className="p-5">
               {isEdit ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white text-xs">Editing {m.name}</span>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between pb-2 border-b">
+                    <span className="font-semibold text-foreground text-xs">
+                      Editing: {m.name}
+                    </span>
                     <div className="flex items-center gap-1.5">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setEditingId(null)}
-                        className="rounded-lg p-1 text-slate-400 hover:text-white"
                       >
-                        <X className="h-4 w-4" />
-                      </button>
-                      <button
+                        <X className="size-4" />
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
                         onClick={() => handleSave(m)}
                         disabled={isSaving}
-                        className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
                       >
-                        {isSaving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                        {isSaving ? (
+                          <Loader2 className="size-3.5 animate-spin mr-1" />
+                        ) : (
+                          <Save className="size-3.5 mr-1" />
+                        )}
                         <span>Save</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
-                  <div>
-                    <ImageCropUploader
-                      currentImageUrl={editPhotoSrc}
-                      folder="team"
-                      aspectRatio={1} // 1:1 enforced per CMS plan
-                      label="Staff Portrait (1:1 Ratio)"
-                      onUploadComplete={(url) => setEditPhotoSrc(url)}
-                    />
-                  </div>
+                  <ImageCropUploader
+                    currentImageUrl={editPhotoSrc}
+                    folder="team"
+                    aspectRatio={1} // 1:1 enforced per CMS plan
+                    label="Staff Portrait (1:1 Ratio)"
+                    onUploadComplete={(url) => setEditPhotoSrc(url)}
+                  />
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-300">Name</label>
-                      <input
-                        type="text"
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-medium text-foreground">
+                        Name
+                      </label>
+                      <Input
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-300">Role</label>
-                      <input
-                        type="text"
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-medium text-foreground">
+                        Role
+                      </label>
+                      <Input
                         value={editRole}
                         onChange={(e) => setEditRole(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-medium text-slate-300">Bio</label>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-foreground">
+                      Bio
+                    </label>
                     <textarea
                       rows={2}
                       value={editBio}
                       onChange={(e) => setEditBio(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                     />
                   </div>
                 </div>
               ) : (
-                <div>
+                <div className="flex flex-col gap-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-slate-800 bg-slate-950">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={m.photoSrc} alt={m.photoAlt} className="h-full w-full object-cover" />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-semibold text-white">{m.name}</h3>
-                        <span className="text-xs text-emerald-400 font-medium">{m.role}</span>
+                      <Avatar className="size-14 border">
+                        <AvatarImage src={m.photoSrc} alt={m.photoAlt} />
+                        <AvatarFallback>{initials}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <h3 className="text-sm font-semibold text-foreground">
+                          {m.name}
+                        </h3>
+                        <span className="text-xs text-primary font-medium">
+                          {m.role}
+                        </span>
                       </div>
                     </div>
 
-                    <button
+                    <Button
+                      variant={m.isActive ? "secondary" : "outline"}
+                      size="sm"
                       onClick={() => handleToggle(m)}
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                        m.isActive
-                          ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                          : "bg-red-500/10 text-red-400 ring-1 ring-red-500/20"
-                      }`}
                     >
-                      {m.isActive ? "Active" : "Disabled"}
-                    </button>
+                      {m.isActive ? (
+                        <>
+                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
+                          <span>Active</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
+                          <span>Disabled</span>
+                        </>
+                      )}
+                    </Button>
                   </div>
 
                   {m.bio && (
-                    <p className="mt-3 text-xs text-slate-400 line-clamp-2 leading-relaxed">{m.bio}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {m.bio}
+                    </p>
                   )}
 
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex justify-end">
-                    <button
+                  <div className="pt-2 border-t flex justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => startEdit(m)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-800/60 px-3 py-1 text-xs text-slate-300 hover:text-white"
                     >
-                      <Edit2 className="h-3 w-3" />
+                      <Pencil className="size-3.5 mr-1" />
                       <span>Edit</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
-            </div>
-          );
-        })}
-      </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

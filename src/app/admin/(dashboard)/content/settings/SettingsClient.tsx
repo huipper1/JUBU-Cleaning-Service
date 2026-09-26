@@ -4,6 +4,17 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Check, Loader2 } from "lucide-react";
 import { updateSettingsAction, type UpdateSettingsData } from "./actions";
+import { AdminPageHeader } from "@/components/admin/page-header";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface SettingsClientProps {
   initialSettings: UpdateSettingsData;
@@ -35,190 +46,209 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-8 max-w-4xl pb-12">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">General Site Settings</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Manage your company details, Dubai trade licence, contact info, and default SEO.
-          </p>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:from-emerald-500 hover:to-teal-400 disabled:opacity-50"
-        >
+    <form onSubmit={handleSave} className="flex flex-col gap-6 max-w-4xl pb-12">
+      <AdminPageHeader
+        title="General Site Settings"
+        description="Manage company details, Dubai trade licence, contact info, and default SEO."
+      >
+        <Button type="submit" disabled={isSaving}>
           {isSaving ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" data-icon="inline-start" />
               <span>Saving...</span>
             </>
           ) : (
             <>
-              <Check className="h-4 w-4" />
+              <Check className="size-4" data-icon="inline-start" />
               <span>Save Changes</span>
             </>
           )}
-        </button>
-      </div>
+        </Button>
+      </AdminPageHeader>
 
-      {/* Contact & Physical Address */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
-          Contact & Address
-        </h2>
+      <Tabs defaultValue="contact" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="contact">Contact & Address</TabsTrigger>
+          <TabsTrigger value="licence">Trade Licence</TabsTrigger>
+          <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
+        </TabsList>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Business Name</label>
-            <input
-              type="text"
-              value={formData.businessName}
-              onChange={(e) => handleChange("businessName", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+        {/* Contact Tab */}
+        <TabsContent value="contact" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Contact & Registered Office</CardTitle>
+              <CardDescription>
+                Primary business phone, email, and Dubai office location.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Business Name
+                  </label>
+                  <Input
+                    value={formData.businessName}
+                    onChange={(e) => handleChange("businessName", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Tagline</label>
-            <input
-              type="text"
-              value={formData.tagline}
-              onChange={(e) => handleChange("tagline", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Tagline
+                  </label>
+                  <Input
+                    value={formData.tagline}
+                    onChange={(e) => handleChange("tagline", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Phone Display</label>
-            <input
-              type="text"
-              value={formData.phoneDisplay}
-              onChange={(e) => handleChange("phoneDisplay", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Phone Display
+                  </label>
+                  <Input
+                    value={formData.phoneDisplay}
+                    onChange={(e) => handleChange("phoneDisplay", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">WhatsApp Display</label>
-            <input
-              type="text"
-              value={formData.whatsapp}
-              onChange={(e) => handleChange("whatsapp", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    WhatsApp Display
+                  </label>
+                  <Input
+                    value={formData.whatsapp}
+                    onChange={(e) => handleChange("whatsapp", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Official Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Official Email
+                  </label>
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Working Hours</label>
-            <input
-              type="text"
-              value={formData.workingHours}
-              onChange={(e) => handleChange("workingHours", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Working Hours
+                  </label>
+                  <Input
+                    value={formData.workingHours}
+                    onChange={(e) => handleChange("workingHours", e.target.value)}
+                  />
+                </div>
 
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-medium text-slate-300">Registered Office Address</label>
-            <input
-              type="text"
-              value={formData.address}
-              onChange={(e) => handleChange("address", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
-        </div>
-      </div>
+                <div className="sm:col-span-2 flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Registered Office Address
+                  </label>
+                  <Input
+                    value={formData.address}
+                    onChange={(e) => handleChange("address", e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Trade Licence Section */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-400">
-          Dubai Trade Licence Verification
-        </h2>
+        {/* Licence Tab */}
+        <TabsContent value="licence" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Dubai Trade Licence</CardTitle>
+              <CardDescription>
+                Verification details for Dubai Department of Economy and Tourism (DET).
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Licence Number
+                  </label>
+                  <Input
+                    value={formData.licenceNumber}
+                    onChange={(e) => handleChange("licenceNumber", e.target.value)}
+                  />
+                </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Licence Number</label>
-            <input
-              type="text"
-              value={formData.licenceNumber}
-              onChange={(e) => handleChange("licenceNumber", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Legal Structure
+                  </label>
+                  <Input
+                    value={formData.licenceStructure}
+                    onChange={(e) => handleChange("licenceStructure", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Legal Structure</label>
-            <input
-              type="text"
-              value={formData.licenceStructure}
-              onChange={(e) => handleChange("licenceStructure", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Issuing Authority
+                  </label>
+                  <Input
+                    value={formData.licenceAuthority}
+                    onChange={(e) => handleChange("licenceAuthority", e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Issuing Authority</label>
-            <input
-              type="text"
-              value={formData.licenceAuthority}
-              onChange={(e) => handleChange("licenceAuthority", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Issue Date
+                  </label>
+                  <Input
+                    value={formData.licenceIssueDate}
+                    onChange={(e) => handleChange("licenceIssueDate", e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Issue Date</label>
-            <input
-              type="text"
-              value={formData.licenceIssueDate}
-              onChange={(e) => handleChange("licenceIssueDate", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
-        </div>
-      </div>
+        {/* SEO Tab */}
+        <TabsContent value="seo" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>SEO & Social Metadata</CardTitle>
+              <CardDescription>
+                Default page title and meta description used across all pages.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Default Meta Title
+                </label>
+                <Input
+                  value={formData.seoTitle}
+                  onChange={(e) => handleChange("seoTitle", e.target.value)}
+                />
+              </div>
 
-      {/* SEO Metadata */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-purple-400">
-          SEO & Social Metadata
-        </h2>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Default Meta Title</label>
-            <input
-              type="text"
-              value={formData.seoTitle}
-              onChange={(e) => handleChange("seoTitle", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-slate-300">Default Meta Description</label>
-            <textarea
-              rows={3}
-              value={formData.seoDescription}
-              onChange={(e) => handleChange("seoDescription", e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
-            />
-          </div>
-        </div>
-      </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Default Meta Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.seoDescription}
+                  onChange={(e) => handleChange("seoDescription", e.target.value)}
+                  className="w-full rounded-md border bg-background p-2.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </form>
   );
 }

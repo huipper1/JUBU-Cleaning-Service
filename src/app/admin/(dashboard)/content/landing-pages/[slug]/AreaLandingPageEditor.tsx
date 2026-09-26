@@ -12,10 +12,19 @@ import {
   Trash2,
   Loader2,
   Globe2,
-  Sparkles,
-  HelpCircle
 } from "lucide-react";
 import { updateAreaLandingPageAction, type UpdateAreaLandingPageData } from "./actions";
+import { AdminPageHeader } from "@/components/admin/page-header";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface AreaLandingPageEditorProps {
   pageData: {
@@ -107,7 +116,7 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
         nearYouText,
         finalCtaTitle,
         faqs,
-        isActive
+        isActive,
       };
 
       const result = await updateAreaLandingPageAction(pageData.slug, payload);
@@ -126,372 +135,284 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      {/* Top Bar with Navigation and Save Action */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-800 pb-6">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/admin/content/landing-pages"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900/60 text-slate-400 transition-colors hover:border-slate-700 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
+    <div className="flex flex-col gap-6 max-w-5xl pb-12">
+      <AdminPageHeader
+        title={`${pageData.areaName} Landing Page`}
+        description={`Customize ad landing headlines, local copy, services list, and FAQs for /${pageData.slug}`}
+      >
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/admin/content/landing-pages">
+            <ArrowLeft className="size-4" data-icon="inline-start" />
+            Back to Areas
           </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-white">{pageData.areaName}</h1>
-              <span className="font-mono text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full ring-1 ring-emerald-500/20">
-                /{pageData.slug}
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Edit marketing copy, headlines, bullet points, and area FAQs.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <a
-            href={`/${pageData.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/60 px-3.5 py-2 text-xs font-semibold text-slate-300 transition-colors hover:border-slate-700 hover:text-white"
-          >
-            <ExternalLink className="h-3.5 w-3.5" />
-            <span>View Live</span>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <a href={`/${pageData.slug}`} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="size-4" data-icon="inline-start" />
+            View Live
           </a>
+        </Button>
+        <Button size="sm" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? (
+            <>
+              <Loader2 className="size-4 animate-spin" data-icon="inline-start" />
+              <span>Saving...</span>
+            </>
+          ) : (
+            <>
+              <Check className="size-4" data-icon="inline-start" />
+              <span>Publish Changes</span>
+            </>
+          )}
+        </Button>
+      </AdminPageHeader>
 
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:from-emerald-500 hover:to-teal-400 disabled:opacity-50"
-          >
-            {isSaving ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Publishing...</span>
-              </>
-            ) : (
-              <>
-                <Check className="h-4 w-4" />
-                <span>Publish Changes</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Main Settings Form Grid */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Left 2 Cols: Content Details */}
-        <div className="space-y-6 lg:col-span-2">
-          {/* Hero Section Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
-              1. Hero Presentation
-            </h2>
-            <div className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Hero H1 Headline</label>
-                <input
-                  type="text"
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Main Content Columns (2 cols) */}
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          {/* Hero Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>1. Hero Presentation</CardTitle>
+              <CardDescription>
+                Primary headline and introduction banner tailored for this area.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Hero H1 Headline
+                </label>
+                <Input
                   value={heroHeadline}
                   onChange={(e) => setHeroHeadline(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Hero Intro Paragraph</label>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Hero Intro Paragraph
+                </label>
                 <textarea
                   rows={3}
                   value={heroIntro}
                   onChange={(e) => setHeroIntro(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                 />
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Services Section Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
-              2. Services Offered In Area
-            </h2>
-            <div className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Section Title</label>
-                <input
-                  type="text"
+          {/* Services Offered Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>2. Services Offered In Area</CardTitle>
+              <CardDescription>
+                Bullet list of specific cleaning solutions highlighted on this page.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Section Title
+                </label>
+                <Input
                   value={servicesSectionTitle}
                   onChange={(e) => setServicesSectionTitle(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Service Highlights Bullets</label>
-                <div className="mt-2 flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-medium text-foreground">
+                  Active Service Badges
+                </label>
+                <div className="flex flex-wrap gap-2">
                   {servicesList.map((service, idx) => (
-                    <span
+                    <Badge
                       key={idx}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-950/80 px-3 py-1.5 text-xs text-slate-200"
+                      variant="secondary"
+                      className="flex items-center gap-1.5 py-1 px-2.5"
                     >
                       <span>{service}</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveService(idx)}
-                        className="text-slate-500 hover:text-red-400"
+                        className="text-muted-foreground hover:text-destructive"
                       >
                         &times;
                       </button>
-                    </span>
+                    </Badge>
                   ))}
                 </div>
 
-                <div className="mt-3 flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Add custom service bullet (e.g. Balcony Sanitization)..."
+                <div className="flex items-center gap-2 mt-2">
+                  <Input
+                    placeholder="Add service (e.g. Move In Deep Cleaning)"
                     value={newServiceItem}
                     onChange={(e) => setNewServiceItem(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddService();
-                      }
-                    }}
-                    className="flex-1 rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddService())}
                   />
-                  <button
-                    type="button"
-                    onClick={handleAddService}
-                    className="rounded-xl border border-slate-800 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700"
-                  >
+                  <Button type="button" variant="secondary" size="sm" onClick={handleAddService}>
+                    <Plus className="size-4 mr-1" />
                     Add
-                  </button>
+                  </Button>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Featured Marketing Block */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
-              3. Featured Specialized Block
-            </h2>
-            <div className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Featured Block Title</label>
-                <input
-                  type="text"
-                  value={featuredBlockTitle}
-                  onChange={(e) => setFeaturedBlockTitle(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
-                />
-              </div>
-
-              {!isMultiBlock ? (
-                <div>
-                  <label className="block text-xs font-medium text-slate-300">Featured Description</label>
-                  <textarea
-                    rows={3}
-                    value={featuredText}
-                    onChange={(e) => setFeaturedText(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
-                  />
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <span className="text-xs text-slate-400">3-Card Split Grid Blocks:</span>
-                  {featuredBlocks.map((block, idx) => (
-                    <div key={idx} className="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 space-y-2">
-                      <input
-                        type="text"
-                        value={block.title}
-                        onChange={(e) => {
-                          const copy = [...featuredBlocks];
-                          copy[idx].title = e.target.value;
-                          setFeaturedBlocks(copy);
-                        }}
-                        placeholder="Block title"
-                        className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs text-white"
-                      />
-                      <textarea
-                        rows={2}
-                        value={block.text}
-                        onChange={(e) => {
-                          const copy = [...featuredBlocks];
-                          copy[idx].text = e.target.value;
-                          setFeaturedBlocks(copy);
-                        }}
-                        placeholder="Block description"
-                        className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs text-white leading-relaxed"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Near-You Section Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
-              4. Near-You Section
-            </h2>
-            <div className="mt-4 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Near-You Heading</label>
-                <input
-                  type="text"
+          {/* Local Content Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>3. Community Relevance Block</CardTitle>
+              <CardDescription>
+                Details highlighting proximity, rapid dispatch, and local landmarks.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Near You Title
+                </label>
+                <Input
                   value={nearYouTitle}
                   onChange={(e) => setNearYouTitle(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300">Near-You Text</label>
-                <textarea
-                  rows={2}
-                  value={nearYouText}
-                  onChange={(e) => setNearYouText(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* FAQs Manager Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
-                5. Area FAQ Accordion
-              </h2>
-              <button
-                type="button"
-                onClick={handleAddFaq}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 ring-1 ring-emerald-500/20 hover:bg-emerald-500/20"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                <span>Add Question</span>
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-3">
-              {faqs.map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="relative rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-2.5"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-400">Question #{idx + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFaq(idx)}
-                      className="text-slate-500 hover:text-red-400 transition-colors"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-
-                  <input
-                    type="text"
-                    value={faq.question}
-                    onChange={(e) => handleUpdateFaq(idx, "question", e.target.value)}
-                    placeholder="e.g. Do you provide apartment cleaning in this area?"
-                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-                  />
-
-                  <textarea
-                    rows={2}
-                    value={faq.answer}
-                    onChange={(e) => handleUpdateFaq(idx, "answer", e.target.value)}
-                    placeholder="Answer details..."
-                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right 1 Col: Publishing & SEO Details */}
-        <div className="space-y-6">
-          {/* Status & Publishing Control */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
-              Page Status
-            </h2>
-
-            <div className="mt-4 flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3.5">
-              <div>
-                <span className="text-xs font-semibold text-white">Live Status</span>
-                <p className="text-[10px] text-slate-400">
-                  {isActive ? "Page is visible to ad traffic" : "Page returns 404 when disabled"}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsActive(!isActive)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  isActive ? "bg-emerald-600" : "bg-slate-700"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    isActive ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-xs font-medium text-slate-300">Quote Band Title</label>
-              <input
-                type="text"
-                value={finalCtaTitle}
-                onChange={(e) => setFinalCtaTitle(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          {/* SEO Metadata Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
-              SEO & Social Tags
-            </h2>
-
-            <div className="mt-4 space-y-4">
-              <div>
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-slate-300">Meta Title Tag</label>
-                  <span className="text-[10px] text-slate-500">{metaTitle.length} chars</span>
-                </div>
-                <input
-                  type="text"
-                  value={metaTitle}
-                  onChange={(e) => setMetaTitle(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-slate-300">Meta Description</label>
-                  <span className="text-[10px] text-slate-500">{metaDescription.length} chars</span>
-                </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Near You Description
+                </label>
                 <textarea
                   rows={3}
-                  value={metaDescription}
-                  onChange={(e) => setMetaDescription(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-3.5 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                  value={nearYouText}
+                  onChange={(e) => setNearYouText(e.target.value)}
+                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                 />
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+
+          {/* Area FAQs */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div>
+                <CardTitle>4. Area Frequently Asked Questions</CardTitle>
+                <CardDescription>
+                  Custom FAQs answering local client questions.
+                </CardDescription>
+              </div>
+              <Button type="button" variant="secondary" size="sm" onClick={handleAddFaq}>
+                <Plus className="size-4 mr-1" />
+                Add Question
+              </Button>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              {faqs.length === 0 ? (
+                <div className="py-6 text-center text-xs text-muted-foreground">
+                  No FAQs added yet. Click &quot;Add Question&quot; to add one.
+                </div>
+              ) : (
+                faqs.map((faq, idx) => (
+                  <div key={idx} className="rounded-lg border p-4 flex flex-col gap-2 relative">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-foreground">
+                        Question #{idx + 1}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveFaq(idx)}
+                        className="text-destructive hover:text-destructive size-7 p-0"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
+                    </div>
+                    <Input
+                      placeholder="e.g. How fast can cleaners reach Dubai Marina?"
+                      value={faq.question}
+                      onChange={(e) => handleUpdateFaq(idx, "question", e.target.value)}
+                    />
+                    <textarea
+                      rows={2}
+                      placeholder="Detailed answer for the client..."
+                      value={faq.answer}
+                      onChange={(e) => handleUpdateFaq(idx, "answer", e.target.value)}
+                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                    />
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar Settings (1 col) */}
+        <div className="flex flex-col gap-6">
+          {/* Status & Final CTA */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Page Publishing Status</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Status</span>
+                <Button
+                  type="button"
+                  variant={isActive ? "secondary" : "outline"}
+                  size="sm"
+                  onClick={() => setIsActive(!isActive)}
+                >
+                  {isActive ? "Active (Live)" : "Disabled (Draft)"}
+                </Button>
+              </div>
+
+              <div className="flex flex-col gap-1.5 pt-2 border-t">
+                <label className="text-xs font-medium text-foreground">
+                  Final CTA Headline
+                </label>
+                <Input
+                  value={finalCtaTitle}
+                  onChange={(e) => setFinalCtaTitle(e.target.value)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* SEO Metadata */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Target Area SEO</CardTitle>
+              <CardDescription>
+                Search engine title and snippet preview for Google.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Meta Title
+                </label>
+                <Input
+                  value={metaTitle}
+                  onChange={(e) => setMetaTitle(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">
+                  Meta Description
+                </label>
+                <textarea
+                  rows={4}
+                  value={metaDescription}
+                  onChange={(e) => setMetaDescription(e.target.value)}
+                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                />
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

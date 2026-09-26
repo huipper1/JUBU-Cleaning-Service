@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { toast } from "sonner";
-import { ImageIcon, CheckCircle2, XCircle, Edit2, Save, X, Loader2 } from "lucide-react";
+import { CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 import { toggleGalleryItemActiveAction, updateGalleryItemAction } from "./actions";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface GalleryItemType {
   id: string;
@@ -35,12 +38,18 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
 
   const handleToggle = async (item: GalleryItemType) => {
     const nextVal = !item.isActive;
-    setItems(items.map((i) => (i.id === item.id ? { ...i, isActive: nextVal } : i)));
+    setItems(
+      items.map((i) => (i.id === item.id ? { ...i, isActive: nextVal } : i))
+    );
 
     const res = await toggleGalleryItemActiveAction(item.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
-      setItems(items.map((i) => (i.id === item.id ? { ...i, isActive: !nextVal } : i)));
+      setItems(
+        items.map((i) =>
+          i.id === item.id ? { ...i, isActive: !nextVal } : i
+        )
+      );
     } else {
       toast.success(`${item.title} is now ${nextVal ? "active" : "disabled"}`);
     }
@@ -62,7 +71,7 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
         caption: editCaption || undefined,
         imageSrc: editImageSrc,
         order: editOrder,
-        isActive: item.isActive
+        isActive: item.isActive,
       });
 
       if (res.success) {
@@ -74,7 +83,7 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
                   title: editTitle,
                   caption: editCaption || undefined,
                   imageSrc: editImageSrc,
-                  order: editOrder
+                  order: editOrder,
                 }
               : i
           )
@@ -90,92 +99,89 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl pb-12">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Projects Gallery</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Showcase real cleaning jobs and before/after comparisons with 4:3 standard cropper.
-          </p>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {items.map((item) => {
+        const isEdit = editingId === item.id;
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {items.map((item) => {
-          const isEdit = editingId === item.id;
-
-          return (
-            <div
-              key={item.id}
-              className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 backdrop-blur-xl flex flex-col justify-between"
-            >
+        return (
+          <Card key={item.id} className="flex flex-col justify-between">
+            <CardContent className="p-5">
               {isEdit ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white text-xs">Editing {item.title}</span>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between pb-2 border-b">
+                    <span className="font-semibold text-foreground text-xs">
+                      Editing: {item.title}
+                    </span>
                     <div className="flex items-center gap-1.5">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setEditingId(null)}
-                        className="rounded-lg p-1 text-slate-400 hover:text-white"
                       >
-                        <X className="h-4 w-4" />
-                      </button>
-                      <button
+                        <X className="size-4" />
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
                         onClick={() => handleSave(item)}
                         disabled={isSaving}
-                        className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
                       >
-                        {isSaving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                        {isSaving ? (
+                          <Loader2 className="size-3.5 animate-spin mr-1" />
+                        ) : (
+                          <Save className="size-3.5 mr-1" />
+                        )}
                         <span>Save</span>
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
-                  <div>
-                    <ImageCropUploader
-                      currentImageUrl={editImageSrc}
-                      folder="gallery"
-                      aspectRatio={4 / 3} // 4:3 enforced per CMS plan
-                      label="Project Photo (4:3 Ratio)"
-                      onUploadComplete={(url) => setEditImageSrc(url)}
-                    />
-                  </div>
+                  <ImageCropUploader
+                    currentImageUrl={editImageSrc}
+                    folder="gallery"
+                    aspectRatio={4 / 3} // 4:3 standard
+                    label="Project Photo (4:3 Ratio)"
+                    onUploadComplete={(url) => setEditImageSrc(url)}
+                  />
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-300">Title</label>
-                      <input
-                        type="text"
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-medium text-foreground">
+                        Title
+                      </label>
+                      <Input
                         value={editTitle}
                         onChange={(e) => setEditTitle(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-300">Order</label>
-                      <input
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-medium text-foreground">
+                        Display Order
+                      </label>
+                      <Input
                         type="number"
                         value={editOrder}
                         onChange={(e) => setEditOrder(Number(e.target.value))}
-                        className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-medium text-slate-300">Caption</label>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-foreground">
+                      Caption
+                    </label>
                     <textarea
                       rows={2}
                       value={editCaption}
                       onChange={(e) => setEditCaption(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
                     />
                   </div>
                 </div>
               ) : (
-                <div>
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+                <div className="flex flex-col gap-3">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md border bg-muted">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.imageSrc}
@@ -184,56 +190,71 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
                     />
 
                     {item.isBeforeAfter && (
-                      <span className="absolute top-2.5 left-2.5 rounded-md bg-slate-950/80 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 backdrop-blur-md border border-slate-800">
+                      <Badge
+                        variant="secondary"
+                        className="absolute top-2.5 left-2.5 backdrop-blur-md"
+                      >
                         Before / After
-                      </span>
+                      </Badge>
                     )}
                   </div>
 
-                  <div className="mt-3 flex items-start justify-between">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                      <h3 className="text-sm font-semibold text-foreground">
+                        {item.title}
+                      </h3>
                       {item.serviceName && (
-                        <span className="text-xs text-emerald-400 font-medium">
+                        <span className="text-xs text-primary font-medium">
                           {item.serviceName}
                         </span>
                       )}
                     </div>
 
-                    <button
+                    <Button
+                      variant={item.isActive ? "secondary" : "outline"}
+                      size="sm"
                       onClick={() => handleToggle(item)}
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                        item.isActive
-                          ? "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20"
-                          : "bg-red-500/10 text-red-400 ring-1 ring-red-500/20"
-                      }`}
                     >
-                      {item.isActive ? "Active" : "Disabled"}
-                    </button>
+                      {item.isActive ? (
+                        <>
+                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
+                          <span>Active</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
+                          <span>Disabled</span>
+                        </>
+                      )}
+                    </Button>
                   </div>
 
                   {item.caption && (
-                    <p className="mt-2 text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                       {item.caption}
                     </p>
                   )}
 
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-                    <span className="text-[10px] text-slate-500">Display Order #{item.order}</span>
-                    <button
+                  <div className="pt-2 border-t flex items-center justify-between">
+                    <span className="text-[10px] text-muted-foreground">
+                      Order #{item.order}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => startEdit(item)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-800/60 px-3 py-1 text-xs text-slate-300 hover:text-white"
                     >
-                      <Edit2 className="h-3 w-3" />
+                      <Pencil className="size-3.5 mr-1" />
                       <span>Edit</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
-            </div>
-          );
-        })}
-      </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

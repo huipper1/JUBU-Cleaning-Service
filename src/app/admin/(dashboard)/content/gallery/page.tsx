@@ -1,12 +1,13 @@
 import { prisma } from "@/lib/db/prisma";
 import { GalleryClient } from "./GalleryClient";
+import { AdminPageHeader } from "@/components/admin/page-header";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminGalleryPage() {
   const dbItems = await prisma.galleryItem.findMany({
     include: { service: true },
-    orderBy: { order: "asc" }
+    orderBy: { order: "asc" },
   });
 
   const serialized = dbItems.map((item) => ({
@@ -19,8 +20,16 @@ export default async function AdminGalleryPage() {
     imageAlt: item.imageAlt,
     isBeforeAfter: item.isBeforeAfter,
     order: item.order,
-    isActive: item.isActive
+    isActive: item.isActive,
   }));
 
-  return <GalleryClient initialItems={serialized} />;
+  return (
+    <div className="flex flex-col gap-6">
+      <AdminPageHeader
+        title="Projects Gallery"
+        description="Showcase real cleaning jobs and before/after comparisons with 4:3 standard cropper."
+      />
+      <GalleryClient initialItems={serialized} />
+    </div>
+  );
 }
