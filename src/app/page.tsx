@@ -150,32 +150,36 @@ export default async function Home() {
       <Header settings={settings} />
 
       {/* 2. Hero Section */}
-      <Hero content={hero} phoneTel={settings.phoneTel} phoneDisplay={settings.phoneDisplay} />
+      {(settings.showHero ?? true) && (
+        <Hero content={hero} phoneTel={settings.phoneTel} phoneDisplay={settings.phoneDisplay} />
+      )}
 
       {/* 3. Our Services (6 cards, data-driven) */}
-      <Services services={services} />
+      {(settings.showServices ?? true) && <Services services={services} />}
 
       {/* 4. Why Choose JUBU */}
-      <WhyChooseUs items={whyChoose} />
+      {(settings.showWhyChoose ?? true) && <WhyChooseUs items={whyChoose} />}
 
       {/* 5. About Us / Company Profile */}
-      <About content={about} />
+      {(settings.showAbout ?? true) && <About content={about} />}
 
       {/* 6. Our Team */}
-      <Team members={team} />
+      {(settings.showTeam ?? true) && <Team members={team} />}
 
       {/* 7. Projects / Gallery (with accessible lightbox) */}
-      <Gallery items={gallery} />
+      {(settings.showGallery ?? true) && <Gallery items={gallery} />}
 
       {/* 8. Get a Free Quote (Lead Form) */}
-      <QuoteForm services={services} settings={settings} />
+      {(settings.showQuote ?? true) && <QuoteForm services={services} settings={settings} />}
 
       {/* 9. Dubai Service Areas */}
-      <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} settings={settings} />
+      {(settings.showAreas ?? true) && (
+        <ServiceAreas areas={areas} whatsappUrl={defaultWhatsappUrl} settings={settings} />
+      )}
 
       <div className="bg-white">
         {/* 10. Contact Us */}
-        <Contact settings={settings} />
+        {(settings.showContact ?? true) && <Contact settings={settings} />}
 
         {/* 11. Footer */}
         <Footer settings={settings} />

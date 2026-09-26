@@ -84,6 +84,17 @@ model SiteSettings {
   licenceAuthority        String   @default("Dubai Department of Economy and Tourism (DET)")
   licenceIssueDate        String   @default("25 January 2022")
 
+  // Section Visibility Toggles (default true / on)
+  showHero                Boolean  @default(true)
+  showServices            Boolean  @default(true)
+  showWhyChoose           Boolean  @default(true)
+  showAbout               Boolean  @default(true)
+  showTeam                Boolean  @default(true)
+  showGallery             Boolean  @default(true)
+  showQuote               Boolean  @default(true)
+  showAreas               Boolean  @default(true)
+  showContact             Boolean  @default(true)
+
   updatedAt               DateTime @updatedAt
 }
 

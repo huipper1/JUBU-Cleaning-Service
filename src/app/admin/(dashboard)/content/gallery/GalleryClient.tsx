@@ -79,12 +79,12 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
           items.map((i) =>
             i.id === item.id
               ? {
-                  ...i,
-                  title: editTitle,
-                  caption: editCaption || undefined,
-                  imageSrc: editImageSrc,
-                  order: editOrder,
-                }
+                ...i,
+                title: editTitle,
+                caption: editCaption || undefined,
+                imageSrc: editImageSrc,
+                order: editOrder,
+              }
               : i
           )
         );
@@ -99,13 +99,13 @@ export function GalleryClient({ initialItems }: GalleryClientProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
       {items.map((item) => {
         const isEdit = editingId === item.id;
 
         return (
           <Card key={item.id} className="flex flex-col justify-between">
-            <CardContent className="p-5">
+            <CardContent className="px-2">
               {isEdit ? (
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between pb-2 border-b">

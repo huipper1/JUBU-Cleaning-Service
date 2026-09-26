@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 
 interface SettingsClientProps {
@@ -25,7 +26,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [formData, setFormData] = useState<UpdateSettingsData>(initialSettings);
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleChange = (field: keyof UpdateSettingsData, val: string) => {
+  const handleChange = (field: keyof UpdateSettingsData, val: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: val }));
   };
 
@@ -45,6 +46,69 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       setIsSaving(false);
     }
   };
+
+  const sectionToggles: Array<{
+    key: keyof Pick<
+      UpdateSettingsData,
+      | "showHero"
+      | "showServices"
+      | "showWhyChoose"
+      | "showAbout"
+      | "showTeam"
+      | "showGallery"
+      | "showQuote"
+      | "showAreas"
+      | "showContact"
+    >;
+    title: string;
+    description: string;
+  }> = [
+    {
+      key: "showHero",
+      title: "Hero Section",
+      description: "Top headline, call-to-actions, and main cleaner banner.",
+    },
+    {
+      key: "showServices",
+      title: "Services Catalog",
+      description: "Grid displaying all residential, commercial & deep cleaning services.",
+    },
+    {
+      key: "showWhyChoose",
+      title: "Why Choose JUBU Highlights",
+      description: "Trust pillars, trained staff badges, and quality assurance cards.",
+    },
+    {
+      key: "showAbout",
+      title: "About Us / Company Profile",
+      description: "Company mission statement, equipment checklist, and profile story.",
+    },
+    {
+      key: "showTeam",
+      title: "Our Team",
+      description: "Staff portraits, leadership cards, and supervisor bios.",
+    },
+    {
+      key: "showGallery",
+      title: "Projects & Before/After Gallery",
+      description: "Visual portfolio of completed deep cleaning and sanitization projects.",
+    },
+    {
+      key: "showQuote",
+      title: "Free Quote & Lead Form",
+      description: "Instant booking and contact inquiry form for prospective clients.",
+    },
+    {
+      key: "showAreas",
+      title: "Dubai Service Areas",
+      description: "Interactive coverage map and list of covered Dubai neighborhoods.",
+    },
+    {
+      key: "showContact",
+      title: "Contact & Location",
+      description: "Registered office address, phone numbers, and working hours.",
+    },
+  ];
 
   return (
     <form onSubmit={handleSave} className="flex flex-col gap-6 pb-12">
@@ -68,8 +132,9 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       </AdminPageHeader>
 
       <Tabs defaultValue="branding" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="branding">Branding & Logo</TabsTrigger>
+          <TabsTrigger value="sections">Page Sections</TabsTrigger>
           <TabsTrigger value="contact">Contact & Address</TabsTrigger>
           <TabsTrigger value="licence">Trade Licence</TabsTrigger>
           <TabsTrigger value="seo">SEO & Metadata</TabsTrigger>
@@ -101,6 +166,45 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   onChange={(e) => handleChange("logoAlt", e.target.value)}
                   placeholder="e.g. JUBU Cleaning Service Logo"
                 />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Page Sections Visibility Tab */}
+        <TabsContent value="sections" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Page Sections Visibility</CardTitle>
+              <CardDescription>
+                Enable or disable entire sections from displaying on the public landing page.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {sectionToggles.map((sec) => {
+                  const isChecked = Boolean(formData[sec.key]);
+                  return (
+                    <div
+                      key={sec.key}
+                      className="flex items-center justify-between gap-3 rounded-lg border p-4 shadow-xs"
+                    >
+                      <div className="flex flex-col gap-0.5 pr-2">
+                        <span className="text-sm font-semibold text-foreground">
+                          {sec.title}
+                        </span>
+                        <span className="text-xs text-muted-foreground line-clamp-2">
+                          {sec.description}
+                        </span>
+                      </div>
+                      <Switch
+                        checked={isChecked}
+                        onCheckedChange={(checked) => handleChange(sec.key, checked)}
+                        aria-label={`Toggle ${sec.title}`}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

@@ -2,12 +2,20 @@ import { prisma } from "@/lib/db/prisma";
 import { WhyChooseClient } from "./WhyChooseClient";
 import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminWhyChoosePage() {
-  const dbItems = await prisma.whyChooseItem.findMany({
-    orderBy: { order: "asc" },
-  });
+  const [dbItems, settings] = await Promise.all([
+    prisma.whyChooseItem.findMany({
+      orderBy: { order: "asc" },
+    }),
+    prisma.siteSettings.findUnique({
+      where: { id: "default" },
+      select: { showWhyChoose: true },
+    }),
+  ]);
 
   const serialized = dbItems.map((item) => ({
     id: item.id,
@@ -23,7 +31,13 @@ export default async function AdminWhyChoosePage() {
       <AdminPageHeader
         title="Why Choose Us Highlights"
         description="Edit the 4 core trust pillars displayed across the website."
-      />
+      >
+        <SectionVisibilityToggle
+          sectionKey="showWhyChoose"
+          label="Why Choose Us Section"
+          initialVisible={settings?.showWhyChoose ?? true}
+        />
+      </AdminPageHeader>
       <WhyChooseClient initialItems={serialized} />
     </div>
   );

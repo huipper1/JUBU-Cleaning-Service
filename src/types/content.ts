@@ -48,6 +48,15 @@ export interface SiteSettings {
   defaultSeo: SeoMetadata;
   copyrightText: string;
   licence: TradeLicence;
+  showHero?: boolean;
+  showServices?: boolean;
+  showWhyChoose?: boolean;
+  showAbout?: boolean;
+  showTeam?: boolean;
+  showGallery?: boolean;
+  showQuote?: boolean;
+  showAreas?: boolean;
+  showContact?: boolean;
 }
 
 export interface TrustBadgeItem {

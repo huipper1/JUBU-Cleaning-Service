@@ -26,6 +26,15 @@ export interface UpdateSettingsData {
   licenceStructure: string;
   licenceAuthority: string;
   licenceIssueDate: string;
+  showHero: boolean;
+  showServices: boolean;
+  showWhyChoose: boolean;
+  showAbout: boolean;
+  showTeam: boolean;
+  showGallery: boolean;
+  showQuote: boolean;
+  showAreas: boolean;
+  showContact: boolean;
 }
 
 export async function updateSettingsAction(data: UpdateSettingsData) {

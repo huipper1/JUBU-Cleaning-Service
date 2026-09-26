@@ -2,12 +2,20 @@ import { prisma } from "@/lib/db/prisma";
 import { AreasClient } from "./AreasClient";
 import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminAreasPage() {
-  const dbAreas = await prisma.serviceArea.findMany({
-    orderBy: { order: "asc" },
-  });
+  const [dbAreas, settings] = await Promise.all([
+    prisma.serviceArea.findMany({
+      orderBy: { order: "asc" },
+    }),
+    prisma.siteSettings.findUnique({
+      where: { id: "default" },
+      select: { showAreas: true },
+    }),
+  ]);
 
   const serialized = dbAreas.map((a) => ({
     id: a.id,
@@ -24,7 +32,13 @@ export default async function AdminAreasPage() {
       <AdminPageHeader
         title="Dubai Service Areas"
         description="Manage the 10 supported coverage areas and their interactive map coordinates."
-      />
+      >
+        <SectionVisibilityToggle
+          sectionKey="showAreas"
+          label="Areas Section"
+          initialVisible={settings?.showAreas ?? true}
+        />
+      </AdminPageHeader>
       <AreasClient initialAreas={serialized} />
     </div>
   );

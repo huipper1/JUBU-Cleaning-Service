@@ -88,12 +88,12 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
           services.map((item) =>
             item.id === s.id
               ? {
-                  ...item,
-                  title: editTitle,
-                  shortDescription: editShortDesc,
-                  longDescription: editLongDesc || undefined,
-                  order: editOrder,
-                }
+                ...item,
+                title: editTitle,
+                shortDescription: editShortDesc,
+                longDescription: editLongDesc || undefined,
+                order: editOrder,
+              }
               : item
           )
         );
@@ -114,7 +114,7 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
 
         return (
           <Card key={s.id}>
-            <CardContent className="p-6">
+            <CardContent className="px-2">
               {isEdit ? (
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between pb-2 border-b">

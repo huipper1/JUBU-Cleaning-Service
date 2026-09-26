@@ -2,13 +2,21 @@ import { prisma } from "@/lib/db/prisma";
 import { GalleryClient } from "./GalleryClient";
 import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminGalleryPage() {
-  const dbItems = await prisma.galleryItem.findMany({
-    include: { service: true },
-    orderBy: { order: "asc" },
-  });
+  const [dbItems, settings] = await Promise.all([
+    prisma.galleryItem.findMany({
+      include: { service: true },
+      orderBy: { order: "asc" },
+    }),
+    prisma.siteSettings.findUnique({
+      where: { id: "default" },
+      select: { showGallery: true },
+    }),
+  ]);
 
   const serialized = dbItems.map((item) => ({
     id: item.id,
@@ -28,7 +36,13 @@ export default async function AdminGalleryPage() {
       <AdminPageHeader
         title="Projects Gallery"
         description="Showcase real cleaning jobs and before/after comparisons with 4:3 standard cropper."
-      />
+      >
+        <SectionVisibilityToggle
+          sectionKey="showGallery"
+          label="Gallery Section"
+          initialVisible={settings?.showGallery ?? true}
+        />
+      </AdminPageHeader>
       <GalleryClient initialItems={serialized} />
     </div>
   );

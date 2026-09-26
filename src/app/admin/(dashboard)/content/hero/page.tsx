@@ -4,9 +4,15 @@ import { HeroClient } from "./HeroClient";
 export const dynamic = "force-dynamic";
 
 export default async function AdminHeroPage() {
-  const hero = await prisma.heroContent.findUnique({
-    where: { id: "default" }
-  });
+  const [hero, settings] = await Promise.all([
+    prisma.heroContent.findUnique({
+      where: { id: "default" }
+    }),
+    prisma.siteSettings.findUnique({
+      where: { id: "default" },
+      select: { showHero: true }
+    })
+  ]);
 
   const initialHero = {
     badge: hero?.badge ?? "Professional Cleaning Services in Dubai",
@@ -24,5 +30,10 @@ export default async function AdminHeroPage() {
     floatingBadge: hero?.floatingBadge ?? "Cleaner Spaces Brighter Lives"
   };
 
-  return <HeroClient initialHero={initialHero} />;
+  return (
+    <HeroClient
+      initialHero={initialHero}
+      initialShowHero={settings?.showHero ?? true}
+    />
+  );
 }

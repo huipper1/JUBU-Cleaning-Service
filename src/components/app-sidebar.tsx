@@ -67,7 +67,7 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/admin">
-                <div className="relative flex aspect-square size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-card border">
+                <div className="relative flex aspect-square size-8 shrink-0 items-center justify-center overflow-hidden bg-primary">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={logoUrl}

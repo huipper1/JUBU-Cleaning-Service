@@ -192,11 +192,13 @@ export default async function AreaPage({ params }: AreaPageProps) {
       />
 
       {/* 3. Our Services (swapped heading per client brief) */}
-      <Services
-        services={services}
-        title={areaData.servicesSectionTitle}
-        description={`Professional, licensed cleaning solutions tailored for properties in ${areaData.areaName}, Dubai.`}
-      />
+      {(settings.showServices ?? true) && (
+        <Services
+          services={services}
+          title={areaData.servicesSectionTitle}
+          description={`Professional, licensed cleaning solutions tailored for properties in ${areaData.areaName}, Dubai.`}
+        />
+      )}
 
       {/* 3.1 Featured Area Block (Specialized copy from client brief) */}
       <FeaturedBlock
@@ -205,41 +207,45 @@ export default async function AreaPage({ params }: AreaPageProps) {
       />
 
       {/* 4. Why Choose JUBU */}
-      <WhyChooseUs items={whyChoose} />
+      {(settings.showWhyChoose ?? true) && <WhyChooseUs items={whyChoose} />}
 
       {/* 5. About Us / Company Profile */}
-      <About content={about} />
+      {(settings.showAbout ?? true) && <About content={about} />}
 
       {/* 6. Our Team */}
-      <Team members={team} />
+      {(settings.showTeam ?? true) && <Team members={team} />}
 
       {/* 7. Projects / Gallery (with accessible lightbox) */}
-      <Gallery items={gallery} />
+      {(settings.showGallery ?? true) && <Gallery items={gallery} />}
 
       {/* 8. Frequently Asked Questions (Area-specific FAQ section) */}
       <Faq faqs={areaData.faqs} areaName={areaData.areaName} />
 
       {/* 9. Get a Free Quote (Lead Form with sourceArea tracking and area CTA heading) */}
-      <QuoteForm
-        services={services}
-        settings={settings}
-        sourceArea={areaData.slug}
-        finalCtaTitle={areaData.finalCtaTitle}
-      />
+      {(settings.showQuote ?? true) && (
+        <QuoteForm
+          services={services}
+          settings={settings}
+          sourceArea={areaData.slug}
+          finalCtaTitle={areaData.finalCtaTitle}
+        />
+      )}
 
       {/* 10. Dubai Service Areas (with area pinned and near-you copy) */}
-      <ServiceAreas
-        areas={areas}
-        whatsappUrl={defaultWhatsappUrl}
-        settings={settings}
-        initialActiveAreaId={areaData.slug}
-        headline={areaData.nearYouTitle}
-        nearYouText={areaData.nearYouText}
-      />
+      {(settings.showAreas ?? true) && (
+        <ServiceAreas
+          areas={areas}
+          whatsappUrl={defaultWhatsappUrl}
+          settings={settings}
+          initialActiveAreaId={areaData.slug}
+          headline={areaData.nearYouTitle}
+          nearYouText={areaData.nearYouText}
+        />
+      )}
 
       <div className="bg-white">
         {/* 11. Contact Us */}
-        <Contact settings={settings} />
+        {(settings.showContact ?? true) && <Contact settings={settings} />}
 
         {/* 12. Footer */}
         <Footer settings={settings} />

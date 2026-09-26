@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
 
 interface HeroClientProps {
   initialHero: UpdateHeroData;
+  initialShowHero?: boolean;
 }
 
-export function HeroClient({ initialHero }: HeroClientProps) {
+export function HeroClient({ initialHero, initialShowHero = true }: HeroClientProps) {
   const [formData, setFormData] = useState<UpdateHeroData>(initialHero);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -46,11 +48,16 @@ export function HeroClient({ initialHero }: HeroClientProps) {
   };
 
   return (
-    <form onSubmit={handleSave} className="flex flex-col gap-6 max-w-4xl pb-12">
+    <form onSubmit={handleSave} className="flex flex-col gap-6 pb-12">
       <AdminPageHeader
         title="Hero Section"
         description="Edit the main hero banner headlines, call-to-actions, and cutout cleaner photo."
       >
+        <SectionVisibilityToggle
+          sectionKey="showHero"
+          label="Hero Section"
+          initialVisible={initialShowHero}
+        />
         <Button type="submit" disabled={isSaving}>
           {isSaving ? (
             <>

@@ -42,7 +42,16 @@ export default async function AdminSettingsPage() {
     licenceStructure: settings?.licenceStructure ?? "Limited Liability Company (LLC)",
     licenceAuthority:
       settings?.licenceAuthority ?? "Dubai Department of Economy and Tourism (DET)",
-    licenceIssueDate: settings?.licenceIssueDate ?? "25 January 2022"
+    licenceIssueDate: settings?.licenceIssueDate ?? "25 January 2022",
+    showHero: settings?.showHero ?? true,
+    showServices: settings?.showServices ?? true,
+    showWhyChoose: settings?.showWhyChoose ?? true,
+    showAbout: settings?.showAbout ?? true,
+    showTeam: settings?.showTeam ?? true,
+    showGallery: settings?.showGallery ?? true,
+    showQuote: settings?.showQuote ?? true,
+    showAreas: settings?.showAreas ?? true,
+    showContact: settings?.showContact ?? true,
   };
 
   return <SettingsClient initialSettings={initialSettings} />;

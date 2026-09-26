@@ -10,5 +10,6 @@ export * from "./label";
 export * from "./section-heading";
 export * from "./separator";
 export * from "./sonner";
+export * from "./switch";
 export * from "./table";
 export * from "./tooltip";

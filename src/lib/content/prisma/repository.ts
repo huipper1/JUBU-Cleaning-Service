@@ -61,7 +61,16 @@ export class PrismaContentRepository implements ContentRepository {
         legalStructure: s.licenceStructure,
         issuingAuthority: s.licenceAuthority,
         issueDate: s.licenceIssueDate
-      }
+      },
+      showHero: s.showHero,
+      showServices: s.showServices,
+      showWhyChoose: s.showWhyChoose,
+      showAbout: s.showAbout,
+      showTeam: s.showTeam,
+      showGallery: s.showGallery,
+      showQuote: s.showQuote,
+      showAreas: s.showAreas,
+      showContact: s.showContact
     };
   }
 
