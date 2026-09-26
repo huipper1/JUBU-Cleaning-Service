@@ -5,7 +5,9 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().optional(),
     DIRECT_URL: z.string().optional(),
-    CONTENT_SOURCE: z.enum(["mock", "prisma"]).default("mock")
+    CONTENT_SOURCE: z.enum(["mock", "prisma"]).default("mock"),
+    ADMIN_EMAIL: z.string().email().optional(),
+    ADMIN_PASSWORD: z.string().min(6).optional()
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.url(),
@@ -18,6 +20,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     DIRECT_URL: process.env.DIRECT_URL,
     CONTENT_SOURCE: process.env.CONTENT_SOURCE,
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,

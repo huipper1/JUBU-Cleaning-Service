@@ -6,14 +6,7 @@ import { toast } from "sonner";
 import {
   Phone,
   MessageSquare,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  FileText,
-  Search,
-  ExternalLink,
-  ChevronRight,
-  Loader2,
+
 } from "lucide-react";
 import type { Lead, LeadStatus } from "@/types/lead";
 import { updateLeadStatusAction, updateLeadNotesAction } from "./actions";
@@ -28,7 +21,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 
 interface LeadsClientProps {
   leads: Lead[];
@@ -311,7 +303,7 @@ export function LeadsClient({
           {selectedLead && (
             <div className="flex flex-col gap-4 py-2 text-xs">
               <Card>
-                <CardHeader className="pb-2">
+                <CardHeader>
                   <CardTitle className="text-xs">Contact & Service</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-1 text-muted-foreground">
@@ -340,7 +332,7 @@ export function LeadsClient({
 
               {selectedLead.message && (
                 <Card>
-                  <CardHeader className="pb-2">
+                  <CardHeader>
                     <CardTitle className="text-xs">Inquiry Message</CardTitle>
                   </CardHeader>
                   <CardContent className="italic text-foreground">
@@ -349,8 +341,8 @@ export function LeadsClient({
                 </Card>
               )}
 
-              <Card>
-                <CardHeader className="pb-2">
+              {/* <Card>
+                <CardHeader>
                   <CardTitle className="text-xs">Internal Notes</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
@@ -370,7 +362,7 @@ export function LeadsClient({
                     {isSavingNotes ? "Saving..." : "Save Note"}
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           )}
         </DialogContent>

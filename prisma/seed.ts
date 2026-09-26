@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { createClient } from "@supabase/supabase-js";
 import { mockSettingsData } from "../src/lib/content/mock/data/settings";
 import { mockHeroData } from "../src/lib/content/mock/data/hero";
 import { mockAboutData } from "../src/lib/content/mock/data/about";
@@ -251,6 +252,70 @@ async function main() {
     });
   }
 
+  // 11. Admin User Seeding (Credentials from .env)
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@jubucleaning.ae";
+  const adminPassword = process.env.ADMIN_PASSWORD || "Admin@JubuCleaning2026!";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  console.log(`Seeding Admin User (${adminEmail})...`);
+
+  let supabaseUid: string | null = null;
+
+  if (supabaseUrl && supabaseAnonKey) {
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+
+    // Try signing up or signing in to ensure credentials work in Supabase Auth
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email: adminEmail,
+      password: adminPassword,
+      options: {
+        data: {
+          fullName: "JUBU Admin"
+        }
+      }
+    });
+
+    if (signUpData?.user) {
+      supabaseUid = signUpData.user.id;
+    } else if (signUpError) {
+      // User may already exist in Supabase Auth; verify by signing in
+      const { data: signInData } = await supabase.auth.signInWithPassword({
+        email: adminEmail,
+        password: adminPassword
+      });
+      if (signInData?.user) {
+        supabaseUid = signInData.user.id;
+      }
+    }
+  }
+
+  // If Supabase Auth is not directly queryable or already configured, check existing AdminUser or generate UUID
+  if (!supabaseUid) {
+    const existing = await prisma.adminUser.findUnique({
+      where: { email: adminEmail }
+    });
+    supabaseUid = existing?.supabaseUid || "5d6cfdca-0a0b-4490-8b2f-a0b6ed0a1c8e";
+  }
+
+  await prisma.adminUser.upsert({
+    where: { email: adminEmail },
+    update: {
+      supabaseUid,
+      fullName: "JUBU Admin",
+      role: "ADMIN"
+    },
+    create: {
+      email: adminEmail,
+      supabaseUid,
+      fullName: "JUBU Admin",
+      role: "ADMIN"
+    }
+  });
+
+  console.log(`✅ Admin user seeded: ${adminEmail}`);
   console.log("✅ Seed completed successfully!");
 }
 

@@ -23,7 +23,7 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
       <div className="w-full max-w-md">
         <Card className="border-slate-800 bg-slate-900/80 shadow-2xl backdrop-blur-xl">
           <CardHeader className="text-center pb-4">
-            <div className="mx-auto mb-3 flex h-16 w-36 items-center justify-center rounded-xl bg-card/60 p-2 border border-slate-800">
+            <div className="mx-auto mb-3 flex h-16 w-36 items-center justify-center ">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={branding.logoSrc}
