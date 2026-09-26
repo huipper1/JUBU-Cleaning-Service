@@ -1,9 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import Image from "next/image";
-import { loginAction } from "./actions";
 import { Lock, Mail, ShieldAlert, Sparkles, Loader2 } from "lucide-react";
+import { loginAction } from "./actions";
 
 export default function AdminLoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, null);

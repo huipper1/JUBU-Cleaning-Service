@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { logoutAction } from "./login/actions";
+import { logoutAction } from "../login/actions";
 import {
   LayoutDashboard,
   Inbox,
