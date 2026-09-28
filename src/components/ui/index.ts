@@ -1,5 +1,6 @@
 export * from "./avatar";
 export * from "./button";
+export * from "./calendar";
 export * from "./card";
 export * from "./dropdown-menu";
 export * from "./field";
@@ -7,6 +8,7 @@ export * from "./form";
 export * from "./icon";
 export * from "./input";
 export * from "./label";
+export * from "./popover";
 export * from "./section-heading";
 export * from "./separator";
 export * from "./sonner";

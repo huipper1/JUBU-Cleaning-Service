@@ -5,12 +5,14 @@ import Image from "next/image";
 
 import {
   ArrowRight,
+  Briefcase,
   Building2,
-  Calendar,
+  Calendar as CalendarIcon,
   Check,
   CheckCircle2,
   ChevronDown,
   ExternalLink,
+  Home,
   Loader2,
   Lock,
   MapPin,
@@ -21,20 +23,57 @@ import {
   Settings,
   ShieldCheck,
   Sparkles,
+  Store,
   User
 } from "lucide-react";
+import { format } from "date-fns";
 
 import type { Service, SiteSettings } from "@/types/content";
 import type { CreateLeadInput } from "@/types/lead";
-
-import { Icon } from "@/ui";
-import { createLeadInputSchema } from "@/lib/content/types";
 import { env } from "@/env";
+
+import { createLeadInputSchema } from "@/lib/content/types";
+
+import { Calendar as CalendarPicker, Icon, Popover, PopoverContent, PopoverTrigger } from "@/ui";
+
+const PROPERTY_TYPES = [
+  {
+    id: "apartment",
+    title: "Apartment",
+    shortDescription: "Studio, flat, or residential penthouse",
+    icon: Building2
+  },
+  {
+    id: "villa",
+    title: "Villa",
+    shortDescription: "Detached or semi-detached private home",
+    icon: Home
+  },
+  {
+    id: "office",
+    title: "Office",
+    shortDescription: "Commercial workspace or corporate office",
+    icon: Briefcase
+  },
+  {
+    id: "shop",
+    title: "Shop / Retail",
+    shortDescription: "Retail store, restaurant, or boutique",
+    icon: Store
+  },
+  {
+    id: "other",
+    title: "Other",
+    shortDescription: "Warehouse, venue, or specialized property",
+    icon: Sparkles
+  }
+] as const;
 
 interface QuoteFormProps {
   services: Service[];
   settings: SiteSettings;
   sourceArea?: string;
+  areaName?: string;
   finalCtaTitle?: string;
 }
 
@@ -44,6 +83,7 @@ export function QuoteForm({
   services,
   settings,
   sourceArea = "main-page",
+  areaName,
   finalCtaTitle
 }: QuoteFormProps) {
   const [formData, setFormData] = useState<CreateLeadInput>(() => ({
@@ -51,7 +91,7 @@ export function QuoteForm({
     mobile: "",
     whatsappNumber: "",
     serviceId: services[0]?.id ?? "home-cleaning",
-    location: "",
+    location: areaName ?? "",
     propertyType: "",
     preferredDate: "",
     message: "",
@@ -79,17 +119,28 @@ export function QuoteForm({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close custom dropdown on outside click or escape
+  const [isPropertyDropdownOpen, setIsPropertyDropdownOpen] = useState(false);
+  const propertyDropdownRef = useRef<HTMLDivElement>(null);
+
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
+  // Close custom dropdowns on outside click or escape
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsDropdownOpen(false);
+      }
+      if (propertyDropdownRef.current && !propertyDropdownRef.current.contains(e.target as Node)) {
+        setIsPropertyDropdownOpen(false);
       }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsDropdownOpen(false);
+        setIsPropertyDropdownOpen(false);
+        setIsDatePickerOpen(false);
       }
     };
 
@@ -258,12 +309,13 @@ export function QuoteForm({
   const resetForm = () => {
     setStatus("idle");
     setRedirectUrl("");
+    setSelectedDate(undefined);
     setFormData((prev) => ({
       ...prev,
       fullName: "",
       mobile: "",
       whatsappNumber: "",
-      location: "",
+      location: areaName ?? "",
       propertyType: "",
       preferredDate: "",
       message: ""
@@ -335,9 +387,7 @@ export function QuoteForm({
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">Customized Solutions</h3>
-                  <p className="mt-0.5 text-xs text-slate-300">
-                    Tailored to your specific needs
-                  </p>
+                  <p className="mt-0.5 text-xs text-slate-300">Tailored to your specific needs</p>
                 </div>
               </div>
 
@@ -359,9 +409,7 @@ export function QuoteForm({
                   <MessageCircle className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="block text-xs font-medium text-slate-300">
-                    Call / WhatsApp
-                  </span>
+                  <span className="block text-xs font-medium text-slate-300">Call / WhatsApp</span>
                   <a
                     href={`tel:${settings.phoneTel}`}
                     className="text-xl font-extrabold tracking-tight text-white transition-colors hover:text-brand-sky sm:text-2xl"
@@ -386,9 +434,12 @@ export function QuoteForm({
                 </a>
 
                 {/* Cursive text accent "Cleaner Dubai Brighter Lives" */}
-                <div className="relative -rotate-20 select-none hidden md:block">
-                  <span className="block font-serif text-lg italic tracking-wide text-center text-white/90 sm:text-xl">
-                    Cleaner<br /> Dubai<br /> Brighter<br /> Lives
+                <div className="relative hidden -rotate-20 select-none md:block">
+                  <span className="block text-center font-serif text-lg tracking-wide text-white/90 italic sm:text-xl">
+                    Cleaner
+                    <br /> Dubai
+                    <br /> Brighter
+                    <br /> Lives
                   </span>
                   <svg
                     className="mt-0.5 h-2 w-32 text-brand-green"
@@ -415,7 +466,7 @@ export function QuoteForm({
               {status === "success" ? (
                 /* Redirecting / Success State */
                 <div className="flex animate-in flex-col items-center py-6 text-center duration-300 zoom-in-95 fade-in">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-green/20 text-brand-green border border-brand-green/30">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-brand-green/30 bg-brand-green/20 text-brand-green">
                     <MessageCircle className="h-10 w-10 animate-pulse" />
                   </div>
                   <h3 className="mb-2 text-2xl font-extrabold text-white">
@@ -423,7 +474,9 @@ export function QuoteForm({
                   </h3>
                   <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-200">
                     Your request for{" "}
-                    <strong className="text-brand-sky font-bold">{submittedData?.serviceName}</strong>{" "}
+                    <strong className="font-bold text-brand-sky">
+                      {submittedData?.serviceName}
+                    </strong>{" "}
                     is ready. Opening WhatsApp now to connect you with our team.
                   </p>
 
@@ -503,10 +556,11 @@ export function QuoteForm({
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="e.g. John Doe"
-                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.fullName
-                          ? "border-red-400 bg-red-950/30"
-                          : "border-white/15 hover:border-white/30"
-                          }`}
+                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          fieldErrors.fullName
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                        }`}
                       />
                     </div>
                     {fieldErrors.fullName && (
@@ -536,10 +590,11 @@ export function QuoteForm({
                           value={formData.mobile}
                           onChange={handleChange}
                           placeholder="e.g. +971 50 123 4567"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                            fieldErrors.mobile
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15 hover:border-white/30"
+                          }`}
                         />
                       </div>
                       {fieldErrors.mobile && (
@@ -567,10 +622,11 @@ export function QuoteForm({
                           value={formData.whatsappNumber}
                           onChange={handleChange}
                           placeholder="e.g. +971 55 987 6543"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.whatsappNumber
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                            fieldErrors.whatsappNumber
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15 hover:border-white/30"
+                          }`}
                         />
                       </div>
                       {fieldErrors.whatsappNumber && (
@@ -580,7 +636,6 @@ export function QuoteForm({
                       )}
                     </div>
                   </div>
-
 
                   {/* Select Cleaning Service */}
                   <div className="relative" ref={dropdownRef}>
@@ -592,11 +647,7 @@ export function QuoteForm({
                     </label>
 
                     {/* Hidden input to maintain native form compatibility */}
-                    <input
-                      type="hidden"
-                      name="serviceId"
-                      value={formData.serviceId}
-                    />
+                    <input type="hidden" name="serviceId" value={formData.serviceId} />
 
                     {/* Custom Dropdown Trigger Button */}
                     <button
@@ -606,10 +657,13 @@ export function QuoteForm({
                       aria-expanded={isDropdownOpen}
                       aria-labelledby="service-select-label serviceId"
                       disabled={status === "submitting"}
-                      onClick={() => setIsDropdownOpen((prev) => !prev)}
+                      onClick={() => {
+                        setIsDropdownOpen((prev) => !prev);
+                        setIsPropertyDropdownOpen(false);
+                      }}
                       className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
                         isDropdownOpen
-                          ? "border-brand-sky ring-2 ring-brand-sky/30 shadow-lg shadow-sky-950/40"
+                          ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
                           : "border-white/15"
                       }`}
                     >
@@ -619,7 +673,10 @@ export function QuoteForm({
                             <Sparkles className="h-4 w-4" />
                           ) : (
                             <Icon
-                              name={services.find((s) => s.id === formData.serviceId)?.icon || "calendar"}
+                              name={
+                                services.find((s) => s.id === formData.serviceId)?.icon ||
+                                "calendar"
+                              }
                               className="h-4 w-4"
                             />
                           )}
@@ -627,7 +684,8 @@ export function QuoteForm({
                         <span className="truncate font-medium text-white">
                           {formData.serviceId === "other"
                             ? "Other / Custom Service"
-                            : services.find((s) => s.id === formData.serviceId)?.title ?? "Select a service"}
+                            : (services.find((s) => s.id === formData.serviceId)?.title ??
+                              "Select a service")}
                         </span>
                       </div>
 
@@ -645,9 +703,9 @@ export function QuoteForm({
                       <div
                         role="listbox"
                         aria-labelledby="service-select-label"
-                        className="absolute z-50 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-white/20 bg-[#081839]/95 p-1.5 shadow-2xl backdrop-blur-xl ring-1 ring-black/40 focus:outline-none scrollbar-thin scrollbar-thumb-white/20 animate-in fade-in zoom-in-95 duration-150"
+                        className="scrollbar-thin scrollbar-thumb-white/20 absolute z-50 mt-2 max-h-72 w-full animate-in overflow-y-auto rounded-2xl border border-white/20 bg-[#081839]/95 p-1.5 shadow-2xl ring-1 ring-black/40 backdrop-blur-xl duration-150 zoom-in-95 fade-in focus:outline-none"
                       >
-                        <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                        <div className="px-2.5 py-1.5 text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
                           Available Services
                         </div>
 
@@ -694,7 +752,7 @@ export function QuoteForm({
                                   <Icon name={svc.icon} className="h-4 w-4" />
                                 </div>
                                 <div className="min-w-0">
-                                  <div className="truncate text-sm font-semibold leading-tight text-white">
+                                  <div className="truncate text-sm leading-tight font-semibold text-white">
                                     {svc.title}
                                   </div>
                                   {svc.shortDescription && (
@@ -705,9 +763,7 @@ export function QuoteForm({
                                 </div>
                               </div>
 
-                              {isSelected && (
-                                <Check className="h-4 w-4 shrink-0 text-brand-sky" />
-                              )}
+                              {isSelected && <Check className="h-4 w-4 shrink-0 text-brand-sky" />}
                             </div>
                           );
                         })}
@@ -754,7 +810,7 @@ export function QuoteForm({
                               <Sparkles className="h-4 w-4" />
                             </div>
                             <div className="min-w-0">
-                              <div className="text-sm font-semibold leading-tight text-white">
+                              <div className="text-sm leading-tight font-semibold text-white">
                                 Other / Custom Service
                               </div>
                               <div className="text-[11px] text-slate-400 group-hover/item:text-slate-300">
@@ -792,11 +848,12 @@ export function QuoteForm({
                           disabled={status === "submitting"}
                           value={formData.location}
                           onChange={handleChange}
-                          placeholder="e.g. Dubai Marina, JBR"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.location
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
+                          placeholder={areaName ? `e.g. ${areaName}` : "e.g. Dubai Marina, JBR"}
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                            fieldErrors.location
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15 hover:border-white/30"
+                          }`}
                         />
                       </div>
                       {fieldErrors.location && (
@@ -804,55 +861,137 @@ export function QuoteForm({
                       )}
                     </div>
 
-                    <div>
+                    {/* Property Type Custom Dropdown matching Service UI-UX */}
+                    <div className="relative" ref={propertyDropdownRef}>
                       <label
-                        htmlFor="propertyType"
+                        id="property-type-label"
                         className="mb-1.5 block text-xs font-bold text-slate-200"
                       >
-                        Property Type{" "}
-                        <span className="font-normal text-slate-400">(Optional)</span>
+                        Property Type <span className="font-normal text-slate-400">(Optional)</span>
                       </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                          <Building2 className="h-4 w-4" />
+
+                      {/* Hidden input to maintain native form compatibility */}
+                      <input type="hidden" name="propertyType" value={formData.propertyType} />
+
+                      <button
+                        type="button"
+                        id="propertyType"
+                        aria-haspopup="listbox"
+                        aria-expanded={isPropertyDropdownOpen}
+                        aria-labelledby="property-type-label propertyType"
+                        disabled={status === "submitting"}
+                        onClick={() => {
+                          setIsPropertyDropdownOpen((prev) => !prev);
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          isPropertyDropdownOpen
+                            ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
+                            : "border-white/15"
+                        }`}
+                      >
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-sky transition-colors group-hover:bg-brand-sky/20">
+                            {(() => {
+                              const activeProp = PROPERTY_TYPES.find(
+                                (p) => p.id === formData.propertyType
+                              );
+                              const IconComp = activeProp?.icon || Building2;
+                              return <IconComp className="h-4 w-4" />;
+                            })()}
+                          </div>
+                          <span
+                            className={`truncate font-medium ${
+                              formData.propertyType ? "text-white" : "text-slate-400"
+                            }`}
+                          >
+                            {PROPERTY_TYPES.find((p) => p.id === formData.propertyType)?.title ??
+                              "Select property type"}
+                          </span>
                         </div>
-                        <select
-                          id="propertyType"
-                          name="propertyType"
-                          disabled={status === "submitting"}
-                          value={formData.propertyType}
-                          onChange={handleChange}
-                          className={`w-full appearance-none rounded-xl border bg-white/10 py-3 pr-10 pl-10 text-sm text-white transition-all focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${formData.propertyType
-                            ? "text-white"
-                            : "text-slate-400"
-                          } ${fieldErrors.propertyType
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                          }`}
+
+                        <div className="flex items-center pl-2 text-slate-400 transition-colors group-hover:text-white">
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform duration-200 ${
+                              isPropertyDropdownOpen ? "rotate-180 text-brand-sky" : ""
+                            }`}
+                          />
+                        </div>
+                      </button>
+
+                      {/* Custom Property Type Menu Panel */}
+                      {isPropertyDropdownOpen && (
+                        <div
+                          role="listbox"
+                          aria-labelledby="property-type-label"
+                          className="scrollbar-thin scrollbar-thumb-white/20 absolute z-50 mt-2 max-h-72 w-full animate-in overflow-y-auto rounded-2xl border border-white/20 bg-[#081839]/95 p-1.5 shadow-2xl ring-1 ring-black/40 backdrop-blur-xl duration-150 zoom-in-95 fade-in focus:outline-none"
                         >
-                          <option value="" className="bg-[#0b2447] text-slate-400">
-                            Select property type
-                          </option>
-                          <option value="apartment" className="bg-[#0b2447] text-white">
-                            Apartment
-                          </option>
-                          <option value="villa" className="bg-[#0b2447] text-white">
-                            Villa
-                          </option>
-                          <option value="office" className="bg-[#0b2447] text-white">
-                            Office
-                          </option>
-                          <option value="shop" className="bg-[#0b2447] text-white">
-                            Shop
-                          </option>
-                          <option value="other" className="bg-[#0b2447] text-white">
-                            Other
-                          </option>
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
-                          <ChevronDown className="h-4 w-4" />
+                          <div className="px-2.5 py-1.5 text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+                            Available Property Types
+                          </div>
+
+                          {PROPERTY_TYPES.map((prop) => {
+                            const isSelected = formData.propertyType === prop.id;
+                            const IconComponent = prop.icon;
+                            return (
+                              <div
+                                key={prop.id}
+                                role="option"
+                                aria-selected={isSelected}
+                                tabIndex={0}
+                                onClick={() => {
+                                  setFormData((prev) => ({ ...prev, propertyType: prop.id }));
+                                  setIsPropertyDropdownOpen(false);
+                                  if (fieldErrors.propertyType) {
+                                    setFieldErrors((prev) => {
+                                      const next = { ...prev };
+                                      delete next.propertyType;
+                                      return next;
+                                    });
+                                  }
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    setFormData((prev) => ({ ...prev, propertyType: prop.id }));
+                                    setIsPropertyDropdownOpen(false);
+                                  }
+                                }}
+                                className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
+                                  isSelected
+                                    ? "bg-brand-sky/20 text-white"
+                                    : "text-slate-200 hover:bg-white/10 hover:text-white"
+                                }`}
+                              >
+                                <div className="flex min-w-0 items-center gap-3">
+                                  <div
+                                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                                      isSelected
+                                        ? "bg-brand-sky text-white shadow-sm"
+                                        : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
+                                    }`}
+                                  >
+                                    <IconComponent className="h-4 w-4" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <div className="truncate text-sm leading-tight font-semibold text-white">
+                                      {prop.title}
+                                    </div>
+                                    <div className="truncate text-[11px] text-slate-400 group-hover/item:text-slate-300">
+                                      {prop.shortDescription}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {isSelected && (
+                                  <Check className="h-4 w-4 shrink-0 text-brand-sky" />
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
-                      </div>
+                      )}
+
                       {fieldErrors.propertyType && (
                         <p className="mt-1 text-[11px] text-red-300">
                           {fieldErrors.propertyType[0]}
@@ -861,32 +1000,77 @@ export function QuoteForm({
                     </div>
                   </div>
 
-                  {/* Preferred Date */}
+                  {/* Preferred Date with Shadcn Popover + Calendar */}
                   <div>
                     <label
                       htmlFor="preferredDate"
                       className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
-                      Preferred Date{" "}
-                      <span className="font-normal text-slate-400">(Optional)</span>
+                      Preferred Date <span className="font-normal text-slate-400">(Optional)</span>
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                        <Calendar className="h-4 w-4" />
-                      </div>
-                      <input
-                        type="date"
-                        id="preferredDate"
-                        name="preferredDate"
-                        disabled={status === "submitting"}
-                        value={formData.preferredDate}
-                        onChange={handleChange}
-                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none [color-scheme:dark] ${fieldErrors.preferredDate
-                          ? "border-red-400 bg-red-950/30"
-                          : "border-white/15 hover:border-white/30"
+
+                    {/* Hidden input to maintain native form compatibility */}
+                    <input type="hidden" name="preferredDate" value={formData.preferredDate} />
+
+                    <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          id="preferredDate"
+                          disabled={status === "submitting"}
+                          className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                            selectedDate ? "text-white" : "text-slate-400"
+                          } ${
+                            fieldErrors.preferredDate
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15 hover:border-white/30"
                           }`}
-                      />
-                    </div>
+                        >
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                            <CalendarIcon className="h-4 w-4" />
+                          </div>
+                          <span>
+                            {selectedDate
+                              ? format(selectedDate, "dd MMMM yyyy")
+                              : "Pick a preferred date"}
+                          </span>
+                          <div className="flex items-center text-slate-400 transition-colors group-hover:text-white">
+                            <ChevronDown className="h-4 w-4" />
+                          </div>
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        align="start"
+                        className="w-auto overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-xl"
+                      >
+                        <CalendarPicker
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            setSelectedDate(date);
+                            setFormData((prev) => ({
+                              ...prev,
+                              preferredDate: date ? format(date, "yyyy-MM-dd") : ""
+                            }));
+                            setIsDatePickerOpen(false);
+                            if (fieldErrors.preferredDate) {
+                              setFieldErrors((prev) => {
+                                const next = { ...prev };
+                                delete next.preferredDate;
+                                return next;
+                              });
+                            }
+                          }}
+                          disabled={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return date < today;
+                          }}
+                          autoFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
                     {fieldErrors.preferredDate && (
                       <p className="mt-1 text-[11px] text-red-300">
                         {fieldErrors.preferredDate[0]}
@@ -961,7 +1145,10 @@ export function QuoteForm({
                   {/* Privacy note */}
                   <div className="mt-1 flex items-center justify-center gap-1.5 text-center text-[11px] text-slate-400">
                     <Lock className="h-3.5 w-3.5 shrink-0" />
-                    <span>Your information is safe with us. We never share your details with third parties.</span>
+                    <span>
+                      Your information is safe with us. We never share your details with third
+                      parties.
+                    </span>
                   </div>
                 </form>
               )}

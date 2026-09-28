@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { env } from "@/env";
+
 import {
   getAbout,
   getAreaLandingPage,
@@ -12,7 +13,7 @@ import {
   getServices,
   getSettings,
   getTeam,
-  getWhyChoose,
+  getWhyChoose
 } from "@/lib/content";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
@@ -86,17 +87,16 @@ export default async function AreaPage({ params }: AreaPageProps) {
   }
 
   // Fetch shared site content exactly like the root page
-  const [settings, hero, services, whyChoose, about, team, gallery, areas] =
-    await Promise.all([
-      getSettings(),
-      getHero(),
-      getServices(),
-      getWhyChoose(),
-      getAbout(),
-      getTeam(),
-      getGallery(),
-      getAreas()
-    ]);
+  const [settings, hero, services, whyChoose, about, team, gallery, areas] = await Promise.all([
+    getSettings(),
+    getHero(),
+    getServices(),
+    getWhyChoose(),
+    getAbout(),
+    getTeam(),
+    getGallery(),
+    getAreas()
+  ]);
 
   const defaultWhatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     settings.whatsappDefaultMessage
@@ -151,9 +151,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
           position: index + 1
         }))
       },
-      sameAs: settings.socialLinks
-        .filter((s) => Boolean(s.url))
-        .map((s) => s.url)
+      sameAs: settings.socialLinks.filter((s) => Boolean(s.url)).map((s) => s.url)
     },
     {
       "@context": "https://schema.org",
@@ -201,10 +199,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
       )}
 
       {/* 3.1 Featured Area Block (Specialized copy from client brief) */}
-      <FeaturedBlock
-        title={areaData.featuredBlockTitle}
-        content={areaData.featuredBlockText}
-      />
+      <FeaturedBlock title={areaData.featuredBlockTitle} content={areaData.featuredBlockText} />
 
       {/* 4. Why Choose JUBU */}
       {(settings.showWhyChoose ?? true) && <WhyChooseUs items={whyChoose} />}
@@ -221,12 +216,13 @@ export default async function AreaPage({ params }: AreaPageProps) {
       {/* 8. Frequently Asked Questions (Area-specific FAQ section) */}
       <Faq faqs={areaData.faqs} areaName={areaData.areaName} />
 
-      {/* 9. Get a Free Quote (Lead Form with sourceArea tracking and area CTA heading) */}
+      {/* 9. Get a Free Quote (Lead Form with sourceArea tracking, area autofill, and area CTA heading) */}
       {(settings.showQuote ?? true) && (
         <QuoteForm
           services={services}
           settings={settings}
           sourceArea={areaData.slug}
+          areaName={areaData.areaName}
           finalCtaTitle={areaData.finalCtaTitle}
         />
       )}
