@@ -1,13 +1,13 @@
 import type { AreaNavItem, NavItem } from "@/types/navigation";
 
 export const MAIN_NAV_ITEMS: readonly NavItem[] = [
-  { label: "Home", href: "/#top" },
-  { label: "Services", href: "/#services" },
-  { label: "Why Us", href: "/#why-choose" },
-  { label: "About", href: "/#about" },
-  { label: "Gallery", href: "/#gallery" },
-  { label: "Areas", href: "/#areas" },
-  { label: "Contact", href: "/#contact" }
+  { label: "Home", href: "#top" },
+  { label: "Services", href: "#services" },
+  { label: "Why Us", href: "#why-choose" },
+  { label: "About", href: "#about" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Areas", href: "#areas" },
+  { label: "Contact", href: "#contact" }
 ] as const;
 
 export const AREA_NAV_ITEMS: readonly AreaNavItem[] = [

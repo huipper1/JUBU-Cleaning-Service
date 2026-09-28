@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
@@ -26,15 +27,14 @@ const QUICK_LINKS = [
 ] as const;
 
 export function Footer({ settings }: FooterProps) {
+  const pathname = usePathname();
+  const isRoot = pathname === "/";
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     settings.whatsappDefaultMessage
   )}`;
 
   return (
-    <footer
-      className="relative overflow-hidden text-white bg-white"
-      aria-label="Site Footer"
-    >
+    <footer className="relative overflow-hidden bg-white text-white" aria-label="Site Footer">
       {/* Dubai City Skyline Background */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <Image
@@ -50,12 +50,12 @@ export function Footer({ settings }: FooterProps) {
       </div>
 
       {/* Main Footer Content */}
-      <div className="container relative z-10 mx-auto px-4 pt-48 pb-14 sm:px-6 sm:pt-60 sm:pb-16 lg:px-8 lg:pt-72">
+      <div className="relative z-10 container mx-auto px-4 pt-48 pb-14 sm:px-6 sm:pt-60 sm:pb-16 lg:px-8 lg:pt-72">
         <div className="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-12 md:gap-0">
           {/* Column 1: Brand & Bio & Socials */}
           <div className="flex flex-col items-center text-center md:col-span-5 md:items-start md:pr-12 md:text-left lg:pr-16">
             <Link
-              href="#top"
+              href={isRoot ? "#top" : "/"}
               className="mb-5 block"
               aria-label={`${settings.businessName} Home`}
             >
@@ -69,7 +69,9 @@ export function Footer({ settings }: FooterProps) {
             </Link>
 
             <p className="mb-6 max-w-sm text-xs leading-relaxed font-normal text-slate-200 sm:text-sm">
-              JUBU Cleaning Service is a Dubai-based LLC providing trusted, reliable residential and commercial cleaning solutions across Dubai with specialized machines and dedicated staff.
+              JUBU Cleaning Service is a Dubai-based LLC providing trusted, reliable residential and
+              commercial cleaning solutions across Dubai with specialized machines and dedicated
+              staff.
             </p>
 
             {/* Contact details list */}
@@ -78,15 +80,15 @@ export function Footer({ settings }: FooterProps) {
                 href={settings.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-2 hover:text-white transition-colors"
+                className="flex items-start gap-2 transition-colors hover:text-white"
               >
-                <MapPin className="h-4 w-4 shrink-0 text-[#34d399] mt-0.5" />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#34d399]" />
                 <span>{settings.address}</span>
               </a>
 
               <a
                 href={`tel:${settings.phoneTel}`}
-                className="flex items-center gap-2 hover:text-white transition-colors"
+                className="flex items-center gap-2 transition-colors hover:text-white"
               >
                 <Phone className="h-4 w-4 shrink-0 text-[#38bdf8]" />
                 <span>{settings.phoneDisplay}</span>
@@ -94,7 +96,7 @@ export function Footer({ settings }: FooterProps) {
 
               <a
                 href={`mailto:${settings.email}`}
-                className="flex items-center gap-2 hover:text-white transition-colors"
+                className="flex items-center gap-2 transition-colors hover:text-white"
               >
                 <Mail className="h-4 w-4 shrink-0 text-[#38bdf8]" />
                 <span>{settings.email}</span>
@@ -126,16 +128,20 @@ export function Footer({ settings }: FooterProps) {
               Quick Links
             </h3>
             <ul className="grid grid-cols-2 gap-x-8 gap-y-2.5 sm:gap-x-12 md:grid-cols-1">
-              {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="inline-block text-sm text-slate-200 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {QUICK_LINKS.map((link) => {
+                const isHome = link.label === "Home";
+                const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
+                return (
+                  <li key={link.label}>
+                    <Link
+                      href={linkHref}
+                      className="inline-block text-sm text-slate-200 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -145,7 +151,8 @@ export function Footer({ settings }: FooterProps) {
               Get in Touch
             </h3>
             <p className="mb-5 text-xs leading-relaxed font-normal text-slate-200 sm:text-sm">
-              Need cleaning for your apartment, villa, or office? Reach out to us directly for a free, custom quote.
+              Need cleaning for your apartment, villa, or office? Reach out to us directly for a
+              free, custom quote.
             </p>
 
             <div className="flex w-full flex-col gap-3">
@@ -174,10 +181,11 @@ export function Footer({ settings }: FooterProps) {
       {/* Bottom Copyright Bar with Trade Licence Trust Line */}
       <div className="relative z-10 border-t border-white/10 bg-[#030d1d]/75 backdrop-blur-xs">
         <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-slate-300 sm:flex-row sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center sm:items-start sm:text-left gap-1">
+          <div className="flex flex-col items-center gap-1 text-center sm:items-start sm:text-left">
             <p>{settings.copyrightText}</p>
             <p className="text-[11px] text-slate-400">
-              Licensed by {settings.licence.issuingAuthority} · Licence No. {settings.licence.number}
+              Licensed by {settings.licence.issuingAuthority} · Licence No.{" "}
+              {settings.licence.number}
             </p>
           </div>
 

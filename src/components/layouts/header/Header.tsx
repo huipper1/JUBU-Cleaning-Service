@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { ChevronDown, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
 
@@ -14,6 +15,8 @@ interface HeaderProps {
 }
 
 export function Header({ settings }: HeaderProps) {
+  const pathname = usePathname();
+  const isRoot = pathname === "/";
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileAreasOpen, setIsMobileAreasOpen] = useState(false);
 
@@ -31,7 +34,7 @@ export function Header({ settings }: HeaderProps) {
       <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
-          href="/#top"
+          href={isRoot ? "#top" : "/"}
           className="flex items-center gap-2 rounded-md focus-visible:outline-2 focus-visible:outline-brand-sky"
           aria-label={`${settings.businessName} Home`}
         >
@@ -50,11 +53,14 @@ export function Header({ settings }: HeaderProps) {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main Navigation">
           {MAIN_NAV_ITEMS.map((link, idx) => {
+            const isHome = link.label === "Home";
+            const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
+
             if (link.label === "Areas") {
               return (
-                <div key={link.href} className="group/areas relative">
+                <div key={link.label} className="group/areas relative">
                   <Link
-                    href={link.href}
+                    href={linkHref}
                     className="relative flex items-center gap-1.5 py-2 text-sm font-medium text-slate-300 transition-colors group-hover/areas:text-white hover:text-white"
                     aria-haspopup="true"
                   >
@@ -100,10 +106,10 @@ export function Header({ settings }: HeaderProps) {
 
             return (
               <Link
-                key={link.href}
-                href={link.href}
+                key={link.label}
+                href={linkHref}
                 className={`relative py-1 text-sm font-medium transition-colors hover:text-white ${
-                  idx === 0
+                  idx === 0 && isRoot
                     ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-brand-sky"
                     : "text-slate-300 hover:text-white"
                 }`}
@@ -137,7 +143,7 @@ export function Header({ settings }: HeaderProps) {
 
           {/* Quote Button */}
           <Link
-            href="/#quote"
+            href="#quote"
             className="inline-flex items-center gap-2 rounded-full bg-brand-green px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-brand-green/25 transition-all hover:bg-brand-green-hover hover:shadow-lg active:scale-98 sm:text-sm"
           >
             <MessageCircle className="h-4 w-4" />
@@ -163,11 +169,14 @@ export function Header({ settings }: HeaderProps) {
           <div className="container mx-auto flex flex-col gap-4 px-4 py-6">
             <nav className="flex flex-col gap-1" aria-label="Mobile Navigation">
               {MAIN_NAV_ITEMS.map((link) => {
+                const isHome = link.label === "Home";
+                const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
+
                 if (link.label === "Areas") {
                   return (
-                    <div key={link.href} className="flex flex-col">
+                    <div key={link.label} className="flex flex-col">
                       <div className="flex items-center justify-between rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white">
-                        <Link href={link.href} onClick={closeMobileMenu} className="flex-1">
+                        <Link href={linkHref} onClick={closeMobileMenu} className="flex-1">
                           {link.label}
                         </Link>
                         <button
@@ -188,7 +197,7 @@ export function Header({ settings }: HeaderProps) {
                       {isMobileAreasOpen && (
                         <div className="mt-1 ml-4 flex flex-col gap-1 border-l border-white/10 pl-3">
                           <Link
-                            href="/#areas"
+                            href="#areas"
                             onClick={closeMobileMenu}
                             className="flex items-center gap-2.5 rounded-lg py-2 text-xs font-semibold text-brand-sky hover:text-white"
                           >
@@ -217,8 +226,8 @@ export function Header({ settings }: HeaderProps) {
 
                 return (
                   <Link
-                    key={link.href}
-                    href={link.href}
+                    key={link.label}
+                    href={linkHref}
                     onClick={closeMobileMenu}
                     className="rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
                   >
@@ -252,7 +261,7 @@ export function Header({ settings }: HeaderProps) {
               </a>
 
               <Link
-                href="/#quote"
+                href="#quote"
                 onClick={closeMobileMenu}
                 className="flex items-center justify-center gap-2 rounded-xl bg-brand-blue py-3 text-sm font-bold text-white shadow-md transition-colors hover:bg-brand-blue-hover"
               >
