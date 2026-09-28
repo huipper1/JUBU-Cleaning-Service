@@ -17,7 +17,7 @@ export const mockSettingsData: SiteSettings = {
   whatsappNumber: "971542995191",
   whatsappDefaultMessage:
     "Hello JUBU Cleaning Service, I would like to inquire about a free quote for your cleaning services in Dubai.",
-  email: "sajibulislam679@gmail.com",
+  email: "booking@jubucleaning.com",
   address: "Setadel Building, Office # 201, Al Quoz-4, Dubai, United Arab Emirates",
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Setadel+Building+Al+Quoz+4+Dubai",
   // DUMMY: confirm with client
