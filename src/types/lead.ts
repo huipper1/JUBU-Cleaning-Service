@@ -1,4 +1,10 @@
-export type LeadStatus = "pending" | "contacted" | "closed";
+export type LeadStatus =
+  | "new"
+  | "contacted"
+  | "quotation_sent"
+  | "confirmed"
+  | "completed"
+  | "lost_cancelled";
 
 export interface Lead {
   id: string;

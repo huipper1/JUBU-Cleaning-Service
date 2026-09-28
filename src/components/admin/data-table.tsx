@@ -1,27 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+import { ChevronLeft, ChevronRight, Inbox, Search } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface ColumnDef<T> {
   header: string;
@@ -49,7 +42,7 @@ export function AdminDataTable<T extends { id: string | number }>({
   pageSize,
   searchPlaceholder = "Search...",
   searchValue = "",
-  emptyMessage = "No records found.",
+  emptyMessage = "No records found."
 }: AdminDataTableProps<T>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -64,7 +57,7 @@ export function AdminDataTable<T extends { id: string | number }>({
     (params: Record<string, string | number | null>) => {
       const current = new URLSearchParams(Array.from(searchParams.entries()));
       Object.entries(params).forEach(([key, val]) => {
-        if (val === null || val === "" || val === 1 && key === "page") {
+        if (val === null || val === "" || (val === 1 && key === "page")) {
           current.delete(key);
         } else {
           current.set(key, String(val));
@@ -83,12 +76,12 @@ export function AdminDataTable<T extends { id: string | number }>({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full max-w-full min-w-0 flex-col gap-4">
       {/* Search Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <form onSubmit={handleSearchSubmit} className="flex max-w-sm flex-1 items-center gap-2">
           <div className="relative w-full">
-            <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+            <Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder={searchPlaceholder}
@@ -121,7 +114,7 @@ export function AdminDataTable<T extends { id: string | number }>({
       </div>
 
       {/* Table Container */}
-      <div className="rounded-md border bg-card">
+      <div className="w-full max-w-full min-w-0 overflow-hidden rounded-md border bg-card">
         <Table>
           <TableHeader>
             <TableRow>
@@ -153,8 +146,8 @@ export function AdminDataTable<T extends { id: string | number }>({
                       {col.cell
                         ? col.cell(row)
                         : col.accessorKey
-                        ? String(row[col.accessorKey] ?? "")
-                        : null}
+                          ? String(row[col.accessorKey] ?? "")
+                          : null}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -177,7 +170,7 @@ export function AdminDataTable<T extends { id: string | number }>({
               disabled={currentPage <= 1}
               onClick={() => updateQuery({ page: currentPage - 1 })}
             >
-              <ChevronLeft className="size-4 mr-1" />
+              <ChevronLeft className="mr-1 size-4" />
               Previous
             </Button>
             <Button
@@ -187,7 +180,7 @@ export function AdminDataTable<T extends { id: string | number }>({
               onClick={() => updateQuery({ page: currentPage + 1 })}
             >
               Next
-              <ChevronRight className="size-4 ml-1" />
+              <ChevronRight className="ml-1 size-4" />
             </Button>
           </div>
         </div>

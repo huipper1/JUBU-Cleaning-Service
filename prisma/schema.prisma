@@ -19,9 +19,12 @@ enum AdminRole {
 }
 
 enum LeadStatus {
-  pending
+  new
   contacted
-  closed
+  quotation_sent
+  confirmed
+  completed
+  lost_cancelled
 }
 
 // -------------------------------------------------------------
@@ -329,7 +332,7 @@ model Lead {
   fbclid         String?
   landingUrl     String?
 
-  status         LeadStatus @default(pending)
+  status         LeadStatus @default(new)
   adminNotes     String?    // Internal CRM remarks
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt

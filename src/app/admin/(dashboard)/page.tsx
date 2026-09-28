@@ -24,10 +24,10 @@ import { Button } from "@/components/ui/button";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  const [leadCount, pendingLeadCount, servicesCount, landingPagesCount, recentLeads] =
+  const [leadCount, newLeadCount, servicesCount, landingPagesCount, recentLeads] =
     await Promise.all([
       prisma.lead.count(),
-      prisma.lead.count({ where: { status: "pending" } }),
+      prisma.lead.count({ where: { status: "new" } }),
       prisma.service.count({ where: { isActive: true } }),
       prisma.areaLandingPage.count({ where: { isActive: true } }),
       prisma.lead.findMany({
@@ -68,21 +68,21 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Pending Actions */}
+        {/* New Leads */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Awaiting Follow-up
+              New Inquiries
             </CardTitle>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500">
               <Clock className="size-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
-              {pendingLeadCount}
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {newLeadCount}
             </div>
-            <p className="text-xs text-muted-foreground">pending response</p>
+            <p className="text-xs text-muted-foreground">awaiting response</p>
           </CardContent>
         </Card>
 
@@ -163,14 +163,18 @@ export default async function AdminDashboardPage() {
                     <div className="flex flex-col items-end gap-1">
                       <Badge
                         variant={
-                          lead.status === "pending"
+                          lead.status === "new"
                             ? "outline"
-                            : lead.status === "contacted"
-                            ? "secondary"
-                            : "default"
+                            : lead.status === "completed"
+                            ? "default"
+                            : "secondary"
                         }
                       >
-                        {lead.status}
+                        {lead.status === "quotation_sent"
+                          ? "Quotation Sent"
+                          : lead.status === "lost_cancelled"
+                          ? "Lost/Cancelled"
+                          : lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground">
                         {new Date(lead.createdAt).toLocaleDateString()}

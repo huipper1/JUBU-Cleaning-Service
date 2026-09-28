@@ -8,6 +8,8 @@ import { toast } from "sonner";
 
 import type { Lead, LeadStatus } from "@/types/lead";
 
+import { cn } from "@/lib/utils";
+
 import { AdminDataTable, ColumnDef } from "@/components/admin/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,50 @@ import {
 
 import { updateLeadNotesAction, updateLeadStatusAction } from "./actions";
 
+const STATUS_OPTIONS: {
+  id: LeadStatus;
+  label: string;
+  badgeClass: string;
+  cardClass: string;
+}[] = [
+  {
+    id: "new",
+    label: "New",
+    badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    cardClass: "text-blue-600 dark:text-blue-400"
+  },
+  {
+    id: "contacted",
+    label: "Contacted",
+    badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    cardClass: "text-amber-600 dark:text-amber-400"
+  },
+  {
+    id: "quotation_sent",
+    label: "Quotation Sent",
+    badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+    cardClass: "text-purple-600 dark:text-purple-400"
+  },
+  {
+    id: "confirmed",
+    label: "Confirmed",
+    badgeClass: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+    cardClass: "text-cyan-600 dark:text-cyan-400"
+  },
+  {
+    id: "completed",
+    label: "Completed",
+    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    cardClass: "text-emerald-600 dark:text-emerald-400"
+  },
+  {
+    id: "lost_cancelled",
+    label: "Lost/Cancelled",
+    badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    cardClass: "text-rose-600 dark:text-rose-400"
+  }
+];
+
 interface LeadsClientProps {
   leads: Lead[];
   totalCount: number;
@@ -31,9 +77,12 @@ interface LeadsClientProps {
   statusFilter: string;
   metrics: {
     total: number;
-    pending: number;
+    new: number;
     contacted: number;
-    closed: number;
+    quotation_sent: number;
+    confirmed: number;
+    completed: number;
+    lost_cancelled: number;
   };
 }
 
@@ -80,7 +129,8 @@ export function LeadsClient({
       toast.error("Failed to update status");
       setLocalLeads(prev);
     } else {
-      toast.success(`Lead marked as ${newStatus}`);
+      const opt = STATUS_OPTIONS.find((s) => s.id === newStatus);
+      toast.success(`Lead marked as ${opt?.label ?? newStatus}`);
     }
   };
 
@@ -158,20 +208,24 @@ export function LeadsClient({
     },
     {
       header: "Status",
+      className: "min-w-[140px]",
       cell: (lead) => (
         <select
           value={lead.status}
           onChange={(e) => handleStatusChange(lead.id, e.target.value as LeadStatus)}
           className="rounded-md border bg-background px-2 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
         >
-          <option value="pending">Pending</option>
-          <option value="contacted">Contacted</option>
-          <option value="closed">Closed</option>
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.id} value={opt.id}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       )
     },
     {
       header: "Date",
+      className: "whitespace-nowrap",
       cell: (lead) => (
         <span className="text-xs text-muted-foreground">
           {new Date(lead.createdAt).toLocaleDateString()}
@@ -180,7 +234,7 @@ export function LeadsClient({
     },
     {
       header: "Action",
-      className: "text-right",
+      className: "text-right whitespace-nowrap",
       cell: (lead) => (
         <Button
           variant="ghost"
@@ -197,71 +251,61 @@ export function LeadsClient({
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full max-w-full min-w-0 flex-col gap-6">
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 xl:grid-cols-7">
+        <Card className="min-w-0 overflow-hidden">
+          <CardHeader className="min-w-0 p-3 pb-1 sm:p-4 sm:pb-2">
+            <CardTitle
+              className="truncate text-xs font-medium text-muted-foreground"
+              title="Total Inquiries"
+            >
               Total Inquiries
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.total}</div>
+          <CardContent className="min-w-0 p-3 pt-0 sm:p-4 sm:pt-0">
+            <div className="truncate text-xl font-bold sm:text-2xl">{metrics.total}</div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-medium text-amber-600 dark:text-amber-400">
-              Pending Follow-up
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
-              {metrics.pending}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-medium text-blue-600 dark:text-blue-400">
-              Contacted / Active
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {metrics.contacted}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              Closed / Won
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-              {metrics.closed}
-            </div>
-          </CardContent>
-        </Card>
+        {STATUS_OPTIONS.map((st) => (
+          <Card key={st.id} className="min-w-0 overflow-hidden">
+            <CardHeader className="min-w-0 p-3 pb-1 sm:p-4 sm:pb-2">
+              <CardTitle
+                className={cn("truncate text-xs font-medium", st.cardClass)}
+                title={st.label}
+              >
+                {st.label}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="min-w-0 p-3 pt-0 sm:p-4 sm:pt-0">
+              <div className={cn("truncate text-xl font-bold sm:text-2xl", st.cardClass)}>
+                {metrics[st.id]}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Filter Chips */}
-      <div className="flex flex-wrap items-center gap-2">
-        {["all", "pending", "contacted", "closed"].map((st) => (
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
+        <Button
+          variant={statusFilter === "all" ? "default" : "outline"}
+          size="sm"
+          className="h-8 shrink-0 text-xs font-medium"
+          onClick={() => updateQuery({ status: "all", page: "1" })}
+        >
+          All ({metrics.total})
+        </Button>
+        {STATUS_OPTIONS.map((st) => (
           <Button
-            key={st}
-            variant={statusFilter === st ? "default" : "outline"}
+            key={st.id}
+            variant={statusFilter === st.id ? "default" : "outline"}
             size="sm"
-            onClick={() => updateQuery({ status: st, page: "1" })}
-            className="capitalize"
+            className="h-8 shrink-0 text-xs font-medium"
+            onClick={() => updateQuery({ status: st.id, page: "1" })}
           >
-            {st}
+            {st.label} ({metrics[st.id]})
           </Button>
         ))}
       </div>
@@ -280,7 +324,7 @@ export function LeadsClient({
 
       {/* Lead Details Dialog */}
       <Dialog open={Boolean(selectedLead)} onOpenChange={(open) => !open && setSelectedLead(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto sm:w-full">
           <DialogHeader>
             <DialogTitle>{selectedLead?.fullName}</DialogTitle>
             <DialogDescription>
@@ -296,6 +340,18 @@ export function LeadsClient({
                   <CardTitle className="text-xs">Contact & Service</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-1 text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-foreground">Status:</span>
+                    <Badge
+                      variant="outline"
+                      className={
+                        STATUS_OPTIONS.find((s) => s.id === selectedLead.status)?.badgeClass
+                      }
+                    >
+                      {STATUS_OPTIONS.find((s) => s.id === selectedLead.status)?.label ??
+                        selectedLead.status}
+                    </Badge>
+                  </div>
                   <div>
                     <span className="font-semibold text-foreground">Phone:</span>{" "}
                     {selectedLead.mobile}

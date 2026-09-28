@@ -47,7 +47,7 @@ export class PrismaLeadService implements LeadService {
           utmContent: validData.utmContent ?? null,
           fbclid: validData.fbclid ?? null,
           landingUrl: validData.landingUrl ?? null,
-          status: "pending"
+          status: "new"
         }
       });
 

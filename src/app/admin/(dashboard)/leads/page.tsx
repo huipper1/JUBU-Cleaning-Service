@@ -39,7 +39,16 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
     ];
   }
 
-  const [totalCount, dbLeads, pendingCount, contactedCount, closedCount] = await Promise.all([
+  const [
+    totalCount,
+    dbLeads,
+    newCount,
+    contactedCount,
+    quotationSentCount,
+    confirmedCount,
+    completedCount,
+    lostCancelledCount
+  ] = await Promise.all([
     prisma.lead.count({ where }),
     prisma.lead.findMany({
       where,
@@ -47,10 +56,21 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
       skip: (page - 1) * pageSize,
       take: pageSize
     }),
-    prisma.lead.count({ where: { status: "pending" } }),
+    prisma.lead.count({ where: { status: "new" } }),
     prisma.lead.count({ where: { status: "contacted" } }),
-    prisma.lead.count({ where: { status: "closed" } })
+    prisma.lead.count({ where: { status: "quotation_sent" } }),
+    prisma.lead.count({ where: { status: "confirmed" } }),
+    prisma.lead.count({ where: { status: "completed" } }),
+    prisma.lead.count({ where: { status: "lost_cancelled" } })
   ]);
+
+  const allTotalCount =
+    newCount +
+    contactedCount +
+    quotationSentCount +
+    confirmedCount +
+    completedCount +
+    lostCancelledCount;
 
   const serializedLeads: Lead[] = dbLeads.map((l) => ({
     id: l.id,
@@ -76,7 +96,7 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
   }));
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full max-w-full min-w-0 flex-col gap-6">
       <AdminPageHeader
         title="Leads Inbox & CRM Pipeline"
         description="Manage inbound quote inquiries, follow-ups, and operational notes with server-side pagination."
@@ -90,10 +110,13 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
         searchValue={search}
         statusFilter={status}
         metrics={{
-          total: totalCount,
-          pending: pendingCount,
+          total: allTotalCount,
+          new: newCount,
           contacted: contactedCount,
-          closed: closedCount
+          quotation_sent: quotationSentCount,
+          confirmed: confirmedCount,
+          completed: completedCount,
+          lost_cancelled: lostCancelledCount
         }}
       />
     </div>
