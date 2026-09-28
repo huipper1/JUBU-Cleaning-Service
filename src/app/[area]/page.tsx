@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import type { GalleryItem } from "@/types/content";
 import { env } from "@/env";
 
 import {
@@ -106,6 +107,44 @@ export default async function AreaPage({ params }: AreaPageProps) {
       : allServices;
 
   const services = selectedServices.length > 0 ? selectedServices : allServices;
+
+  const galleryItems: GalleryItem[] =
+    areaData.customGallery && areaData.customGallery.length > 0
+      ? areaData.customGallery.map((item, index) => ({
+          id: item.id || `custom-${index}`,
+          title: item.title,
+          caption: item.caption,
+          serviceId: "",
+          serviceName: areaData.areaName,
+          image: {
+            src: item.imageSrc,
+            alt: item.title,
+            width: 800,
+            height: 600
+          },
+          beforeImage: item.beforeImageSrc
+            ? {
+                src: item.beforeImageSrc,
+                alt: `${item.title} Before`,
+                width: 800,
+                height: 600
+              }
+            : undefined,
+          afterImage: item.afterImageSrc
+            ? {
+                src: item.afterImageSrc,
+                alt: `${item.title} After`,
+                width: 800,
+                height: 600
+              }
+            : undefined,
+          isBeforeAfter: item.isBeforeAfter,
+          order: item.order ?? index + 1,
+          isActive: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }))
+      : gallery;
 
   const defaultWhatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     settings.whatsappDefaultMessage
@@ -220,7 +259,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
       {(settings.showTeam ?? true) && <Team members={team} />}
 
       {/* 7. Projects / Gallery (with accessible lightbox) */}
-      {(settings.showGallery ?? true) && <Gallery items={gallery} />}
+      {(settings.showGallery ?? true) && <Gallery items={galleryItems} />}
 
       {/* 8. Frequently Asked Questions (Area-specific FAQ section) */}
       <Faq faqs={areaData.faqs} areaName={areaData.areaName} />

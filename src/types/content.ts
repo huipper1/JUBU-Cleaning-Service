@@ -171,6 +171,17 @@ export interface FeaturedContentBlock {
   text: string;
 }
 
+export interface AreaGalleryItem {
+  id: string;
+  title: string;
+  caption?: string;
+  imageSrc: string;
+  beforeImageSrc?: string;
+  afterImageSrc?: string;
+  isBeforeAfter: boolean;
+  order: number;
+}
+
 export interface AreaLandingPage {
   id: string;
   slug: string;
@@ -183,6 +194,7 @@ export interface AreaLandingPage {
   servicesSectionTitle: string;
   servicesList?: string[];
   serviceIds?: string[];
+  customGallery?: AreaGalleryItem[];
   featuredBlockTitle: string;
   featuredBlockText: string | FeaturedContentBlock[];
   nearYouTitle: string;
@@ -192,4 +204,3 @@ export interface AreaLandingPage {
   isActive: boolean;
   order: number;
 }
-

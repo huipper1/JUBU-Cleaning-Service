@@ -266,6 +266,8 @@ model AreaLandingPage {
   servicesList         String[] // Descriptive bullet strings
   serviceIds           String[] @default([]) // Selected service IDs from catalog
 
+  customGallery        Json?    @default("[]") // Custom area-specific gallery items (if empty, falls back to main gallery)
+
   featuredBlockTitle   String
   // Stored as JSON: string | Array<{ title: string, text: string }>
   featuredBlockText    Json

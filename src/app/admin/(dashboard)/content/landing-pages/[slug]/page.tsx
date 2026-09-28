@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 
+import { AreaGalleryItem } from "@/types/content";
+
 import { prisma } from "@/lib/db/prisma";
 
 import { AreaLandingPageEditor } from "./AreaLandingPageEditor";
@@ -41,6 +43,7 @@ export default async function AdminAreaLandingPageEditPage({
     servicesSectionTitle: page.servicesSectionTitle,
     servicesList: page.servicesList,
     serviceIds: page.serviceIds ?? [],
+    customGallery: (page.customGallery as unknown as AreaGalleryItem[]) ?? [],
     featuredBlockTitle: page.featuredBlockTitle,
     featuredBlockText: page.featuredBlockText as string | Array<{ title: string; text: string }>,
     nearYouTitle: page.nearYouTitle,

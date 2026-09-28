@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 
 import { Prisma } from "@prisma/client";
 
+import type { AreaGalleryItem } from "@/types/content";
+
 import { prisma } from "@/lib/db/prisma";
 
 export interface UpdateAreaLandingPageData {
@@ -16,6 +18,7 @@ export interface UpdateAreaLandingPageData {
   servicesSectionTitle: string;
   servicesList: string[];
   serviceIds?: string[];
+  customGallery?: AreaGalleryItem[];
   featuredBlockTitle: string;
   featuredBlockText: string | Array<{ title: string; text: string }>;
   nearYouTitle: string;
@@ -42,6 +45,7 @@ export async function updateAreaLandingPageAction(slug: string, data: UpdateArea
         servicesSectionTitle: data.servicesSectionTitle,
         servicesList: data.servicesList,
         serviceIds: data.serviceIds ?? [],
+        customGallery: (data.customGallery as unknown as Prisma.InputJsonValue) ?? [],
         featuredBlockTitle: data.featuredBlockTitle,
         featuredBlockText: data.featuredBlockText as unknown as Prisma.InputJsonValue,
         nearYouTitle: data.nearYouTitle,

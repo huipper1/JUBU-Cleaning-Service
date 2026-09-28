@@ -1,6 +1,7 @@
 import type {
   AboutContent,
   AboutHighlightItem,
+  AreaGalleryItem,
   AreaLandingPage,
   FaqItem,
   FeaturedContentBlock,
@@ -16,6 +17,7 @@ import type {
   WhyChooseItem
 } from "@/types/content";
 import type { TestimonialItem } from "@/types/testimonial";
+
 import type { ContentRepository } from "@/lib/content/repository";
 import { prisma } from "@/lib/db/prisma";
 
@@ -316,6 +318,7 @@ export class PrismaContentRepository implements ContentRepository {
     servicesSectionTitle: string;
     servicesList: string[];
     serviceIds?: string[];
+    customGallery?: unknown;
     featuredBlockTitle: string;
     featuredBlockText: unknown;
     nearYouTitle: string;
@@ -345,6 +348,7 @@ export class PrismaContentRepository implements ContentRepository {
       servicesSectionTitle: p.servicesSectionTitle,
       servicesList: p.servicesList,
       serviceIds: p.serviceIds ?? [],
+      customGallery: (p.customGallery as AreaGalleryItem[]) ?? [],
       featuredBlockTitle: p.featuredBlockTitle,
       featuredBlockText: p.featuredBlockText as string | FeaturedContentBlock[],
       nearYouTitle: p.nearYouTitle,
