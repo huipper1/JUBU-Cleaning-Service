@@ -1,26 +1,26 @@
 "use client";
 
 import * as React from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
-import {
-  Phone,
-  MessageSquare,
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-} from "lucide-react";
+import { MessageSquare, Phone } from "lucide-react";
+import { toast } from "sonner";
+
 import type { Lead, LeadStatus } from "@/types/lead";
-import { updateLeadStatusAction, updateLeadNotesAction } from "./actions";
+
 import { AdminDataTable, ColumnDef } from "@/components/admin/data-table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
+
+import { updateLeadNotesAction, updateLeadStatusAction } from "./actions";
 
 interface LeadsClientProps {
   leads: Lead[];
@@ -44,7 +44,7 @@ export function LeadsClient({
   pageSize,
   searchValue,
   statusFilter,
-  metrics,
+  metrics
 }: LeadsClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -73,9 +73,7 @@ export function LeadsClient({
 
   const handleStatusChange = async (leadId: string, newStatus: LeadStatus) => {
     const prev = [...localLeads];
-    setLocalLeads(
-      localLeads.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l))
-    );
+    setLocalLeads(localLeads.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)));
 
     const res = await updateLeadStatusAction(leadId, newStatus);
     if (!res.success) {
@@ -122,7 +120,7 @@ export function LeadsClient({
                 href={`https://wa.me/${whatsappTarget}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 hover:underline"
+                className="flex items-center gap-1 text-xs text-emerald-600 hover:underline dark:text-emerald-400"
               >
                 <MessageSquare className="size-3" />
                 <span>WhatsApp</span>
@@ -130,7 +128,7 @@ export function LeadsClient({
             </div>
           </div>
         );
-      },
+      }
     },
     {
       header: "Service & Property",
@@ -140,12 +138,10 @@ export function LeadsClient({
             {lead.serviceId}
           </Badge>
           {lead.propertyType && (
-            <span className="text-xs text-muted-foreground">
-              Property: {lead.propertyType}
-            </span>
+            <span className="text-xs text-muted-foreground">Property: {lead.propertyType}</span>
           )}
         </div>
-      ),
+      )
     },
     {
       header: "Source / Area",
@@ -155,28 +151,24 @@ export function LeadsClient({
             {lead.sourceArea ?? "main-page"}
           </Badge>
           {lead.utmSource && (
-            <span className="text-[10px] text-muted-foreground">
-              via {lead.utmSource}
-            </span>
+            <span className="text-[10px] text-muted-foreground">via {lead.utmSource}</span>
           )}
         </div>
-      ),
+      )
     },
     {
       header: "Status",
       cell: (lead) => (
         <select
           value={lead.status}
-          onChange={(e) =>
-            handleStatusChange(lead.id, e.target.value as LeadStatus)
-          }
-          className="rounded-md border bg-background px-2 py-1 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          onChange={(e) => handleStatusChange(lead.id, e.target.value as LeadStatus)}
+          className="rounded-md border bg-background px-2 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
         >
           <option value="pending">Pending</option>
           <option value="contacted">Contacted</option>
           <option value="closed">Closed</option>
         </select>
-      ),
+      )
     },
     {
       header: "Date",
@@ -184,7 +176,7 @@ export function LeadsClient({
         <span className="text-xs text-muted-foreground">
           {new Date(lead.createdAt).toLocaleDateString()}
         </span>
-      ),
+      )
     },
     {
       header: "Action",
@@ -200,8 +192,8 @@ export function LeadsClient({
         >
           Details
         </Button>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -287,10 +279,7 @@ export function LeadsClient({
       />
 
       {/* Lead Details Dialog */}
-      <Dialog
-        open={Boolean(selectedLead)}
-        onOpenChange={(open) => !open && setSelectedLead(null)}
-      >
+      <Dialog open={Boolean(selectedLead)} onOpenChange={(open) => !open && setSelectedLead(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{selectedLead?.fullName}</DialogTitle>
@@ -316,16 +305,16 @@ export function LeadsClient({
                     {selectedLead.serviceId}
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground">
-                      Location / Community:
-                    </span>{" "}
+                    <span className="font-semibold text-foreground">Location / Community:</span>{" "}
                     {selectedLead.location ?? "Not specified"}
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground">
-                      Preferred Date:
-                    </span>{" "}
+                    <span className="font-semibold text-foreground">Preferred Date:</span>{" "}
                     {selectedLead.preferredDate ?? "Flexible"}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-foreground">Preferred Time:</span>{" "}
+                    {selectedLead.preferredTime ?? "Flexible"}
                   </div>
                 </CardContent>
               </Card>
@@ -335,13 +324,13 @@ export function LeadsClient({
                   <CardHeader>
                     <CardTitle className="text-xs">Inquiry Message</CardTitle>
                   </CardHeader>
-                  <CardContent className="italic text-foreground">
-                    "{selectedLead.message}"
+                  <CardContent className="text-foreground italic">
+                    &quot;{selectedLead.message}&quot;
                   </CardContent>
                 </Card>
               )}
 
-              {/* <Card>
+              <Card>
                 <CardHeader>
                   <CardTitle className="text-xs">Internal Notes</CardTitle>
                 </CardHeader>
@@ -351,7 +340,7 @@ export function LeadsClient({
                     value={notesDraft}
                     onChange={(e) => setNotesDraft(e.target.value)}
                     placeholder="Quotation given, assigned team, etc..."
-                    className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                   />
                   <Button
                     size="sm"
@@ -362,7 +351,7 @@ export function LeadsClient({
                     {isSavingNotes ? "Saving..." : "Save Note"}
                   </Button>
                 </CardContent>
-              </Card> */}
+              </Card>
             </div>
           )}
         </DialogContent>

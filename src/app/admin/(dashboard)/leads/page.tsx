@@ -1,7 +1,12 @@
-import { prisma } from "@/lib/db/prisma";
+import type { Prisma } from "@prisma/client";
+
 import type { Lead } from "@/types/lead";
-import { LeadsClient } from "./LeadsClient";
+
+import { prisma } from "@/lib/db/prisma";
+
 import { AdminPageHeader } from "@/components/admin/page-header";
+
+import { LeadsClient } from "./LeadsClient";
 
 export const dynamic = "force-dynamic";
 
@@ -21,16 +26,16 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
   const status = resolvedParams.status || "all";
 
   // Build prisma filter
-  const where: any = {};
+  const where: Prisma.LeadWhereInput = {};
   if (status !== "all" && status) {
-    where.status = status;
+    where.status = status as Prisma.LeadWhereInput["status"];
   }
   if (search) {
     where.OR = [
       { fullName: { contains: search, mode: "insensitive" } },
       { mobile: { contains: search, mode: "insensitive" } },
       { location: { contains: search, mode: "insensitive" } },
-      { sourceArea: { contains: search, mode: "insensitive" } },
+      { sourceArea: { contains: search, mode: "insensitive" } }
     ];
   }
 
@@ -40,11 +45,11 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
       where,
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * pageSize,
-      take: pageSize,
+      take: pageSize
     }),
     prisma.lead.count({ where: { status: "pending" } }),
     prisma.lead.count({ where: { status: "contacted" } }),
-    prisma.lead.count({ where: { status: "closed" } }),
+    prisma.lead.count({ where: { status: "closed" } })
   ]);
 
   const serializedLeads: Lead[] = dbLeads.map((l) => ({
@@ -56,6 +61,7 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
     location: l.location ?? undefined,
     propertyType: l.propertyType ?? undefined,
     preferredDate: l.preferredDate ?? undefined,
+    preferredTime: l.preferredTime ?? undefined,
     message: l.message ?? undefined,
     whatsappOptIn: l.whatsappOptIn,
     sourceArea: l.sourceArea ?? undefined,
@@ -66,7 +72,7 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
     fbclid: l.fbclid ?? undefined,
     landingUrl: l.landingUrl ?? undefined,
     status: l.status as Lead["status"],
-    createdAt: l.createdAt.toISOString(),
+    createdAt: l.createdAt.toISOString()
   }));
 
   return (
@@ -87,7 +93,7 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
           total: totalCount,
           pending: pendingCount,
           contacted: contactedCount,
-          closed: closedCount,
+          closed: closedCount
         }}
       />
     </div>

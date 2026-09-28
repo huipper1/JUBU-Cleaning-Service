@@ -11,6 +11,7 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  Clock,
   ExternalLink,
   Home,
   Loader2,
@@ -69,6 +70,21 @@ const PROPERTY_TYPES = [
   }
 ] as const;
 
+const TIME_SLOTS = [
+  {
+    group: "Morning",
+    slots: ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM"]
+  },
+  {
+    group: "Afternoon",
+    slots: ["12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM"]
+  },
+  {
+    group: "Evening",
+    slots: ["04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"]
+  }
+] as const;
+
 interface QuoteFormProps {
   services: Service[];
   settings: SiteSettings;
@@ -94,6 +110,7 @@ export function QuoteForm({
     location: areaName ?? "",
     propertyType: "",
     preferredDate: "",
+    preferredTime: "",
     message: "",
     whatsappOptIn: true,
     honeypot: "",
@@ -125,6 +142,8 @@ export function QuoteForm({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
+  const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+
   // Close custom dropdowns on outside click or escape
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -141,6 +160,7 @@ export function QuoteForm({
         setIsDropdownOpen(false);
         setIsPropertyDropdownOpen(false);
         setIsDatePickerOpen(false);
+        setIsTimePickerOpen(false);
       }
     };
 
@@ -244,6 +264,7 @@ export function QuoteForm({
       ? formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1)
       : "N/A";
     const submittedPreferredDate = formData.preferredDate?.trim() || "N/A";
+    const submittedPreferredTime = formData.preferredTime?.trim() || "N/A";
     const submittedMessage = formData.message?.trim() || "N/A";
     const contactPreference = formData.whatsappOptIn
       ? "Prefers WhatsApp contact"
@@ -267,6 +288,7 @@ export function QuoteForm({
       `Location: ${submittedLocation}`,
       `Property: ${submittedPropertyType}`,
       `Preferred Date: ${submittedPreferredDate}`,
+      `Preferred Time: ${submittedPreferredTime}`,
       `Details: ${submittedMessage}`,
       `Contact: ${contactPreference}`,
       `Source: ${activeSourceArea} (${utmSource} / ${utmCampaign})`,
@@ -318,6 +340,7 @@ export function QuoteForm({
       location: areaName ?? "",
       propertyType: "",
       preferredDate: "",
+      preferredTime: "",
       message: ""
     }));
   };
@@ -834,8 +857,7 @@ export function QuoteForm({
                         htmlFor="location"
                         className="mb-1.5 block text-xs font-bold text-slate-200"
                       >
-                        Location / Area{" "}
-                        <span className="font-normal text-slate-400">(Optional)</span>
+                        Location / Area
                       </label>
                       <div className="relative">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
@@ -867,7 +889,7 @@ export function QuoteForm({
                         id="property-type-label"
                         className="mb-1.5 block text-xs font-bold text-slate-200"
                       >
-                        Property Type <span className="font-normal text-slate-400">(Optional)</span>
+                        Property Type
                       </label>
 
                       {/* Hidden input to maintain native form compatibility */}
@@ -883,11 +905,15 @@ export function QuoteForm({
                         onClick={() => {
                           setIsPropertyDropdownOpen((prev) => !prev);
                           setIsDropdownOpen(false);
+                          setIsDatePickerOpen(false);
+                          setIsTimePickerOpen(false);
                         }}
                         className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
                           isPropertyDropdownOpen
                             ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
-                            : "border-white/15"
+                            : fieldErrors.propertyType
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15"
                         }`}
                       >
                         <div className="flex min-w-0 items-center gap-3">
@@ -1000,92 +1026,197 @@ export function QuoteForm({
                     </div>
                   </div>
 
-                  {/* Preferred Date with Shadcn Popover + Calendar */}
-                  <div>
-                    <label
-                      htmlFor="preferredDate"
-                      className="mb-1.5 block text-xs font-bold text-slate-200"
-                    >
-                      Preferred Date <span className="font-normal text-slate-400">(Optional)</span>
-                    </label>
-
-                    {/* Hidden input to maintain native form compatibility */}
-                    <input type="hidden" name="preferredDate" value={formData.preferredDate} />
-
-                    <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
-                      <PopoverTrigger asChild>
-                        <button
-                          type="button"
-                          id="preferredDate"
-                          disabled={status === "submitting"}
-                          className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
-                            selectedDate ? "text-white" : "text-slate-400"
-                          } ${
-                            fieldErrors.preferredDate
-                              ? "border-red-400 bg-red-950/30"
-                              : "border-white/15 hover:border-white/30"
-                          }`}
-                        >
-                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                            <CalendarIcon className="h-4 w-4" />
-                          </div>
-                          <span>
-                            {selectedDate
-                              ? format(selectedDate, "dd MMMM yyyy")
-                              : "Pick a preferred date"}
-                          </span>
-                          <div className="flex items-center text-slate-400 transition-colors group-hover:text-white">
-                            <ChevronDown className="h-4 w-4" />
-                          </div>
-                        </button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        align="start"
-                        className="w-auto overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-xl"
+                  {/* Preferred Date & Preferred Time — side by side */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {/* Preferred Date with Shadcn Popover + Calendar */}
+                    <div>
+                      <label
+                        htmlFor="preferredDate"
+                        className="mb-1.5 block text-xs font-bold text-slate-200"
                       >
-                        <CalendarPicker
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={(date) => {
-                            setSelectedDate(date);
-                            setFormData((prev) => ({
-                              ...prev,
-                              preferredDate: date ? format(date, "yyyy-MM-dd") : ""
-                            }));
-                            setIsDatePickerOpen(false);
-                            if (fieldErrors.preferredDate) {
-                              setFieldErrors((prev) => {
-                                const next = { ...prev };
-                                delete next.preferredDate;
-                                return next;
-                              });
-                            }
-                          }}
-                          disabled={(date) => {
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            return date < today;
-                          }}
-                          autoFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                        Preferred Date
+                      </label>
 
-                    {fieldErrors.preferredDate && (
-                      <p className="mt-1 text-[11px] text-red-300">
-                        {fieldErrors.preferredDate[0]}
-                      </p>
-                    )}
+                      {/* Hidden input to maintain native form compatibility */}
+                      <input type="hidden" name="preferredDate" value={formData.preferredDate} />
+
+                      <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            id="preferredDate"
+                            disabled={status === "submitting"}
+                            className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                              selectedDate ? "text-white" : "text-slate-400"
+                            } ${
+                              fieldErrors.preferredDate
+                                ? "border-red-400 bg-red-950/30"
+                                : "border-white/15 hover:border-white/30"
+                            }`}
+                          >
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                              <CalendarIcon className="h-4 w-4" />
+                            </div>
+                            <span>
+                              {selectedDate
+                                ? format(selectedDate, "dd MMMM yyyy")
+                                : "Pick a preferred date"}
+                            </span>
+                            <div className="flex items-center text-slate-400 transition-colors group-hover:text-white">
+                              <ChevronDown className="h-4 w-4" />
+                            </div>
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          align="start"
+                          className="w-auto overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-xl"
+                        >
+                          <CalendarPicker
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={(date) => {
+                              setSelectedDate(date);
+                              setFormData((prev) => ({
+                                ...prev,
+                                preferredDate: date ? format(date, "yyyy-MM-dd") : ""
+                              }));
+                              setIsDatePickerOpen(false);
+                              if (fieldErrors.preferredDate) {
+                                setFieldErrors((prev) => {
+                                  const next = { ...prev };
+                                  delete next.preferredDate;
+                                  return next;
+                                });
+                              }
+                            }}
+                            disabled={(date) => {
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0);
+                              return date < today;
+                            }}
+                            autoFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      {fieldErrors.preferredDate && (
+                        <p className="mt-1 text-[11px] text-red-300">
+                          {fieldErrors.preferredDate[0]}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Preferred Time with Shadcn Popover + Slot Grid */}
+                    <div>
+                      <label
+                        htmlFor="preferredTime"
+                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                      >
+                        Preferred Time
+                      </label>
+
+                      {/* Hidden input to maintain native form compatibility */}
+                      <input type="hidden" name="preferredTime" value={formData.preferredTime} />
+
+                      <Popover open={isTimePickerOpen} onOpenChange={setIsTimePickerOpen}>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            id="preferredTime"
+                            disabled={status === "submitting"}
+                            className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                              formData.preferredTime ? "text-white" : "text-slate-400"
+                            } ${
+                              fieldErrors.preferredTime
+                                ? "border-red-400 bg-red-950/30"
+                                : "border-white/15 hover:border-white/30"
+                            }`}
+                          >
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                              <Clock className="h-4 w-4" />
+                            </div>
+                            <span className="truncate">
+                              {formData.preferredTime || "Select arrival time"}
+                            </span>
+                            <div className="flex items-center text-slate-400 transition-colors group-hover:text-white">
+                              <ChevronDown className="h-4 w-4" />
+                            </div>
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          align="start"
+                          className="w-72 overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-3 text-white shadow-2xl backdrop-blur-xl sm:w-80"
+                        >
+                          <div className="mb-2.5 flex items-center justify-between border-b border-white/10 pb-2">
+                            <div className="flex items-center gap-2">
+                              <Clock className="h-3.5 w-3.5 text-brand-sky" />
+                              <span className="text-xs font-semibold text-white">
+                                Select Arrival Time
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-slate-400">08:00 AM – 08:00 PM</span>
+                          </div>
+
+                          <div className="flex flex-col gap-3">
+                            {TIME_SLOTS.map((group) => (
+                              <div key={group.group} className="flex flex-col gap-1.5">
+                                <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                                  {group.group}
+                                </span>
+                                <div className="grid grid-cols-2 gap-1.5">
+                                  {group.slots.map((slot) => {
+                                    const isSelected = formData.preferredTime === slot;
+                                    return (
+                                      <button
+                                        key={slot}
+                                        type="button"
+                                        onClick={() => {
+                                          setFormData((prev) => ({
+                                            ...prev,
+                                            preferredTime: slot
+                                          }));
+                                          setIsTimePickerOpen(false);
+                                          if (fieldErrors.preferredTime) {
+                                            setFieldErrors((prev) => {
+                                              const next = { ...prev };
+                                              delete next.preferredTime;
+                                              return next;
+                                            });
+                                          }
+                                        }}
+                                        className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-all ${
+                                          isSelected
+                                            ? "bg-brand-sky font-semibold text-white shadow-xs"
+                                            : "bg-white/5 text-slate-200 hover:bg-white/15 hover:text-white"
+                                        }`}
+                                      >
+                                        <span>{slot}</span>
+                                        {isSelected && <Check className="h-3 w-3 shrink-0" />}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+
+                      {fieldErrors.preferredTime && (
+                        <p className="mt-1 text-[11px] text-red-300">
+                          {fieldErrors.preferredTime[0]}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Additional Details (Optional) */}
+                  {/* Additional Details */}
                   <div>
                     <label
                       htmlFor="message"
                       className="mb-1.5 block text-xs font-bold text-slate-200"
                     >
-                      Additional Details{" "}
-                      <span className="font-normal text-slate-400">(Optional)</span>
+                      Additional Details
                     </label>
                     <div className="relative">
                       <div className="pointer-events-none absolute top-3.5 left-3.5 text-slate-400">
@@ -1098,10 +1229,17 @@ export function QuoteForm({
                         disabled={status === "submitting"}
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="Any special requirements, preferred time, number of rooms, etc."
-                        className="w-full resize-none rounded-xl border border-white/15 bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none"
+                        placeholder="Please describe your cleaning requirements (e.g. number of bedrooms/bathrooms, balcony washing, specific focus areas...)"
+                        className={`w-full resize-none rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          fieldErrors.message
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                        }`}
                       />
                     </div>
+                    {fieldErrors.message && (
+                      <p className="mt-1 text-[11px] text-red-300">{fieldErrors.message[0]}</p>
+                    )}
                   </div>
 
                   {/* WhatsApp Opt-in Checkbox */}

@@ -9,6 +9,7 @@ export interface Lead {
   location?: string;
   propertyType?: string;
   preferredDate?: string;
+  preferredTime?: string;
   message?: string;
   whatsappOptIn: boolean;
   sourceArea?: string;
@@ -30,6 +31,7 @@ export interface CreateLeadInput {
   location?: string;
   propertyType?: string;
   preferredDate?: string;
+  preferredTime?: string;
   message?: string;
   whatsappOptIn?: boolean;
   honeypot?: string;

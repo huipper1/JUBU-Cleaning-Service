@@ -1,6 +1,8 @@
 import type { CreateLeadInput, LeadServiceResult } from "@/types/lead";
+
 import { createLeadInputSchema } from "@/lib/content/types";
 import { prisma } from "@/lib/db/prisma";
+
 import type { LeadService } from "./lead-service";
 
 export class PrismaLeadService implements LeadService {
@@ -35,6 +37,7 @@ export class PrismaLeadService implements LeadService {
           location: validData.location ?? null,
           propertyType: validData.propertyType ?? null,
           preferredDate: validData.preferredDate ?? null,
+          preferredTime: validData.preferredTime ?? null,
           message: validData.message ?? null,
           whatsappOptIn: validData.whatsappOptIn ?? true,
           sourceArea: validData.sourceArea ?? "main-page",

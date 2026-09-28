@@ -316,6 +316,7 @@ model Lead {
   location       String?
   propertyType   String?
   preferredDate  String?
+  preferredTime  String?
   message        String?
   whatsappOptIn  Boolean    @default(true)
   sourceArea     String?    @default("main-page")
