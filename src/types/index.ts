@@ -21,3 +21,4 @@ export type { DataTableProps } from "./data-table";
 export type { CreateLeadInput, Lead, LeadServiceResult, LeadStatus } from "./lead";
 export type { SiteConfig, SocialLinks } from "./site-config";
 export type { User } from "./user";
+export type { AreaNavItem, NavItem } from "./navigation";
