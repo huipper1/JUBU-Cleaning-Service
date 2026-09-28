@@ -2,23 +2,33 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { Globe2, Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { Plus, Trash2, Loader2, Globe2 } from "lucide-react";
+
+import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
+import { ServiceSelector, type ServiceOption } from "@/components/admin/ServiceSelector";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { createAreaLandingPageAction, type CreateAreaLandingPageInput } from "./create-action";
-import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 
-export function CreateAreaLandingPageDialog() {
+import { createAreaLandingPageAction, type CreateAreaLandingPageInput } from "./create-action";
+
+interface CreateAreaLandingPageDialogProps {
+  availableServices?: ServiceOption[];
+}
+
+export function CreateAreaLandingPageDialog({
+  availableServices = []
+}: CreateAreaLandingPageDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,8 +46,11 @@ export function CreateAreaLandingPageDialog() {
     "Deep Cleaning",
     "Apartment Cleaning",
     "Move In / Out Cleaning",
-    "Office Cleaning",
+    "Office Cleaning"
   ]);
+  const [serviceIds, setServiceIds] = useState<string[]>(() =>
+    availableServices.filter((s) => s.isActive).map((s) => s.id)
+  );
   const [newService, setNewService] = useState("");
 
   const [featuredBlockTitle, setFeaturedBlockTitle] = useState("");
@@ -48,13 +61,16 @@ export function CreateAreaLandingPageDialog() {
   const [finalCtaTitle, setFinalCtaTitle] = useState("");
 
   const [faqs, setFaqs] = useState<Array<{ question: string; answer: string }>>([
-    { question: "", answer: "" },
+    { question: "", answer: "" }
   ]);
 
   // Auto-generate slug and defaults when areaName changes
   const handleAreaNameChange = (val: string) => {
     setAreaName(val);
-    const generatedSlug = val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const generatedSlug = val
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
     setSlug(generatedSlug);
     if (!metaTitle) {
       setMetaTitle(`Professional Cleaning Services in ${val} | JUBU`);
@@ -98,8 +114,8 @@ export function CreateAreaLandingPageDialog() {
       setFaqs([
         {
           question: `How fast can JUBU cleaners reach ${val}?`,
-          answer: `Our dedicated mobile teams cover ${val} daily with rapid same-day and scheduled dispatch available.`,
-        },
+          answer: `Our dedicated mobile teams cover ${val} daily with rapid same-day and scheduled dispatch available.`
+        }
       ]);
     }
   };
@@ -193,13 +209,14 @@ export function CreateAreaLandingPageDialog() {
         heroImageSrc: heroImageSrc || undefined,
         servicesSectionTitle: servicesSectionTitle.trim(),
         servicesList,
+        serviceIds,
         featuredBlockTitle: featuredBlockTitle.trim(),
         featuredBlockText: featuredBlockText.trim(),
         nearYouTitle: nearYouTitle.trim(),
         nearYouText: nearYouText.trim(),
         finalCtaTitle: finalCtaTitle.trim(),
         faqs,
-        isActive: true,
+        isActive: true
       };
 
       const res = await createAreaLandingPageAction(payload);
@@ -222,7 +239,7 @@ export function CreateAreaLandingPageDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm">
-          <Plus className="size-4 mr-1" />
+          <Plus className="mr-1 size-4" />
           <span>Add Area Landing Page</span>
         </Button>
       </DialogTrigger>
@@ -234,7 +251,8 @@ export function CreateAreaLandingPageDialog() {
             <span>Create New Area Landing Page</span>
           </DialogTitle>
           <DialogDescription>
-            All fields are mandatory to ensure complete SEO metadata, ads landing copy, and local schema.
+            All fields are mandatory to ensure complete SEO metadata, ads landing copy, and local
+            schema.
           </DialogDescription>
         </DialogHeader>
 
@@ -242,9 +260,7 @@ export function CreateAreaLandingPageDialog() {
           {/* Basic Identity */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-foreground">
-                Area Community Name *
-              </label>
+              <label className="text-xs font-semibold text-foreground">Area Community Name *</label>
               <Input
                 placeholder="e.g. Palm Jumeirah"
                 value={areaName}
@@ -254,9 +270,7 @@ export function CreateAreaLandingPageDialog() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-foreground">
-                URL Slug *
-              </label>
+              <label className="text-xs font-semibold text-foreground">URL Slug *</label>
               <Input
                 placeholder="e.g. palm-jumeirah"
                 value={slug}
@@ -267,14 +281,12 @@ export function CreateAreaLandingPageDialog() {
           </div>
 
           {/* Hero Presentation */}
-          <div className="flex flex-col gap-3 rounded-lg border p-4 bg-muted/20">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <div className="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
+            <span className="text-xs font-bold tracking-wider text-primary uppercase">
               1. Hero Presentation
             </span>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-foreground">
-                Hero H1 Headline *
-              </label>
+              <label className="text-xs font-medium text-foreground">Hero H1 Headline *</label>
               <Input
                 value={heroHeadline}
                 onChange={(e) => setHeroHeadline(e.target.value)}
@@ -290,7 +302,7 @@ export function CreateAreaLandingPageDialog() {
                 rows={3}
                 value={heroIntro}
                 onChange={(e) => setHeroIntro(e.target.value)}
-                className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 required
               />
             </div>
@@ -304,14 +316,12 @@ export function CreateAreaLandingPageDialog() {
           </div>
 
           {/* Services & Bullet Points */}
-          <div className="flex flex-col gap-3 rounded-lg border p-4 bg-muted/20">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <div className="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
+            <span className="text-xs font-bold tracking-wider text-primary uppercase">
               2. Services Offered In Area
             </span>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-foreground">
-                Section Heading *
-              </label>
+              <label className="text-xs font-medium text-foreground">Section Heading *</label>
               <Input
                 value={servicesSectionTitle}
                 onChange={(e) => setServicesSectionTitle(e.target.value)}
@@ -320,9 +330,7 @@ export function CreateAreaLandingPageDialog() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-foreground">
-                Services List *
-              </label>
+              <label className="text-xs font-medium text-foreground">Services List *</label>
               <div className="flex flex-wrap gap-2">
                 {servicesList.map((s, idx) => (
                   <Badge key={idx} variant="secondary" className="gap-1 px-2.5 py-1">
@@ -338,7 +346,7 @@ export function CreateAreaLandingPageDialog() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-2 mt-1">
+              <div className="mt-1 flex items-center gap-2">
                 <Input
                   placeholder="e.g. Balcony Pressure Wash"
                   value={newService}
@@ -350,11 +358,23 @@ export function CreateAreaLandingPageDialog() {
                 </Button>
               </div>
             </div>
+
+            {availableServices.length > 0 && (
+              <div className="border-t pt-3">
+                <ServiceSelector
+                  availableServices={availableServices}
+                  selectedIds={serviceIds}
+                  onChange={setServiceIds}
+                  title="Select Services from Master Catalog"
+                  description="Choose which service cards from your catalog will be displayed on this area landing page and order them."
+                />
+              </div>
+            )}
           </div>
 
           {/* Featured & Near You Block */}
-          <div className="flex flex-col gap-3 rounded-lg border p-4 bg-muted/20">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <div className="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
+            <span className="text-xs font-bold tracking-wider text-primary uppercase">
               3. Community Content Blocks
             </span>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -370,9 +390,7 @@ export function CreateAreaLandingPageDialog() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Near You Title *
-                </label>
+                <label className="text-xs font-medium text-foreground">Near You Title *</label>
                 <Input
                   value={nearYouTitle}
                   onChange={(e) => setNearYouTitle(e.target.value)}
@@ -388,7 +406,7 @@ export function CreateAreaLandingPageDialog() {
                   rows={2}
                   value={featuredBlockText}
                   onChange={(e) => setFeaturedBlockText(e.target.value)}
-                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                   required
                 />
               </div>
@@ -401,15 +419,13 @@ export function CreateAreaLandingPageDialog() {
                   rows={2}
                   value={nearYouText}
                   onChange={(e) => setNearYouText(e.target.value)}
-                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                   required
                 />
               </div>
 
               <div className="flex flex-col gap-1.5 sm:col-span-2">
-                <label className="text-xs font-medium text-foreground">
-                  Final CTA Headline *
-                </label>
+                <label className="text-xs font-medium text-foreground">Final CTA Headline *</label>
                 <Input
                   value={finalCtaTitle}
                   onChange={(e) => setFinalCtaTitle(e.target.value)}
@@ -420,13 +436,13 @@ export function CreateAreaLandingPageDialog() {
           </div>
 
           {/* FAQs */}
-          <div className="flex flex-col gap-3 rounded-lg border p-4 bg-muted/20">
+          <div className="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-primary">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase">
                 4. Frequently Asked Questions *
               </span>
               <Button type="button" variant="secondary" size="sm" onClick={handleAddFaq}>
-                <Plus className="size-3.5 mr-1" />
+                <Plus className="mr-1 size-3.5" />
                 Add FAQ
               </Button>
             </div>
@@ -434,9 +450,7 @@ export function CreateAreaLandingPageDialog() {
             {faqs.map((faq, idx) => (
               <div key={idx} className="flex flex-col gap-2 rounded-md border bg-background p-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-foreground">
-                    Question #{idx + 1}
-                  </span>
+                  <span className="text-xs font-semibold text-foreground">Question #{idx + 1}</span>
                   <Button
                     type="button"
                     variant="ghost"
@@ -458,7 +472,7 @@ export function CreateAreaLandingPageDialog() {
                   placeholder="Answer..."
                   value={faq.answer}
                   onChange={(e) => handleUpdateFaq(idx, "answer", e.target.value)}
-                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                   required
                 />
               </div>
@@ -466,43 +480,35 @@ export function CreateAreaLandingPageDialog() {
           </div>
 
           {/* SEO Metadata */}
-          <div className="flex flex-col gap-3 rounded-lg border p-4 bg-muted/20">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">
+          <div className="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4">
+            <span className="text-xs font-bold tracking-wider text-primary uppercase">
               5. SEO Metadata *
             </span>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-foreground">
-                Meta Title *
-              </label>
-              <Input
-                value={metaTitle}
-                onChange={(e) => setMetaTitle(e.target.value)}
-                required
-              />
+              <label className="text-xs font-medium text-foreground">Meta Title *</label>
+              <Input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} required />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-foreground">
-                Meta Description *
-              </label>
+              <label className="text-xs font-medium text-foreground">Meta Description *</label>
               <textarea
                 rows={3}
                 value={metaDescription}
                 onChange={(e) => setMetaDescription(e.target.value)}
-                className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 required
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t">
+          <div className="flex items-center justify-end gap-2 border-t pt-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <Loader2 className="size-4 animate-spin mr-1" />
+                  <Loader2 className="mr-1 size-4 animate-spin" />
                   <span>Creating Page...</span>
                 </>
               ) : (

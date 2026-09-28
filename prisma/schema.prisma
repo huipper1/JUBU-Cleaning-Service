@@ -95,6 +95,9 @@ model SiteSettings {
   showAreas               Boolean  @default(true)
   showContact             Boolean  @default(true)
 
+  // Homepage Selected Services (in order)
+  homepageServiceIds      String[] @default([])
+
   updatedAt               DateTime @updatedAt
 }
 
@@ -150,7 +153,7 @@ model AboutContent {
 // -------------------------------------------------------------
 
 model Service {
-  id               String        @id // e.g. "home-cleaning"
+  id               String        @id @default(cuid()) // e.g. "home-cleaning" or cuid
   slug             String        @unique // e.g. "home-cleaning"
   title            String
   shortDescription String
@@ -261,6 +264,7 @@ model AreaLandingPage {
 
   servicesSectionTitle String
   servicesList         String[] // Descriptive bullet strings
+  serviceIds           String[] @default([]) // Selected service IDs from catalog
 
   featuredBlockTitle   String
   // Stored as JSON: string | Array<{ title: string, text: string }>

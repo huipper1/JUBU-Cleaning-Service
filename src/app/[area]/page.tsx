@@ -87,7 +87,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
   }
 
   // Fetch shared site content exactly like the root page
-  const [settings, hero, services, whyChoose, about, team, gallery, areas] = await Promise.all([
+  const [settings, hero, allServices, whyChoose, about, team, gallery, areas] = await Promise.all([
     getSettings(),
     getHero(),
     getServices(),
@@ -97,6 +97,15 @@ export default async function AreaPage({ params }: AreaPageProps) {
     getGallery(),
     getAreas()
   ]);
+
+  const selectedServices =
+    areaData.serviceIds && areaData.serviceIds.length > 0
+      ? areaData.serviceIds
+          .map((id) => allServices.find((s) => s.id === id))
+          .filter((s): s is (typeof allServices)[number] => Boolean(s && s.isActive))
+      : allServices;
+
+  const services = selectedServices.length > 0 ? selectedServices : allServices;
 
   const defaultWhatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     settings.whatsappDefaultMessage

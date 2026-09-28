@@ -3,29 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import { ArrowLeft, Check, ExternalLink, Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  ArrowLeft,
-  Check,
-  ExternalLink,
-  Plus,
-  Trash2,
-  Loader2,
-  Globe2,
-} from "lucide-react";
-import { updateAreaLandingPageAction, type UpdateAreaLandingPageData } from "./actions";
+
+import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 import { AdminPageHeader } from "@/components/admin/page-header";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { ServiceSelector, type ServiceOption } from "@/components/admin/ServiceSelector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
+
+import { updateAreaLandingPageAction, type UpdateAreaLandingPageData } from "./actions";
 
 interface AreaLandingPageEditorProps {
   pageData: {
@@ -40,6 +30,7 @@ interface AreaLandingPageEditorProps {
     heroImageAlt?: string;
     servicesSectionTitle: string;
     servicesList: string[];
+    serviceIds?: string[];
     featuredBlockTitle: string;
     featuredBlockText: string | Array<{ title: string; text: string }>;
     nearYouTitle: string;
@@ -48,9 +39,13 @@ interface AreaLandingPageEditorProps {
     faqs: Array<{ question: string; answer: string }>;
     isActive: boolean;
   };
+  availableServices?: ServiceOption[];
 }
 
-export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) {
+export function AreaLandingPageEditor({
+  pageData,
+  availableServices = []
+}: AreaLandingPageEditorProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -64,6 +59,11 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
   const [heroImageAlt, setHeroImageAlt] = useState(pageData.heroImageAlt || "");
   const [servicesSectionTitle, setServicesSectionTitle] = useState(pageData.servicesSectionTitle);
   const [servicesList, setServicesList] = useState<string[]>(pageData.servicesList);
+  const [serviceIds, setServiceIds] = useState<string[]>(
+    pageData.serviceIds && pageData.serviceIds.length > 0
+      ? pageData.serviceIds
+      : availableServices.filter((s) => s.isActive).map((s) => s.id)
+  );
   const [newServiceItem, setNewServiceItem] = useState("");
 
   const [featuredBlockTitle, setFeaturedBlockTitle] = useState(pageData.featuredBlockTitle);
@@ -117,13 +117,14 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
         heroImageAlt: heroImageAlt || undefined,
         servicesSectionTitle,
         servicesList,
+        serviceIds,
         featuredBlockTitle,
         featuredBlockText: isMultiBlock ? featuredBlocks : featuredText,
         nearYouTitle,
         nearYouText,
         finalCtaTitle,
         faqs,
-        isActive,
+        isActive
       };
 
       const result = await updateAreaLandingPageAction(pageData.slug, payload);
@@ -187,29 +188,22 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Hero H1 Headline
-                </label>
-                <Input
-                  value={heroHeadline}
-                  onChange={(e) => setHeroHeadline(e.target.value)}
-                />
+                <label className="text-xs font-medium text-foreground">Hero H1 Headline</label>
+                <Input value={heroHeadline} onChange={(e) => setHeroHeadline(e.target.value)} />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Hero Intro Paragraph
-                </label>
+                <label className="text-xs font-medium text-foreground">Hero Intro Paragraph</label>
                 <textarea
                   rows={3}
                   value={heroIntro}
                   onChange={(e) => setHeroIntro(e.target.value)}
-                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                  className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 />
               </div>
 
               {/* Area Cutout/Hero Image */}
-              <div className="pt-3 border-t flex flex-col gap-3">
+              <div className="flex flex-col gap-3 border-t pt-3">
                 <ImageCropUploader
                   currentImageUrl={heroImageSrc}
                   folder="areas"
@@ -243,9 +237,7 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Section Title
-                </label>
+                <label className="text-xs font-medium text-foreground">Section Title</label>
                 <Input
                   value={servicesSectionTitle}
                   onChange={(e) => setServicesSectionTitle(e.target.value)}
@@ -253,15 +245,13 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-medium text-foreground">
-                  Active Service Badges
-                </label>
+                <label className="text-xs font-medium text-foreground">Active Service Badges</label>
                 <div className="flex flex-wrap gap-2">
                   {servicesList.map((service, idx) => (
                     <Badge
                       key={idx}
                       variant="secondary"
-                      className="flex items-center gap-1.5 py-1 px-2.5"
+                      className="flex items-center gap-1.5 px-2.5 py-1"
                     >
                       <span>{service}</span>
                       <button
@@ -275,7 +265,7 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 mt-2">
+                <div className="mt-2 flex items-center gap-2">
                   <Input
                     placeholder="Add service (e.g. Move In Deep Cleaning)"
                     value={newServiceItem}
@@ -283,42 +273,111 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                     onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddService())}
                   />
                   <Button type="button" variant="secondary" size="sm" onClick={handleAddService}>
-                    <Plus className="size-4 mr-1" />
+                    <Plus className="mr-1 size-4" />
                     Add
                   </Button>
                 </div>
               </div>
+
+              {availableServices.length > 0 && (
+                <div className="border-t pt-3">
+                  <ServiceSelector
+                    availableServices={availableServices}
+                    selectedIds={serviceIds}
+                    onChange={setServiceIds}
+                    title="Select Services from Master Catalog"
+                    description="Choose which service cards from your catalog will be displayed on this area landing page and order them."
+                  />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Featured Community Highlight Block */}
+          <Card>
+            <CardHeader>
+              <CardTitle>3. Featured Community Highlight Block</CardTitle>
+              <CardDescription>
+                Specialized copy explaining why JUBU is tailored for properties in this community.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-foreground">Featured Block Title</label>
+                <Input
+                  value={featuredBlockTitle}
+                  onChange={(e) => setFeaturedBlockTitle(e.target.value)}
+                />
+              </div>
+
+              {isMultiBlock ? (
+                <div className="flex flex-col gap-3">
+                  <label className="text-xs font-medium text-foreground">Content Highlights</label>
+                  {featuredBlocks.map((block, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col gap-2 rounded-md border bg-muted/20 p-3"
+                    >
+                      <Input
+                        value={block.title}
+                        onChange={(e) => {
+                          const updated = [...featuredBlocks];
+                          updated[idx] = { ...updated[idx], title: e.target.value };
+                          setFeaturedBlocks(updated);
+                        }}
+                        placeholder="Highlight Title"
+                      />
+                      <textarea
+                        rows={2}
+                        value={block.text}
+                        onChange={(e) => {
+                          const updated = [...featuredBlocks];
+                          updated[idx] = { ...updated[idx], text: e.target.value };
+                          setFeaturedBlocks(updated);
+                        }}
+                        className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+                        placeholder="Highlight description text..."
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-foreground">
+                    Featured Block Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={featuredText}
+                    onChange={(e) => setFeaturedText(e.target.value)}
+                    className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
 
           {/* Local Content Section */}
           <Card>
             <CardHeader>
-              <CardTitle>3. Community Relevance Block</CardTitle>
+              <CardTitle>4. Community Relevance Block</CardTitle>
               <CardDescription>
                 Details highlighting proximity, rapid dispatch, and local landmarks.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Near You Title
-                </label>
-                <Input
-                  value={nearYouTitle}
-                  onChange={(e) => setNearYouTitle(e.target.value)}
-                />
+                <label className="text-xs font-medium text-foreground">Near You Title</label>
+                <Input value={nearYouTitle} onChange={(e) => setNearYouTitle(e.target.value)} />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Near You Description
-                </label>
+                <label className="text-xs font-medium text-foreground">Near You Description</label>
                 <textarea
                   rows={3}
                   value={nearYouText}
                   onChange={(e) => setNearYouText(e.target.value)}
-                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                  className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 />
               </div>
             </CardContent>
@@ -328,13 +387,11 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
               <div>
-                <CardTitle>4. Area Frequently Asked Questions</CardTitle>
-                <CardDescription>
-                  Custom FAQs answering local client questions.
-                </CardDescription>
+                <CardTitle>5. Area Frequently Asked Questions</CardTitle>
+                <CardDescription>Custom FAQs answering local client questions.</CardDescription>
               </div>
               <Button type="button" variant="secondary" size="sm" onClick={handleAddFaq}>
-                <Plus className="size-4 mr-1" />
+                <Plus className="mr-1 size-4" />
                 Add Question
               </Button>
             </CardHeader>
@@ -345,7 +402,7 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                 </div>
               ) : (
                 faqs.map((faq, idx) => (
-                  <div key={idx} className="rounded-lg border p-4 flex flex-col gap-2 relative">
+                  <div key={idx} className="relative flex flex-col gap-2 rounded-lg border p-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-foreground">
                         Question #{idx + 1}
@@ -355,7 +412,7 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                         variant="ghost"
                         size="sm"
                         onClick={() => handleRemoveFaq(idx)}
-                        className="text-destructive hover:text-destructive size-7 p-0"
+                        className="size-7 p-0 text-destructive hover:text-destructive"
                       >
                         <Trash2 className="size-3.5" />
                       </Button>
@@ -370,7 +427,7 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                       placeholder="Detailed answer for the client..."
                       value={faq.answer}
                       onChange={(e) => handleUpdateFaq(idx, "answer", e.target.value)}
-                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                      className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                     />
                   </div>
                 ))
@@ -399,14 +456,9 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
                 </Button>
               </div>
 
-              <div className="flex flex-col gap-1.5 pt-2 border-t">
-                <label className="text-xs font-medium text-foreground">
-                  Final CTA Headline
-                </label>
-                <Input
-                  value={finalCtaTitle}
-                  onChange={(e) => setFinalCtaTitle(e.target.value)}
-                />
+              <div className="flex flex-col gap-1.5 border-t pt-2">
+                <label className="text-xs font-medium text-foreground">Final CTA Headline</label>
+                <Input value={finalCtaTitle} onChange={(e) => setFinalCtaTitle(e.target.value)} />
               </div>
             </CardContent>
           </Card>
@@ -415,30 +467,21 @@ export function AreaLandingPageEditor({ pageData }: AreaLandingPageEditorProps) 
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">Target Area SEO</CardTitle>
-              <CardDescription>
-                Search engine title and snippet preview for Google.
-              </CardDescription>
+              <CardDescription>Search engine title and snippet preview for Google.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Meta Title
-                </label>
-                <Input
-                  value={metaTitle}
-                  onChange={(e) => setMetaTitle(e.target.value)}
-                />
+                <label className="text-xs font-medium text-foreground">Meta Title</label>
+                <Input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Meta Description
-                </label>
+                <label className="text-xs font-medium text-foreground">Meta Description</label>
                 <textarea
                   rows={4}
                   value={metaDescription}
                   onChange={(e) => setMetaDescription(e.target.value)}
-                  className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                  className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 />
               </div>
             </CardContent>

@@ -1,7 +1,25 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { prisma } from "@/lib/db/prisma";
+
+export async function updateHomepageServicesAction(serviceIds: string[]) {
+  try {
+    await prisma.siteSettings.update({
+      where: { id: "default" },
+      data: { homepageServiceIds: serviceIds }
+    });
+    revalidatePath("/");
+    revalidatePath("/admin/content/services");
+    return { success: true };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to update homepage services"
+    };
+  }
+}
 
 export async function toggleServiceActiveAction(id: string, isActive: boolean) {
   try {

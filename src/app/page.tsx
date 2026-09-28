@@ -23,17 +23,25 @@ import {
 } from "@/components/sections";
 
 export default async function Home() {
-  const [settings, hero, services, whyChoose, about, team, gallery, areas] =
-    await Promise.all([
-      getSettings(),
-      getHero(),
-      getServices(),
-      getWhyChoose(),
-      getAbout(),
-      getTeam(),
-      getGallery(),
-      getAreas()
-    ]);
+  const [settings, hero, allServices, whyChoose, about, team, gallery, areas] = await Promise.all([
+    getSettings(),
+    getHero(),
+    getServices(),
+    getWhyChoose(),
+    getAbout(),
+    getTeam(),
+    getGallery(),
+    getAreas()
+  ]);
+
+  const selectedServices =
+    settings.homepageServiceIds && settings.homepageServiceIds.length > 0
+      ? settings.homepageServiceIds
+          .map((id) => allServices.find((s) => s.id === id))
+          .filter((s): s is (typeof allServices)[number] => Boolean(s && s.isActive))
+      : allServices;
+
+  const services = selectedServices.length > 0 ? selectedServices : allServices;
 
   const defaultWhatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     settings.whatsappDefaultMessage
@@ -94,9 +102,7 @@ export default async function Home() {
           position: index + 1
         }))
       },
-      sameAs: settings.socialLinks
-        .filter((s) => Boolean(s.url))
-        .map((s) => s.url)
+      sameAs: settings.socialLinks.filter((s) => Boolean(s.url)).map((s) => s.url)
     },
     {
       "@context": "https://schema.org",

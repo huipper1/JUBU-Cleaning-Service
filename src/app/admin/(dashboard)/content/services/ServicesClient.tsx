@@ -1,260 +1,120 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { toast } from "sonner";
-import {
-  Save,
-  X,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  Pencil,
-} from "lucide-react";
-import { toggleServiceActiveAction, updateServiceAction } from "./actions";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
-interface ServiceItem {
-  id: string;
-  slug: string;
-  title: string;
-  shortDescription: string;
-  longDescription?: string;
-  icon: string;
-  imageSrc: string;
-  imageAlt: string;
-  order: number;
-  isActive: boolean;
-}
+import { ArrowUpRight, Check, Loader2, Sparkles } from "lucide-react";
+import { toast } from "sonner";
+
+import { ServiceOption, ServiceSelector } from "@/components/admin/ServiceSelector";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { updateHomepageServicesAction } from "./actions";
 
 interface ServicesClientProps {
-  initialServices: ServiceItem[];
+  allServices: ServiceOption[];
+  initialSelectedIds: string[];
 }
 
-export function ServicesClient({ initialServices }: ServicesClientProps) {
-  const [services, setServices] = useState<ServiceItem[]>(initialServices);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [editShortDesc, setEditShortDesc] = useState("");
-  const [editLongDesc, setEditLongDesc] = useState("");
-  const [editOrder, setEditOrder] = useState(0);
+export function ServicesClient({ allServices, initialSelectedIds }: ServicesClientProps) {
+  const [selectedIds, setSelectedIds] = useState<string[]>(initialSelectedIds);
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleToggle = async (s: ServiceItem) => {
-    const nextVal = !s.isActive;
-    setServices(
-      services.map((item) =>
-        item.id === s.id ? { ...item, isActive: nextVal } : item
-      )
-    );
-
-    const res = await toggleServiceActiveAction(s.id, nextVal);
-    if (!res.success) {
-      toast.error("Failed to update status");
-      setServices(
-        services.map((item) =>
-          item.id === s.id ? { ...item, isActive: !nextVal } : item
-        )
-      );
-    } else {
-      toast.success(`${s.title} is now ${nextVal ? "active" : "disabled"}`);
-    }
-  };
-
-  const startEdit = (s: ServiceItem) => {
-    setEditingId(s.id);
-    setEditTitle(s.title);
-    setEditShortDesc(s.shortDescription);
-    setEditLongDesc(s.longDescription ?? "");
-    setEditOrder(s.order);
-  };
-
-  const handleSave = async (s: ServiceItem) => {
+  const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await updateServiceAction(s.id, {
-        title: editTitle,
-        shortDescription: editShortDesc,
-        longDescription: editLongDesc || undefined,
-        order: editOrder,
-        isActive: s.isActive,
-      });
-
+      const res = await updateHomepageServicesAction(selectedIds);
       if (res.success) {
-        setServices(
-          services.map((item) =>
-            item.id === s.id
-              ? {
-                ...item,
-                title: editTitle,
-                shortDescription: editShortDesc,
-                longDescription: editLongDesc || undefined,
-                order: editOrder,
-              }
-              : item
-          )
-        );
-        toast.success("Service updated and published live!");
-        setEditingId(null);
+        toast.success("Homepage services updated and published live!");
       } else {
-        toast.error(res.error ?? "Failed to save service");
+        toast.error(res.error ?? "Failed to save homepage services");
       }
+    } catch {
+      toast.error("An unexpected error occurred while saving.");
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {services.map((s) => {
-        const isEdit = editingId === s.id;
+    <div className="flex flex-col gap-6 pb-12">
+      {/* Save Button Header Action */}
+      <div className="flex items-center justify-between rounded-xl border bg-card p-4 shadow-xs">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm font-semibold text-foreground">
+            Homepage Services ({selectedIds.length} Selected)
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Save changes to update the live homepage services section.
+          </span>
+        </div>
 
-        return (
-          <Card key={s.id}>
-            <CardContent className="px-2">
-              {isEdit ? (
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between pb-2 border-b">
-                    <span className="font-semibold text-foreground">
-                      Editing: {s.title}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingId(null)}
-                      >
-                        <X className="size-4" />
-                        Cancel
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleSave(s)}
-                        disabled={isSaving}
-                      >
-                        {isSaving ? (
-                          <Loader2 className="size-3.5 animate-spin" />
-                        ) : (
-                          <Save className="size-3.5" />
-                        )}
-                        <span>Save Changes</span>
-                      </Button>
-                    </div>
-                  </div>
+        <Button onClick={handleSave} disabled={isSaving} className="gap-1.5">
+          {isSaving ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              <span>Saving...</span>
+            </>
+          ) : (
+            <>
+              <Check className="size-4" />
+              <span>Save Changes</span>
+            </>
+          )}
+        </Button>
+      </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-foreground">
-                        Title
-                      </label>
-                      <Input
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                      />
-                    </div>
+      {/* Info Card with Link to Services Catalog */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <Sparkles className="size-4" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold text-foreground">
+                Want to add, edit, or delete services?
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                Use the Services Catalog to create new services or modify existing service titles,
+                descriptions, and images.
+              </span>
+            </div>
+          </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-foreground">
-                        Display Order
-                      </label>
-                      <Input
-                        type="number"
-                        value={editOrder}
-                        onChange={(e) => setEditOrder(Number(e.target.value))}
-                      />
-                    </div>
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            className="shrink-0 gap-1 self-start text-xs sm:self-auto"
+          >
+            <Link href="/admin/content/services-list">
+              <span>Go to Services Catalog</span>
+              <ArrowUpRight className="size-3.5" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
 
-                    <div className="flex flex-col gap-1.5 sm:col-span-2">
-                      <label className="text-xs font-medium text-foreground">
-                        Short Description
-                      </label>
-                      <textarea
-                        rows={2}
-                        value={editShortDesc}
-                        onChange={(e) => setEditShortDesc(e.target.value)}
-                        className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5 sm:col-span-2">
-                      <label className="text-xs font-medium text-foreground">
-                        Long Description
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={editLongDesc}
-                        onChange={(e) => setEditLongDesc(e.target.value)}
-                        className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="relative size-16 shrink-0 overflow-hidden rounded-lg border bg-muted">
-                      <Image
-                        src={s.imageSrc}
-                        alt={s.imageAlt}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-foreground">
-                          {s.title}
-                        </span>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          /{s.slug}
-                        </span>
-                        <Badge variant="outline" className="text-[10px]">
-                          Order #{s.order}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {s.shortDescription}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 self-end sm:self-center">
-                    <Button
-                      variant={s.isActive ? "secondary" : "outline"}
-                      size="sm"
-                      onClick={() => handleToggle(s)}
-                    >
-                      {s.isActive ? (
-                        <>
-                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
-                          <span>Active</span>
-                        </>
-                      ) : (
-                        <>
-                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
-                          <span>Disabled</span>
-                        </>
-                      )}
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => startEdit(s)}
-                    >
-                      <Pencil className="size-3.5 mr-1" />
-                      <span>Edit</span>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        );
-      })}
+      {/* Main Service Selector Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Select Services to Display</CardTitle>
+          <CardDescription>
+            Choose which services appear on the main website homepage and reorder them as desired.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ServiceSelector
+            availableServices={allServices}
+            selectedIds={selectedIds}
+            onChange={setSelectedIds}
+            title="Homepage Services Display"
+            description="Cards on the homepage will be displayed in this exact sequence."
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

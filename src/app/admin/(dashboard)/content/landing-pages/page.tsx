@@ -1,26 +1,37 @@
 import Link from "next/link";
+
+import { ArrowRight, CheckCircle2, Eye, Globe2, XCircle } from "lucide-react";
+
 import { prisma } from "@/lib/db/prisma";
-import { Globe2, ArrowRight, Eye, CheckCircle2, XCircle } from "lucide-react";
+
 import { AdminPageHeader } from "@/components/admin/page-header";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { CreateAreaLandingPageDialog } from "./CreateAreaLandingPageDialog";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAreaLandingPagesHub() {
-  const pages = await prisma.areaLandingPage.findMany({
-    orderBy: { areaName: "asc" },
-  });
+  const [pages, services] = await Promise.all([
+    prisma.areaLandingPage.findMany({
+      orderBy: { areaName: "asc" }
+    }),
+    prisma.service.findMany({
+      orderBy: { order: "asc" }
+    })
+  ]);
+
+  const serializedServices = services.map((s) => ({
+    id: s.id,
+    slug: s.slug,
+    title: s.title,
+    shortDescription: s.shortDescription,
+    icon: s.icon,
+    imageSrc: s.imageSrc,
+    isActive: s.isActive
+  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -28,14 +39,13 @@ export default async function AdminAreaLandingPagesHub() {
         title="Area Landing Pages (Ad Targets)"
         description="Dedicated landing pages designed for Google and Facebook Ads campaigns with area-targeted copy."
       >
-        <CreateAreaLandingPageDialog />
+        <CreateAreaLandingPageDialog availableServices={serializedServices} />
       </AdminPageHeader>
 
       {/* Pages Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {pages.map((p) => {
-          const faqs =
-            (p.faqs as Array<{ question: string; answer: string }>) ?? [];
+          const faqs = (p.faqs as Array<{ question: string; answer: string }>) ?? [];
 
           return (
             <Card key={p.id} className="flex flex-col justify-between">
@@ -47,21 +57,19 @@ export default async function AdminAreaLandingPagesHub() {
                     </div>
                     <div className="flex flex-col">
                       <CardTitle className="text-base">{p.areaName}</CardTitle>
-                      <span className="font-mono text-xs text-muted-foreground">
-                        /{p.slug}
-                      </span>
+                      <span className="font-mono text-xs text-muted-foreground">/{p.slug}</span>
                     </div>
                   </div>
 
                   <Badge variant={p.isActive ? "secondary" : "outline"}>
                     {p.isActive ? (
                       <>
-                        <CheckCircle2 className="size-3 text-emerald-500 mr-1" />
+                        <CheckCircle2 className="mr-1 size-3 text-emerald-500" />
                         <span>Active</span>
                       </>
                     ) : (
                       <>
-                        <XCircle className="size-3 text-muted-foreground mr-1" />
+                        <XCircle className="mr-1 size-3 text-muted-foreground" />
                         <span>Disabled</span>
                       </>
                     )}
@@ -69,14 +77,14 @@ export default async function AdminAreaLandingPagesHub() {
                 </CardHeader>
 
                 <CardContent className="flex flex-col gap-3">
-                  <p className="line-clamp-2 text-xs font-medium text-foreground leading-relaxed">
+                  <p className="line-clamp-2 text-xs leading-relaxed font-medium text-foreground">
                     {p.heroHeadline}
                   </p>
-                  <p className="line-clamp-2 text-xs text-muted-foreground leading-relaxed">
+                  <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {p.heroIntro}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 pt-2 border-t text-[11px] text-muted-foreground">
+                  <div className="flex flex-wrap gap-2 border-t pt-2 text-[11px] text-muted-foreground">
                     <Badge variant="outline" className="text-[10px]">
                       {p.servicesList.length} services listed
                     </Badge>
@@ -87,14 +95,10 @@ export default async function AdminAreaLandingPagesHub() {
                 </CardContent>
               </div>
 
-              <CardFooter className="flex items-center justify-between pt-4 border-t">
+              <CardFooter className="flex items-center justify-between border-t pt-4">
                 <Button variant="ghost" size="sm" asChild>
-                  <a
-                    href={`/${p.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Eye className="size-3.5 mr-1" />
+                  <a href={`/${p.slug}`} target="_blank" rel="noopener noreferrer">
+                    <Eye className="mr-1 size-3.5" />
                     <span>Preview</span>
                   </a>
                 </Button>
@@ -102,7 +106,7 @@ export default async function AdminAreaLandingPagesHub() {
                 <Button size="sm" asChild>
                   <Link href={`/admin/content/landing-pages/${p.slug}`}>
                     <span>Edit Content</span>
-                    <ArrowRight className="size-3.5 ml-1" />
+                    <ArrowRight className="ml-1 size-3.5" />
                   </Link>
                 </Button>
               </CardFooter>

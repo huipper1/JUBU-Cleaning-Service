@@ -1,7 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { Prisma } from "@prisma/client";
+
 import { prisma } from "@/lib/db/prisma";
 
 export interface UpdateAreaLandingPageData {
@@ -13,6 +15,7 @@ export interface UpdateAreaLandingPageData {
   heroImageAlt?: string;
   servicesSectionTitle: string;
   servicesList: string[];
+  serviceIds?: string[];
   featuredBlockTitle: string;
   featuredBlockText: string | Array<{ title: string; text: string }>;
   nearYouTitle: string;
@@ -22,10 +25,7 @@ export interface UpdateAreaLandingPageData {
   isActive: boolean;
 }
 
-export async function updateAreaLandingPageAction(
-  slug: string,
-  data: UpdateAreaLandingPageData
-) {
+export async function updateAreaLandingPageAction(slug: string, data: UpdateAreaLandingPageData) {
   try {
     await prisma.areaLandingPage.update({
       where: { slug },
@@ -35,11 +35,13 @@ export async function updateAreaLandingPageAction(
         heroHeadline: data.heroHeadline,
         heroIntro: data.heroIntro,
         heroImageSrc: data.heroImageSrc || null,
-        heroImageAlt: data.heroImageAlt || (data.heroImageSrc ? `${data.heroHeadline} in Dubai` : null),
+        heroImageAlt:
+          data.heroImageAlt || (data.heroImageSrc ? `${data.heroHeadline} in Dubai` : null),
         heroImageWidth: data.heroImageSrc ? 800 : null,
         heroImageHeight: data.heroImageSrc ? 600 : null,
         servicesSectionTitle: data.servicesSectionTitle,
         servicesList: data.servicesList,
+        serviceIds: data.serviceIds ?? [],
         featuredBlockTitle: data.featuredBlockTitle,
         featuredBlockText: data.featuredBlockText as unknown as Prisma.InputJsonValue,
         nearYouTitle: data.nearYouTitle,

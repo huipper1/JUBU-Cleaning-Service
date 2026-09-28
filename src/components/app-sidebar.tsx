@@ -143,6 +143,19 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/admin/content/services-list"}
+                tooltip="Services Catalog"
+              >
+                <Link href="/admin/content/services-list">
+                  <Sparkles />
+                  <span>Services Catalog</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
 

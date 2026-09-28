@@ -1,20 +1,21 @@
 import { prisma } from "@/lib/db/prisma";
-import { ServicesClient } from "./ServicesClient";
-import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { AdminPageHeader } from "@/components/admin/page-header";
 import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
+import { ServicesClient } from "./ServicesClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminServicesPage() {
   const [dbServices, settings] = await Promise.all([
     prisma.service.findMany({
-      orderBy: { order: "asc" },
+      orderBy: { order: "asc" }
     }),
     prisma.siteSettings.findUnique({
       where: { id: "default" },
-      select: { showServices: true },
-    }),
+      select: { showServices: true, homepageServiceIds: true }
+    })
   ]);
 
   const serialized = dbServices.map((s) => ({
@@ -27,14 +28,19 @@ export default async function AdminServicesPage() {
     imageSrc: s.imageSrc,
     imageAlt: s.imageAlt,
     order: s.order,
-    isActive: s.isActive,
+    isActive: s.isActive
   }));
+
+  const defaultHomepageIds =
+    settings?.homepageServiceIds && settings.homepageServiceIds.length > 0
+      ? settings.homepageServiceIds
+      : serialized.filter((s) => s.isActive).map((s) => s.id);
 
   return (
     <div className="flex flex-col gap-6">
       <AdminPageHeader
-        title="Services Management"
-        description="Edit cleaning service titles, descriptions, display order, and live visibility."
+        title="Homepage Services Section"
+        description="Select which cleaning services appear in the Services section on the main homepage and customize their display order."
       >
         <SectionVisibilityToggle
           sectionKey="showServices"
@@ -42,7 +48,7 @@ export default async function AdminServicesPage() {
           initialVisible={settings?.showServices ?? true}
         />
       </AdminPageHeader>
-      <ServicesClient initialServices={serialized} />
+      <ServicesClient allServices={serialized} initialSelectedIds={defaultHomepageIds} />
     </div>
   );
 }

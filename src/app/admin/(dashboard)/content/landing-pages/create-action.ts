@@ -1,7 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { Prisma } from "@prisma/client";
+
 import { prisma } from "@/lib/db/prisma";
 
 export interface CreateAreaLandingPageInput {
@@ -15,6 +17,7 @@ export interface CreateAreaLandingPageInput {
   heroImageAlt?: string;
   servicesSectionTitle: string;
   servicesList: string[];
+  serviceIds?: string[];
   featuredBlockTitle: string;
   featuredBlockText: string | Array<{ title: string; text: string }>;
   nearYouTitle: string;
@@ -26,7 +29,10 @@ export interface CreateAreaLandingPageInput {
 
 export async function createAreaLandingPageAction(input: CreateAreaLandingPageInput) {
   try {
-    const slug = input.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-");
+    const slug = input.slug
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-");
 
     // Validation
     if (!input.areaName.trim()) throw new Error("Area name is required.");
@@ -36,12 +42,14 @@ export async function createAreaLandingPageAction(input: CreateAreaLandingPageIn
     if (!input.heroHeadline.trim()) throw new Error("Hero Headline is required.");
     if (!input.heroIntro.trim()) throw new Error("Hero Intro is required.");
     if (!input.servicesSectionTitle.trim()) throw new Error("Services Section Title is required.");
-    if (!input.servicesList || input.servicesList.length === 0) throw new Error("At least one service bullet point is required.");
+    if (!input.servicesList || input.servicesList.length === 0)
+      throw new Error("At least one service bullet point is required.");
     if (!input.featuredBlockTitle.trim()) throw new Error("Featured Block Title is required.");
     if (!input.nearYouTitle.trim()) throw new Error("Near You Title is required.");
     if (!input.nearYouText.trim()) throw new Error("Near You Text is required.");
     if (!input.finalCtaTitle.trim()) throw new Error("Final CTA Title is required.");
-    if (!input.faqs || input.faqs.length === 0) throw new Error("At least one FAQ item is required.");
+    if (!input.faqs || input.faqs.length === 0)
+      throw new Error("At least one FAQ item is required.");
 
     // Check duplicate
     const existing = await prisma.areaLandingPage.findUnique({
@@ -61,11 +69,13 @@ export async function createAreaLandingPageAction(input: CreateAreaLandingPageIn
         heroHeadline: input.heroHeadline.trim(),
         heroIntro: input.heroIntro.trim(),
         heroImageSrc: input.heroImageSrc || null,
-        heroImageAlt: input.heroImageAlt || (input.heroImageSrc ? `${input.heroHeadline} in Dubai` : null),
+        heroImageAlt:
+          input.heroImageAlt || (input.heroImageSrc ? `${input.heroHeadline} in Dubai` : null),
         heroImageWidth: input.heroImageSrc ? 800 : null,
         heroImageHeight: input.heroImageSrc ? 600 : null,
         servicesSectionTitle: input.servicesSectionTitle.trim(),
         servicesList: input.servicesList,
+        serviceIds: input.serviceIds ?? [],
         featuredBlockTitle: input.featuredBlockTitle.trim(),
         featuredBlockText: input.featuredBlockText as unknown as Prisma.InputJsonValue,
         nearYouTitle: input.nearYouTitle.trim(),

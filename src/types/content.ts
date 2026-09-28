@@ -57,6 +57,7 @@ export interface SiteSettings {
   showQuote?: boolean;
   showAreas?: boolean;
   showContact?: boolean;
+  homepageServiceIds?: string[];
 }
 
 export interface TrustBadgeItem {
@@ -181,6 +182,7 @@ export interface AreaLandingPage {
   heroImage?: ImageItem;
   servicesSectionTitle: string;
   servicesList?: string[];
+  serviceIds?: string[];
   featuredBlockTitle: string;
   featuredBlockText: string | FeaturedContentBlock[];
   nearYouTitle: string;

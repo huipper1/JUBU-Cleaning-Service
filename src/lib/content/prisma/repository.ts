@@ -70,7 +70,8 @@ export class PrismaContentRepository implements ContentRepository {
       showGallery: s.showGallery,
       showQuote: s.showQuote,
       showAreas: s.showAreas,
-      showContact: s.showContact
+      showContact: s.showContact,
+      homepageServiceIds: s.homepageServiceIds ?? []
     };
   }
 
@@ -314,13 +315,12 @@ export class PrismaContentRepository implements ContentRepository {
     heroImageHeight: number | null;
     servicesSectionTitle: string;
     servicesList: string[];
+    serviceIds?: string[];
     featuredBlockTitle: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     featuredBlockText: unknown;
     nearYouTitle: string;
     nearYouText: string;
     finalCtaTitle: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     faqs: unknown;
     isActive: boolean;
     order: number;
@@ -344,6 +344,7 @@ export class PrismaContentRepository implements ContentRepository {
           : undefined,
       servicesSectionTitle: p.servicesSectionTitle,
       servicesList: p.servicesList,
+      serviceIds: p.serviceIds ?? [],
       featuredBlockTitle: p.featuredBlockTitle,
       featuredBlockText: p.featuredBlockText as string | FeaturedContentBlock[],
       nearYouTitle: p.nearYouTitle,
