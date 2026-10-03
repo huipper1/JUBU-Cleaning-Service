@@ -30,43 +30,43 @@ const STATUS_OPTIONS: {
   badgeClass: string;
   cardClass: string;
 }[] = [
-  {
-    id: "new",
-    label: "New",
-    badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-    cardClass: "text-blue-600 dark:text-blue-400"
-  },
-  {
-    id: "contacted",
-    label: "Contacted",
-    badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-    cardClass: "text-amber-600 dark:text-amber-400"
-  },
-  {
-    id: "quotation_sent",
-    label: "Quotation Sent",
-    badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
-    cardClass: "text-purple-600 dark:text-purple-400"
-  },
-  {
-    id: "confirmed",
-    label: "Confirmed",
-    badgeClass: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
-    cardClass: "text-cyan-600 dark:text-cyan-400"
-  },
-  {
-    id: "completed",
-    label: "Completed",
-    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    cardClass: "text-emerald-600 dark:text-emerald-400"
-  },
-  {
-    id: "lost_cancelled",
-    label: "Lost/Cancelled",
-    badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
-    cardClass: "text-rose-600 dark:text-rose-400"
-  }
-];
+    {
+      id: "new",
+      label: "New",
+      badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+      cardClass: "text-blue-600 dark:text-blue-400"
+    },
+    {
+      id: "contacted",
+      label: "Contacted",
+      badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+      cardClass: "text-amber-600 dark:text-amber-400"
+    },
+    {
+      id: "quotation_sent",
+      label: "Quotation Sent",
+      badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+      cardClass: "text-purple-600 dark:text-purple-400"
+    },
+    {
+      id: "confirmed",
+      label: "Confirmed",
+      badgeClass: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+      cardClass: "text-cyan-600 dark:text-cyan-400"
+    },
+    {
+      id: "completed",
+      label: "Completed",
+      badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      cardClass: "text-emerald-600 dark:text-emerald-400"
+    },
+    {
+      id: "lost_cancelled",
+      label: "Lost/Cancelled",
+      badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+      cardClass: "text-rose-600 dark:text-rose-400"
+    }
+  ];
 
 interface LeadsClientProps {
   leads: Lead[];
@@ -386,7 +386,7 @@ export function LeadsClient({
                 </Card>
               )}
 
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <CardTitle className="text-xs">Internal Notes</CardTitle>
                 </CardHeader>
@@ -407,7 +407,7 @@ export function LeadsClient({
                     {isSavingNotes ? "Saving..." : "Save Note"}
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           )}
         </DialogContent>
