@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { env } from "@/env";
 import { mockContentRepository } from "./mock/repository";
 import { prismaContentRepository } from "./prisma/repository";
@@ -7,51 +8,52 @@ import type { ContentRepository } from "./repository";
 export const contentRepository: ContentRepository =
   env.CONTENT_SOURCE === "prisma" ? prismaContentRepository : mockContentRepository;
 
-// Helper accessor functions
-export async function getSettings() {
+// Helper accessor functions wrapped with request-level memoization cache()
+export const getSettings = cache(async () => {
   return contentRepository.getSettings();
-}
+});
 
-export async function getHero() {
+export const getHero = cache(async () => {
   return contentRepository.getHero();
-}
+});
 
-export async function getServices() {
+export const getServices = cache(async () => {
   return contentRepository.getServices();
-}
+});
 
-export async function getWhyChoose() {
+export const getWhyChoose = cache(async () => {
   return contentRepository.getWhyChoose();
-}
+});
 
-export async function getAbout() {
+export const getAbout = cache(async () => {
   return contentRepository.getAbout();
-}
+});
 
-export async function getTeam() {
+export const getTeam = cache(async () => {
   return contentRepository.getTeam();
-}
+});
 
-export async function getGallery() {
+export const getGallery = cache(async () => {
   return contentRepository.getGallery();
-}
+});
 
-export async function getAreas() {
+export const getAreas = cache(async () => {
   return contentRepository.getAreas();
-}
+});
 
-export async function getTestimonials() {
+export const getTestimonials = cache(async () => {
   return contentRepository.getTestimonials();
-}
+});
 
-export async function getAreaLandingPages() {
+export const getAreaLandingPages = cache(async () => {
   return contentRepository.getAreaLandingPages();
-}
+});
 
-export async function getAreaLandingPage(slug: string) {
+export const getAreaLandingPage = cache(async (slug: string) => {
   return contentRepository.getAreaLandingPage(slug);
-}
+});
 
+export * from "./image-url";
 export * from "./mock/data/area-landing-pages";
 export * from "./repository";
 export * from "./types";

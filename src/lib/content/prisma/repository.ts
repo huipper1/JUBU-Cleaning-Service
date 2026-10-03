@@ -20,6 +20,9 @@ import type { TestimonialItem } from "@/types/testimonial";
 
 import type { ContentRepository } from "@/lib/content/repository";
 import { prisma } from "@/lib/db/prisma";
+import { mockAboutData } from "../mock/data/about";
+import { mockHeroData } from "../mock/data/hero";
+import { mockSettingsData } from "../mock/data/settings";
 
 export class PrismaContentRepository implements ContentRepository {
   async getSettings(): Promise<SiteSettings> {
@@ -28,7 +31,7 @@ export class PrismaContentRepository implements ContentRepository {
     });
 
     if (!s) {
-      throw new Error("SiteSettings not found in database. Please run database seed.");
+      return mockSettingsData;
     }
 
     return {
@@ -83,7 +86,7 @@ export class PrismaContentRepository implements ContentRepository {
     });
 
     if (!h) {
-      throw new Error("HeroContent not found in database. Please run database seed.");
+      return mockHeroData;
     }
 
     return {
@@ -159,7 +162,7 @@ export class PrismaContentRepository implements ContentRepository {
     });
 
     if (!a) {
-      throw new Error("AboutContent not found in database. Please run database seed.");
+      return mockAboutData;
     }
 
     return {
