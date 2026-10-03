@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
-import type { AboutContent } from "@/types/content";
+import type { AboutContent, SiteSettings } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 interface AboutProps {
   content: AboutContent;
+  settings?: SiteSettings;
 }
 
-export function About({ content }: AboutProps) {
+export function About({ content, settings }: AboutProps) {
   // Use the 12 equipment items in the checklist grid
   const checklistItems = content.equipment && content.equipment.length > 0
     ? content.equipment
@@ -75,8 +77,8 @@ export function About({ content }: AboutProps) {
           {/* Left Large Photo: Cleaners in action */}
           <div className="relative h-[340px] w-full overflow-hidden rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)] sm:h-[420px] lg:col-span-7 lg:h-[480px]">
             <Image
-              src="/images/placeholder/about-cleaner.png"
-              alt="Professional JUBU cleaning team sanitizing office space"
+              src={getPublicImageUrl(content.images?.[0]?.src, "/images/placeholder/about-cleaner.png")}
+              alt={content.images?.[0]?.alt || "Professional JUBU cleaning team"}
               fill
               sizes="(max-width: 1024px) 100vw, 60vw"
               className="object-cover object-center"
@@ -89,8 +91,8 @@ export function About({ content }: AboutProps) {
             {/* Top Team Duo Photo */}
             <div className="relative h-[200px] w-full overflow-hidden rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)] sm:h-[240px] lg:h-[250px]">
               <Image
-                src="/images/placeholder/about-team.png"
-                alt="Two professional cleaners smiling in clean kitchen"
+                src={getPublicImageUrl(content.images?.[1]?.src, "/images/placeholder/about-team.png")}
+                alt={content.images?.[1]?.alt || "Professional JUBU cleaners smiling"}
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
                 className="object-cover object-center"
@@ -110,10 +112,11 @@ export function About({ content }: AboutProps) {
 
               <div className="my-4">
                 <div className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-                  DET Licensed
+                  {settings?.licence?.legalStructure ? "DET Licensed" : "Licensed Cleaner"}
                 </div>
                 <p className="mt-1.5 text-xs font-medium text-slate-300 sm:text-sm">
-                  Dubai Department of Economy and Tourism · Licence No. 1026183
+                  {settings?.licence?.issuingAuthority || "Dubai Department of Economy and Tourism"} · Licence No.{" "}
+                  {settings?.licence?.number || "1026183"}
                 </p>
               </div>
 

@@ -175,7 +175,7 @@ export default async function Home() {
       {(settings.showWhyChoose ?? true) && <WhyChooseUs items={whyChoose} />}
 
       {/* 5. About Us / Company Profile */}
-      {(settings.showAbout ?? true) && <About content={about} />}
+      {(settings.showAbout ?? true) && <About content={about} settings={settings} />}
 
       {/* 6. Our Team */}
       {(settings.showTeam ?? true) && <Team members={team} />}

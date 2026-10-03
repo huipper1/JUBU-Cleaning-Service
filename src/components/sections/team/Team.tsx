@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import type { TeamMember } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { SectionHeading } from "@/ui";
 
@@ -26,8 +27,8 @@ export function Team({ members }: TeamProps) {
             >
               <figure className="relative m-0 aspect-square w-full overflow-hidden bg-brand-pale-blue">
                 <Image
-                  src={member.photo.src}
-                  alt={member.photo.alt}
+                  src={getPublicImageUrl(member.photo.src, "/images/placeholder/team-ahmed.png")}
+                  alt={member.photo.alt || member.name}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"

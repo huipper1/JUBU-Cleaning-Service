@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { SectionHeading } from "@/ui";
 import type { ImageItem, WhyChooseItem } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 interface WhyChooseUsProps {
   items: WhyChooseItem[];
@@ -126,8 +127,8 @@ export function WhyChooseUs({
           {/* Left Column: Image */}
           <div className="relative min-h-[320px] w-full overflow-hidden sm:min-h-[420px] lg:col-span-5 lg:min-h-[500px]">
             <Image
-              src={image.src || "/images/placeholder/why-choose-us.png"}
-              alt={image.alt}
+              src={getPublicImageUrl(image.src, "/images/placeholder/why-choose-us.png")}
+              alt={image.alt || "JUBU Cleaning Service"}
               fill
               sizes="(max-width: 1024px) 100vw, 45vw"
               className="object-cover object-center"

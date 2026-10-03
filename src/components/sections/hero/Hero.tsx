@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check, MessageCircle, ShieldCheck, Users, Wrench } from "lucide-react";
 
 import type { HeroContent } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 interface HeroProps {
   content: HeroContent;
@@ -46,14 +47,16 @@ export function Hero({
   heroImage,
   socialProofText
 }: HeroProps) {
-  const displayImage = heroImage || content.heroImage || {
-    src: "/images/placeholder/hero-cleaner.png",
-    alt: "JUBU Professional Cleaner in uniform with spray bottle and microfibre cloth",
-    width: 800,
-    height: 950
+  const rawImage = heroImage || content.heroImage;
+  const displayImage = {
+    src: getPublicImageUrl(rawImage?.src, "/images/placeholder/hero-cleaner.png"),
+    alt: rawImage?.alt || content.headline || "JUBU Professional Cleaner",
+    width: rawImage?.width || 800,
+    height: rawImage?.height || 950
   };
 
   const displayIntro = intro || content.subheadline;
+  const activeHeadline = headline || content.headline || "Professional Cleaning Services in Dubai";
 
   return (
     <section
@@ -70,25 +73,10 @@ export function Hero({
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-4 xl:gap-6">
           {/* Left Column: Copy, Trust Badges, CTAs, Social Proof (Vertically Centered) */}
           <div className="flex flex-col items-center text-center sm:py-10 lg:col-span-6 lg:items-start lg:self-center lg:py-16 lg:text-left xl:col-span-6">
-            {/* Pill Tag: Professional Cleaning Services in Dubai */}
-            {/* <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/40 px-4 py-1.5 text-xs font-medium text-sky-200 shadow-sm backdrop-blur-md sm:text-sm">
-              <span>{content.badge || "Professional Cleaning Services in Dubai"}</span>
-            </div> */}
-
             {/* Main Headline */}
-            {headline ? (
-              <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
-                {headline}
-              </h1>
-            ) : (
-              <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
-                Professional Cleaning <br className="hidden sm:inline" />
-                Services in{" "}
-                <span className="relative inline-block text-[#34d399]">
-                  Dubai
-                </span>
-              </h1>
-            )}
+            <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-[3.6rem] xl:text-[3.9rem]">
+              {activeHeadline}
+            </h1>
 
             {/* Subheadline description */}
             <p className="mb-8 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base lg:text-left">
@@ -243,18 +231,17 @@ export function Hero({
 
                   {/* Handwritten Text Lines */}
                   <div className="flex flex-col leading-[1.05] tracking-tight">
-                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
-                      Cleaner
-                    </span>
-                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
-                      Spaces
-                    </span>
-                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
-                      Brighter
-                    </span>
-                    <span className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]">
-                      Lives
-                    </span>
+                    {(content.floatingBadge || "Cleaner Spaces Brighter Lives")
+                      .split(" ")
+                      .filter(Boolean)
+                      .map((word, idx) => (
+                        <span
+                          key={idx}
+                          className="text-2xl font-bold text-white/95 drop-shadow-sm sm:text-3xl lg:text-[2.2rem]"
+                        >
+                          {word}
+                        </span>
+                      ))}
                   </div>
 
                   {/* Gradient underline arc (cyan to vibrant lime green) */}

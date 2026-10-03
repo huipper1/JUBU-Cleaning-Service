@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import type { Service } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { Icon, SectionHeading } from "@/ui";
 
@@ -85,8 +86,8 @@ export function Services({
                 {/* Right Half: Rounded Image Preview */}
                 <figure className="relative m-0 aspect-[4/5] w-full overflow-hidden rounded-2xl bg-slate-100">
                   <Image
-                    src={service.image.src}
-                    alt={service.image.alt}
+                    src={getPublicImageUrl(service.image.src, "/images/placeholder/gallery-home.png")}
+                    alt={service.image.alt || service.title}
                     fill
                     sizes="(max-width: 768px) 50vw, 33vw"
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"

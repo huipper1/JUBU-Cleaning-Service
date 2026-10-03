@@ -8,6 +8,7 @@ import { ArrowLeftRight, ArrowRight, ChevronLeft, ChevronRight, X } from "lucide
 
 import { SectionHeading } from "@/ui";
 import type { GalleryItem } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 interface GalleryProps {
   items: GalleryItem[];
@@ -112,8 +113,8 @@ export function Gallery({ items }: GalleryProps) {
             >
               <figure className="relative m-0 aspect-[4/3] w-full">
                 <Image
-                  src={item.image.src}
-                  alt={item.image.alt}
+                  src={getPublicImageUrl(item.image.src, "/images/placeholder/gallery-home.png")}
+                  alt={item.image.alt || item.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
@@ -193,11 +194,12 @@ export function Gallery({ items }: GalleryProps) {
             <div className="relative aspect-[16/10] w-full bg-brand-navy-dark/5 sm:aspect-[16/9]">
               {selectedItem.isBeforeAfter && selectedItem.beforeImage && selectedItem.afterImage ? (
                 <Image
-                  src={
+                  src={getPublicImageUrl(
                     activeTab === "before"
                       ? selectedItem.beforeImage.src
-                      : selectedItem.afterImage.src
-                  }
+                      : selectedItem.afterImage.src,
+                    "/images/placeholder/gallery-home.png"
+                  )}
                   alt={
                     activeTab === "before"
                       ? selectedItem.beforeImage.alt
@@ -209,7 +211,7 @@ export function Gallery({ items }: GalleryProps) {
                 />
               ) : (
                 <Image
-                  src={selectedItem.image.src}
+                  src={getPublicImageUrl(selectedItem.image.src, "/images/placeholder/gallery-home.png")}
                   alt={selectedItem.image.alt}
                   fill
                   sizes="100vw"
