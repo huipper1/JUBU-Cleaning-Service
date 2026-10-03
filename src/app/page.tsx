@@ -3,11 +3,13 @@ import {
   getAreas,
   getGallery,
   getHero,
+  getPublicImageUrl,
   getServices,
   getSettings,
   getTeam,
   getWhyChoose
 } from "@/lib/content";
+import { env } from "@/env";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
 import {
@@ -47,24 +49,30 @@ export default async function Home() {
     settings.whatsappDefaultMessage
   )}`;
 
+  const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
+  const dynamicLogoUrl = getPublicImageUrl(settings.logo?.src, "/images/logo.png");
+  const dynamicOgImageUrl = getPublicImageUrl(
+    settings.defaultSeo?.ogImage || settings.logo?.src,
+    "/images/logo.png"
+  );
+
   // Enhanced JSON-LD Structured Data (LocalBusiness + Service Catalog + FAQPage) for SEO & AI SEO / GEO
   const structuredData = [
     {
       "@context": "https://schema.org",
       "@type": "HouseCleaningService",
-      "@id": "https://jubucleaning.com/#localbusiness",
+      "@id": `${baseUrl}/#localbusiness`,
       name: settings.businessName,
-      alternateName: "JUBU Cleaning Service LLC",
-      url: "https://jubucleaning.com",
-      logo: "https://jubucleaning.com/images/logo.png",
-      image: "https://jubucleaning.com/images/logo.png",
+      alternateName: `${settings.businessName} LLC`,
+      url: baseUrl,
+      logo: dynamicLogoUrl.startsWith("http") ? dynamicLogoUrl : `${baseUrl}${dynamicLogoUrl}`,
+      image: dynamicOgImageUrl.startsWith("http") ? dynamicOgImageUrl : `${baseUrl}${dynamicOgImageUrl}`,
       telephone: settings.phoneTel,
       email: settings.email,
       priceRange: "$$",
       paymentAccepted: "Cash, Card, Bank Transfer",
       currenciesAccepted: "AED",
-      description:
-        "Licensed Dubai cleaning service company offering residential, office, deep cleaning, sofa & carpet extraction, and move-in cleaning across Dubai.",
+      description: settings.defaultSeo?.description || settings.tagline,
       address: {
         "@type": "PostalAddress",
         streetAddress: "Setadel Building, Office # 201, Al Quoz-4",

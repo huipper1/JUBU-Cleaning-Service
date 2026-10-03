@@ -27,7 +27,55 @@ const caveat = Caveat({
   display: "swap"
 });
 
-export const metadata: Metadata = seoConfig;
+import { getPublicImageUrl, getSettings } from "@/lib/content";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const title = settings?.defaultSeo?.title || siteConfig.name;
+  const description = settings?.defaultSeo?.description || siteConfig.description;
+  const ogImageUrl = getPublicImageUrl(
+    settings?.defaultSeo?.ogImage || settings?.logo?.src,
+    "/images/logo.png"
+  );
+  const logoUrl = getPublicImageUrl(settings?.logo?.src, "/images/logo.png");
+
+  return {
+    ...seoConfig,
+    title: {
+      default: title,
+      template: `%s | ${settings?.businessName || "JUBU Cleaning Service"}`
+    },
+    description,
+    icons: {
+      icon: [
+        { url: logoUrl, type: "image/png" },
+        { url: "/favicon.ico" }
+      ],
+      shortcut: logoUrl,
+      apple: logoUrl
+    },
+    openGraph: {
+      ...seoConfig.openGraph,
+      title,
+      description,
+      siteName: settings?.businessName || "JUBU Cleaning Service",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: settings?.businessName || "JUBU Cleaning Service Dubai"
+        }
+      ]
+    },
+    twitter: {
+      ...seoConfig.twitter,
+      title,
+      description,
+      images: [ogImageUrl]
+    }
+  };
+}
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

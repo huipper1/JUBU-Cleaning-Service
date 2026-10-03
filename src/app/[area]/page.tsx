@@ -11,6 +11,7 @@ import {
   getAreas,
   getGallery,
   getHero,
+  getPublicImageUrl,
   getServices,
   getSettings,
   getTeam,
@@ -153,6 +154,12 @@ export default async function AreaPage({ params }: AreaPageProps) {
   const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jebucleaning.netlify.app";
   const pageCanonicalUrl = `${baseUrl}/${areaData.slug}`;
 
+  const dynamicLogoUrl = getPublicImageUrl(settings.logo?.src, "/images/logo.png");
+  const dynamicOgImageUrl = getPublicImageUrl(
+    settings.defaultSeo?.ogImage || settings.logo?.src,
+    "/images/logo.png"
+  );
+
   // Structured Data (HouseCleaningService with specific areaServed + FAQPage)
   const structuredData = [
     {
@@ -160,10 +167,10 @@ export default async function AreaPage({ params }: AreaPageProps) {
       "@type": "HouseCleaningService",
       "@id": `${baseUrl}/${areaData.slug}#localbusiness`,
       name: `${settings.businessName} - ${areaData.areaName}`,
-      alternateName: "JUBU Cleaning Service LLC",
+      alternateName: `${settings.businessName} LLC`,
       url: pageCanonicalUrl,
-      logo: `${baseUrl}/images/logo.png`,
-      image: `${baseUrl}/images/logo.png`,
+      logo: dynamicLogoUrl.startsWith("http") ? dynamicLogoUrl : `${baseUrl}${dynamicLogoUrl}`,
+      image: dynamicOgImageUrl.startsWith("http") ? dynamicOgImageUrl : `${baseUrl}${dynamicOgImageUrl}`,
       telephone: settings.phoneTel,
       email: settings.email,
       priceRange: "$$",

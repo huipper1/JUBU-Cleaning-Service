@@ -1,12 +1,22 @@
 import type { MetadataRoute } from "next";
 
-import { VALID_AREA_SLUGS } from "@/lib/content";
+import { getAreas, VALID_AREA_SLUGS } from "@/lib/content";
 import { env } from "@/env";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jebucleaning.netlify.app";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
 
-  const areaEntries: MetadataRoute.Sitemap = VALID_AREA_SLUGS.map((slug) => ({
+  let areaSlugs: string[] = [...VALID_AREA_SLUGS];
+  try {
+    const areas = await getAreas();
+    if (areas && areas.length > 0) {
+      areaSlugs = areas.map((a) => a.slug);
+    }
+  } catch {
+    // Keep fallback slugs on error
+  }
+
+  const areaEntries: MetadataRoute.Sitemap = areaSlugs.map((slug) => ({
     url: `${baseUrl}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
