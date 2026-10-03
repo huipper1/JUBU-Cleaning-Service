@@ -10,6 +10,7 @@ export async function toggleTeamMemberActiveAction(id: string, isActive: boolean
       data: { isActive }
     });
     revalidatePath("/");
+    revalidatePath("/[area]", "page");
     return { success: true };
   } catch (err: unknown) {
     return {
@@ -43,6 +44,7 @@ export async function updateTeamMemberAction(
       }
     });
     revalidatePath("/");
+    revalidatePath("/[area]", "page");
     return { success: true };
   } catch (err: unknown) {
     return {

@@ -11,6 +11,7 @@ export async function updateHomepageServicesAction(serviceIds: string[]) {
       data: { homepageServiceIds: serviceIds }
     });
     revalidatePath("/");
+    revalidatePath("/[area]", "page");
     revalidatePath("/admin/content/services");
     return { success: true };
   } catch (err: unknown) {
