@@ -17,7 +17,6 @@ import {
   Loader2,
   Lock,
   MapPin,
-  MessageCircle,
   MessageSquare,
   Phone,
   RotateCcw,
@@ -28,6 +27,8 @@ import {
   User
 } from "lucide-react";
 import { format } from "date-fns";
+
+import { WhatsAppIcon } from "@/components/icons";
 
 import type { Service, SiteSettings } from "@/types/content";
 import type { CreateLeadInput } from "@/types/lead";
@@ -429,7 +430,7 @@ export function QuoteForm({
             <div className="flex w-full flex-col gap-4">
               <div className="flex items-center gap-3.5">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-lg">
-                  <MessageCircle className="h-6 w-6" />
+                  <WhatsAppIcon className="h-6 w-6" />
                 </div>
                 <div>
                   <span className="block text-xs font-medium text-slate-300">Call / WhatsApp</span>
@@ -451,7 +452,7 @@ export function QuoteForm({
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-xs font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <WhatsAppIcon className="h-4 w-4" />
                   <span>Contact Us on WhatsApp</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
@@ -490,7 +491,7 @@ export function QuoteForm({
                 /* Redirecting / Success State */
                 <div className="flex animate-in flex-col items-center py-6 text-center duration-300 zoom-in-95 fade-in">
                   <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-brand-green/30 bg-brand-green/20 text-brand-green">
-                    <MessageCircle className="h-10 w-10 animate-pulse" />
+                    <WhatsAppIcon className="h-10 w-10 animate-pulse" />
                   </div>
                   <h3 className="mb-2 text-2xl font-extrabold text-white">
                     Redirecting to WhatsApp…
@@ -509,7 +510,7 @@ export function QuoteForm({
                       href={redirectUrl}
                       className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover"
                     >
-                      <MessageCircle className="h-5 w-5" />
+                      <WhatsAppIcon className="h-5 w-5" />
                       <span>Continue to WhatsApp</span>
                       <ExternalLink className="ml-1 h-4 w-4" />
                     </a>
@@ -635,7 +636,7 @@ export function QuoteForm({
                       </label>
                       <div className="relative">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                          <MessageCircle className="h-4 w-4" />
+                          <WhatsAppIcon className="h-4 w-4" />
                         </div>
                         <input
                           type="tel"

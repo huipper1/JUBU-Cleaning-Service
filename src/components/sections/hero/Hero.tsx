@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight, Check, MessageCircle, ShieldCheck, Users, Wrench } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck, Users, Wrench } from "lucide-react";
 
+import { WhatsAppIcon } from "@/components/icons";
 import type { HeroContent } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
@@ -125,7 +126,7 @@ export function Hero({
                 href={content.primaryCta.href}
                 className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand-green px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-base"
               >
-                <MessageCircle className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
+                <WhatsAppIcon className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
                 <span className="whitespace-nowrap">{content.primaryCta.label}</span>
               </Link>
 

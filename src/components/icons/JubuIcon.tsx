@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, SVGProps } from "react";
 
 import {
   ArrowLeftRight,
@@ -24,7 +24,6 @@ import {
   Mail,
   MapPin,
   Menu,
-  MessageCircle,
   Phone,
   PhoneCall,
   ShieldCheck,
@@ -37,8 +36,9 @@ import {
   Youtube,
   type LucideProps
 } from "lucide-react";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 
-export const ICON_MAP: Record<string, ComponentType<LucideProps>> = {
+export const ICON_MAP: Record<string, ComponentType<LucideProps | SVGProps<SVGSVGElement>>> = {
   home: Home,
   building: Building2,
   "building-2": Building2,
@@ -59,7 +59,7 @@ export const ICON_MAP: Record<string, ComponentType<LucideProps>> = {
   phone: Phone,
   "phone-call": PhoneCall,
   mail: Mail,
-  whatsapp: MessageCircle,
+  whatsapp: WhatsAppIcon as ComponentType<LucideProps | SVGProps<SVGSVGElement>>,
   facebook: Facebook,
   instagram: Instagram,
   youtube: Youtube,

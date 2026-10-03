@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 
+import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
@@ -163,7 +164,7 @@ export function Footer({ settings }: FooterProps) {
                 rel="noopener noreferrer"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-5 py-3 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
               >
-                <MessageCircle className="h-4 w-4" />
+                <WhatsAppIcon className="h-4 w-4" />
                 <span>Chat on WhatsApp</span>
               </a>
 

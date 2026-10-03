@@ -1,7 +1,8 @@
 import Link from "next/link";
 
-import { FileText, MessageCircle, Phone } from "lucide-react";
+import { FileText, Phone } from "lucide-react";
 
+import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
 
 interface StickyBottomBarProps {
@@ -37,7 +38,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
           className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-green px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-green-hover active:scale-95"
           aria-label="Chat with JUBU on WhatsApp"
         >
-          <MessageCircle className="h-4 w-4 shrink-0" />
+          <WhatsAppIcon className="h-4 w-4 shrink-0" />
           <span>WhatsApp</span>
         </a>
 

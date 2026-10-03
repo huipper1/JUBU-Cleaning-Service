@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
+import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
 
 interface ContactProps {
@@ -67,7 +68,7 @@ export function Contact({ settings }: ContactProps) {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
                   >
-                    <MessageCircle className="h-4 w-4 shrink-0 text-[#34d399]" />
+                    <WhatsAppIcon className="h-4 w-4 shrink-0" />
                     <span>WhatsApp: {settings.phoneDisplay}</span>
                   </a>
                 </div>
@@ -79,7 +80,7 @@ export function Contact({ settings }: ContactProps) {
                   href="#quote"
                   className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <WhatsAppIcon className="h-4 w-4" />
                   <span>WhatsApp Us</span>
                 </Link>
 

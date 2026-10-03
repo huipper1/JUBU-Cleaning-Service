@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { ChevronDown, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
+import { ChevronDown, MapPin, Menu, Phone, X } from "lucide-react";
 
+import { WhatsAppIcon } from "@/components/icons";
 import type { ServiceArea, SiteSettings } from "@/types/content";
 import { AREA_NAV_ITEMS, MAIN_NAV_ITEMS } from "@/constants/navigation";
 import { getPublicImageUrl } from "@/lib/content/image-url";
@@ -157,7 +158,7 @@ export function Header({ settings, areas }: HeaderProps) {
             href="#quote"
             className="inline-flex items-center gap-2 rounded-full bg-brand-green px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-brand-green/25 transition-all hover:bg-brand-green-hover hover:shadow-lg active:scale-98 sm:text-sm"
           >
-            <MessageCircle className="h-4 w-4" />
+            <WhatsAppIcon className="h-4 w-4" />
             <span>Get a Free Quote</span>
           </Link>
         </div>
@@ -267,7 +268,7 @@ export function Header({ settings, areas }: HeaderProps) {
                 onClick={closeMobileMenu}
                 className="flex items-center justify-center gap-2 rounded-xl bg-brand-green py-3 text-sm font-bold text-white shadow-md shadow-brand-green/20 transition-colors hover:bg-brand-green-hover"
               >
-                <MessageCircle className="h-4 w-4" />
+                <WhatsAppIcon className="h-4 w-4" />
                 <span>Chat on WhatsApp</span>
               </a>
 
