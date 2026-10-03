@@ -7,14 +7,16 @@ import { usePathname } from "next/navigation";
 
 import { ChevronDown, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
 
-import type { SiteSettings } from "@/types/content";
+import type { ServiceArea, SiteSettings } from "@/types/content";
 import { AREA_NAV_ITEMS, MAIN_NAV_ITEMS } from "@/constants/navigation";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 interface HeaderProps {
   settings: SiteSettings;
+  areas?: ServiceArea[];
 }
 
-export function Header({ settings }: HeaderProps) {
+export function Header({ settings, areas }: HeaderProps) {
   const pathname = usePathname();
   const isRoot = pathname === "/";
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -29,6 +31,15 @@ export function Header({ settings }: HeaderProps) {
     setIsMobileAreasOpen(false);
   };
 
+  const navAreas =
+    areas && areas.length > 0
+      ? areas.map((a) => ({
+          name: a.name,
+          href: `/${a.slug}`,
+          subtitle: "Cleaning Services"
+        }))
+      : AREA_NAV_ITEMS;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#041633]/90 shadow-lg backdrop-blur-md transition-colors">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -40,10 +51,10 @@ export function Header({ settings }: HeaderProps) {
         >
           <figure className="relative m-0 flex items-center">
             <Image
-              src="/images/logo-white-transparent.png"
-              alt="JUBU Cleaning Services Logo"
-              width={160}
-              height={56}
+              src={getPublicImageUrl(settings.logo?.src, "/images/logo-white-transparent.png")}
+              alt={settings.logo?.alt || `${settings.businessName} Logo`}
+              width={settings.logo?.width || 160}
+              height={settings.logo?.height || 56}
               priority
               className="h-10 w-auto object-contain sm:h-12"
             />
@@ -77,7 +88,7 @@ export function Header({ settings }: HeaderProps) {
                   >
                     <div className="w-[520px] rounded-2xl border border-white/15 bg-[#041633]/95 p-3.5 shadow-2xl backdrop-blur-xl">
                       <div className="grid grid-cols-2 gap-2">
-                        {AREA_NAV_ITEMS.map((area) => (
+                        {navAreas.map((area) => (
                           <Link
                             key={area.href}
                             href={area.href}
@@ -204,7 +215,7 @@ export function Header({ settings }: HeaderProps) {
                             <MapPin className="h-3.5 w-3.5" />
                             <span>All Dubai Service Areas</span>
                           </Link>
-                          {AREA_NAV_ITEMS.map((area) => (
+                          {navAreas.map((area) => (
                             <Link
                               key={area.href}
                               href={area.href}

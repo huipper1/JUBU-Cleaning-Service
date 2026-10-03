@@ -153,7 +153,7 @@ export default async function Home() {
       />
 
       {/* 1. Header (sticky, anchor nav, actions) */}
-      <Header settings={settings} />
+      <Header settings={settings} areas={areas} />
 
       {/* 2. Hero Section */}
       {(settings.showHero ?? true) && (

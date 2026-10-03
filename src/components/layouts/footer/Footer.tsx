@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import type { SiteSettings } from "@/types/content";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { Icon } from "@/ui";
 
@@ -60,10 +61,10 @@ export function Footer({ settings }: FooterProps) {
               aria-label={`${settings.businessName} Home`}
             >
               <Image
-                src="/images/logo-white-transparent.png"
-                alt="JUBU Cleaning Services Logo"
-                width={180}
-                height={180}
+                src={getPublicImageUrl(settings.logo?.src, "/images/logo-white-transparent.png")}
+                alt={settings.logo?.alt || `${settings.businessName} Logo`}
+                width={settings.logo?.width || 180}
+                height={settings.logo?.height || 180}
                 className="h-28 w-auto object-contain drop-shadow-md sm:h-32"
               />
             </Link>

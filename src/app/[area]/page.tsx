@@ -224,7 +224,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
       />
 
       {/* 1. Header (sticky, anchor nav, actions) */}
-      <Header settings={settings} />
+      <Header settings={settings} areas={areas} />
 
       {/* 2. Hero Section (swapped headline, intro, and optional hero image) */}
       <Hero
