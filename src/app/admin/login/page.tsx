@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 import { AdminLoginForm } from "./AdminLoginForm";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +11,7 @@ export default async function AdminLoginPage() {
   });
 
   const branding = {
-    logoSrc: settings?.logoSrc || "/images/logo.png",
+    logoSrc: getPublicImageUrl(settings?.logoSrc, "/images/logo.png"),
     logoAlt: settings?.logoAlt || "JUBU Cleaning Service",
     businessName: settings?.businessName || "JUBU Cleaning Service"
   };

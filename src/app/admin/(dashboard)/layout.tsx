@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/db/prisma";
 import { createClient } from "@/lib/supabase/server";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { Badge } from "@/components/ui/badge";
@@ -45,14 +46,16 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
+  const brandingLogo = getPublicImageUrl(settings?.logoSrc, "/images/logo.png");
+
   const userData = {
     name: user.email?.split("@")[0] || "Admin",
     email: user.email || "admin@jubucleaning.ae",
-    avatar: "/brand/logo.png"
+    avatar: brandingLogo
   };
 
   const branding = {
-    logoSrc: settings?.logoSrc || "/images/logo.png",
+    logoSrc: brandingLogo,
     logoAlt: settings?.logoAlt || "JUBU Cleaning Service",
     businessName: settings?.businessName || "JUBU Cleaning"
   };
