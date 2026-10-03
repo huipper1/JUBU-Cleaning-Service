@@ -22,3 +22,4 @@ export type { CreateLeadInput, Lead, LeadServiceResult, LeadStatus } from "./lea
 export type { SiteConfig, SocialLinks } from "./site-config";
 export type { User } from "./user";
 export type { AreaNavItem, NavItem } from "./navigation";
+export type { WhatsAppIconProps } from "./icon";

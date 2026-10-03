@@ -80,7 +80,7 @@ export function Contact({ settings }: ContactProps) {
                   href="#quote"
                   className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
                 >
-                  <WhatsAppIcon className="h-4 w-4" />
+                  <WhatsAppIcon monochrome className="h-4 w-4" />
                   <span>WhatsApp Us</span>
                 </Link>
 

@@ -35,10 +35,10 @@ export function Header({ settings, areas }: HeaderProps) {
   const navAreas =
     areas && areas.length > 0
       ? areas.map((a) => ({
-          name: a.name,
-          href: `/${a.slug}`,
-          subtitle: "Cleaning Services"
-        }))
+        name: a.name,
+        href: `/${a.slug}`,
+        subtitle: "Cleaning Services"
+      }))
       : AREA_NAV_ITEMS;
 
   return (
@@ -120,11 +120,10 @@ export function Header({ settings, areas }: HeaderProps) {
               <Link
                 key={link.label}
                 href={linkHref}
-                className={`relative py-1 text-sm font-medium transition-colors hover:text-white ${
-                  idx === 0 && isRoot
-                    ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-brand-sky"
-                    : "text-slate-300 hover:text-white"
-                }`}
+                className={`relative py-1 text-sm font-medium transition-colors hover:text-white ${idx === 0 && isRoot
+                  ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-brand-sky"
+                  : "text-slate-300 hover:text-white"
+                  }`}
               >
                 {link.label}
               </Link>
@@ -158,7 +157,7 @@ export function Header({ settings, areas }: HeaderProps) {
             href="#quote"
             className="inline-flex items-center gap-2 rounded-full bg-brand-green px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-brand-green/25 transition-all hover:bg-brand-green-hover hover:shadow-lg active:scale-98 sm:text-sm"
           >
-            <WhatsAppIcon className="h-4 w-4" />
+            <WhatsAppIcon monochrome className="h-4 w-4" />
             <span>Get a Free Quote</span>
           </Link>
         </div>
@@ -199,9 +198,8 @@ export function Header({ settings, areas }: HeaderProps) {
                           className="p-1 text-slate-400 hover:text-white"
                         >
                           <ChevronDown
-                            className={`h-4 w-4 transition-transform duration-200 ${
-                              isMobileAreasOpen ? "rotate-180 text-brand-sky" : ""
-                            }`}
+                            className={`h-4 w-4 transition-transform duration-200 ${isMobileAreasOpen ? "rotate-180 text-brand-sky" : ""
+                              }`}
                           />
                         </button>
                       </div>
@@ -268,7 +266,7 @@ export function Header({ settings, areas }: HeaderProps) {
                 onClick={closeMobileMenu}
                 className="flex items-center justify-center gap-2 rounded-xl bg-brand-green py-3 text-sm font-bold text-white shadow-md shadow-brand-green/20 transition-colors hover:bg-brand-green-hover"
               >
-                <WhatsAppIcon className="h-4 w-4" />
+                <WhatsAppIcon monochrome className="h-4 w-4" />
                 <span>Chat on WhatsApp</span>
               </a>
 

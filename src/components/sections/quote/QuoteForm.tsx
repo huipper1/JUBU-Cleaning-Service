@@ -452,7 +452,7 @@ export function QuoteForm({
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-xs font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
                 >
-                  {/* <WhatsAppIcon className="h-4 w-4" /> */}
+                  <WhatsAppIcon monochrome className="h-4 w-4" />
                   <span>Contact Us on WhatsApp</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
@@ -510,7 +510,7 @@ export function QuoteForm({
                       href={redirectUrl}
                       className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover"
                     >
-                      <WhatsAppIcon className="h-5 w-5" />
+                      <WhatsAppIcon monochrome className="h-5 w-5" />
                       <span>Continue to WhatsApp</span>
                       <ExternalLink className="ml-1 h-4 w-4" />
                     </a>

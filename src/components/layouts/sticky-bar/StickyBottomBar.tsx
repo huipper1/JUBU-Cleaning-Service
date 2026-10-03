@@ -38,7 +38,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
           className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-green px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-green-hover active:scale-95"
           aria-label="Chat with JUBU on WhatsApp"
         >
-          <WhatsAppIcon className="h-4 w-4 shrink-0" />
+          <WhatsAppIcon monochrome className="h-4 w-4 shrink-0" />
           <span>WhatsApp</span>
         </a>
 

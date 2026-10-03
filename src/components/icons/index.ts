@@ -6,4 +6,5 @@ export * from "./TailwindCSSIcon";
 export * from "./TanStackIcon";
 export * from "./TypeScriptIcon";
 export * from "./WhatsAppIcon";
+export * from "./WhatsAppIconWhite";
 export * from "./ZodIcon";
