@@ -36,3 +36,23 @@ export async function updateLeadNotesAction(id: string, adminNotes: string) {
     };
   }
 }
+
+export async function updatePaymentStatusAction(
+  id: string,
+  paymentStatus: "pending" | "paid" | "cash_on_delivery" | "cancelled"
+) {
+  try {
+    await prisma.lead.update({
+      where: { id },
+      data: { paymentStatus }
+    });
+    revalidatePath("/admin/leads");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to update payment status"
+    };
+  }
+}

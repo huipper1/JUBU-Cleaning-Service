@@ -79,7 +79,13 @@ export const siteSettingsSchema = z.object({
   copyrightText: z.string().min(1),
   licence: tradeLicenceSchema,
   gtmId: z.string().optional(),
-  gaId: z.string().optional()
+  gaId: z.string().optional(),
+  bankName: z.string().optional(),
+  bankIban: z.string().optional(),
+  bankAccountNumber: z.string().optional(),
+  bankSwiftCode: z.string().optional(),
+  bankRoutingNumber: z.string().optional(),
+  bankAccountOpeningDate: z.string().optional()
 });
 
 // Trust Badge Schema
@@ -109,6 +115,7 @@ export const serviceSchema = z.object({
   shortDescription: z.string().min(1),
   longDescription: z.string().optional(),
   icon: z.string().min(1),
+  basePrice: z.number().positive().optional(),
   image: imageSchema,
   order: z.number().int().nonnegative(),
   isActive: z.boolean(),
@@ -268,6 +275,16 @@ export const createLeadInputSchema = z.object({
   whatsappOptIn: z.boolean().default(true),
   honeypot: z.string().max(0, "Bot detected").optional(),
   sourceArea: z.string().optional(),
+
+  // Booking & Payment Information
+  requestType: z.enum(["quote", "booking"]).default("quote"),
+  paymentMethod: z.enum(["cash", "bank_transfer"]).optional(),
+  paymentStatus: z.enum(["pending", "paid", "cash_on_delivery", "cancelled"]).optional(),
+  amount: z.number().positive().optional(),
+  currency: z.string().default("AED").optional(),
+  transactionRef: z.string().max(120).optional(),
+  bankDetails: z.record(z.string(), z.unknown()).optional(),
+
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),
   utmCampaign: z.string().optional(),

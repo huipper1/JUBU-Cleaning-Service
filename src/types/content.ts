@@ -60,6 +60,14 @@ export interface SiteSettings {
   homepageServiceIds?: string[];
   gtmId?: string;
   gaId?: string;
+
+  // Admin Bank Account Information
+  bankName?: string;
+  bankIban?: string;
+  bankAccountNumber?: string;
+  bankSwiftCode?: string;
+  bankRoutingNumber?: string;
+  bankAccountOpeningDate?: string;
 }
 
 export interface TrustBadgeItem {
@@ -86,6 +94,7 @@ export interface Service {
   shortDescription: string;
   longDescription?: string;
   icon: string;
+  basePrice?: number;
   image: ImageItem;
   order: number;
   isActive: boolean;

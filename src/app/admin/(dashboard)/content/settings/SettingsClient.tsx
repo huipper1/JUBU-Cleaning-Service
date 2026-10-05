@@ -132,13 +132,107 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       </AdminPageHeader>
 
       <Tabs defaultValue="branding" className="w-full">
-        <TabsList className="inline-flex md:grid md:grid-cols-5 w-auto min-w-full justify-start md:justify-center p-1">
+        <TabsList className="inline-flex md:grid md:grid-cols-6 w-auto min-w-full justify-start md:justify-center p-1">
           <TabsTrigger value="branding" className="px-3.5 py-1.5 whitespace-nowrap">Branding & Logo</TabsTrigger>
+          <TabsTrigger value="bank" className="px-3.5 py-1.5 whitespace-nowrap text-blue-600 dark:text-blue-400 font-semibold">Bank Details</TabsTrigger>
           <TabsTrigger value="sections" className="px-3.5 py-1.5 whitespace-nowrap">Page Sections</TabsTrigger>
           <TabsTrigger value="contact" className="px-3.5 py-1.5 whitespace-nowrap">Contact & Address</TabsTrigger>
           <TabsTrigger value="licence" className="px-3.5 py-1.5 whitespace-nowrap">Trade Licence</TabsTrigger>
           <TabsTrigger value="seo" className="px-3.5 py-1.5 whitespace-nowrap">SEO & Metadata</TabsTrigger>
         </TabsList>
+
+        {/* Bank Information Tab */}
+        <TabsContent value="bank" className="mt-4">
+          <Card className="border-blue-200 dark:border-blue-900/50">
+            <CardHeader className="bg-blue-50/50 dark:bg-blue-950/20 rounded-t-lg">
+              <CardTitle className="text-blue-950 dark:text-blue-100 flex items-center gap-2">
+                <span>Official Bank Account Details</span>
+              </CardTitle>
+              <CardDescription>
+                Configure the company bank transfer details displayed to customers during the checkout & booking process. Customers will send their payments to this account.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Bank Name
+                  </label>
+                  <Input
+                    value={formData.bankName ?? ""}
+                    onChange={(e) => handleChange("bankName", e.target.value)}
+                    placeholder="e.g. Dubai Islamic Bank (DIB)"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Full legal name of the financial institution.</p>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    IBAN (International Bank Account Number)
+                  </label>
+                  <Input
+                    value={formData.bankIban ?? ""}
+                    onChange={(e) => handleChange("bankIban", e.target.value)}
+                    placeholder="e.g. AE070240001026183001"
+                    className="font-mono"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Standard UAE 23-character IBAN starting with AE.</p>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Account Number
+                  </label>
+                  <Input
+                    value={formData.bankAccountNumber ?? ""}
+                    onChange={(e) => handleChange("bankAccountNumber", e.target.value)}
+                    placeholder="e.g. 1026183001"
+                    className="font-mono"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Local domestic account number.</p>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    SWIFT / BIC Code
+                  </label>
+                  <Input
+                    value={formData.bankSwiftCode ?? ""}
+                    onChange={(e) => handleChange("bankSwiftCode", e.target.value)}
+                    placeholder="e.g. DIBKAEAD"
+                    className="font-mono uppercase"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Required for international wire transfers.</p>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Routing / Branch Code
+                  </label>
+                  <Input
+                    value={formData.bankRoutingNumber ?? ""}
+                    onChange={(e) => handleChange("bankRoutingNumber", e.target.value)}
+                    placeholder="e.g. 024"
+                    className="font-mono"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Branch identifier or central clearing code.</p>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Account Opening / Registration Date
+                  </label>
+                  <Input
+                    value={formData.bankAccountOpeningDate ?? ""}
+                    onChange={(e) => handleChange("bankAccountOpeningDate", e.target.value)}
+                    placeholder="e.g. 25 January 2022"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Date registered with the bank.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Branding & Logo Tab */}
         <TabsContent value="branding" className="mt-4">

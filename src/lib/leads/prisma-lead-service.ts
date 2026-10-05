@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import type { CreateLeadInput, LeadServiceResult } from "@/types/lead";
 
 import { createLeadInputSchema } from "@/lib/content/types";
@@ -41,6 +42,19 @@ export class PrismaLeadService implements LeadService {
           message: validData.message ?? null,
           whatsappOptIn: validData.whatsappOptIn ?? true,
           sourceArea: validData.sourceArea ?? "main-page",
+          requestType: validData.requestType ?? "quote",
+          paymentMethod: validData.paymentMethod ?? null,
+          paymentStatus:
+            validData.paymentStatus ??
+            (validData.paymentMethod === "cash"
+              ? "cash_on_delivery"
+              : validData.paymentMethod === "bank_transfer"
+                ? "pending"
+                : null),
+          amount: validData.amount ?? null,
+          currency: validData.currency ?? "AED",
+          transactionRef: validData.transactionRef ?? null,
+          bankDetails: (validData.bankDetails as Prisma.InputJsonValue) ?? null,
           utmSource: validData.utmSource ?? null,
           utmMedium: validData.utmMedium ?? null,
           utmCampaign: validData.utmCampaign ?? null,
@@ -53,7 +67,10 @@ export class PrismaLeadService implements LeadService {
 
       return {
         success: true,
-        message: "Your request has been received. Our team will contact you shortly!",
+        message:
+          validData.requestType === "booking"
+            ? "Your booking has been placed successfully! Our team will contact you to confirm."
+            : "Your quote request has been received. Our team will contact you shortly!",
         id: created.id
       };
     } catch (error) {

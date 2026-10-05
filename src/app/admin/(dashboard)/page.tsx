@@ -152,12 +152,23 @@ export default async function AdminDashboardPage() {
                     <div className="flex flex-col gap-0.5">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">{lead.fullName}</span>
-                        <Badge variant="secondary" className="text-[10px]">
-                          {lead.sourceArea ?? "main-page"}
-                        </Badge>
+                        {lead.requestType === "booking" ? (
+                          <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/30 text-[10px]">
+                            {lead.paymentMethod === "cash"
+                              ? "Cash Delivery"
+                              : lead.paymentMethod === "bank_transfer"
+                                ? "Bank Transfer"
+                                : "Booking"}
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-[10px]">
+                            {lead.sourceArea ?? "main-page"}
+                          </Badge>
+                        )}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {lead.mobile} &bull; {lead.serviceId}
+                        {lead.amount ? ` • ${lead.amount} ${lead.currency || "AED"}` : ""}
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1">

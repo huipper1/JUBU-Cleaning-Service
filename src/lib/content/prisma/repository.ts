@@ -78,7 +78,13 @@ export class PrismaContentRepository implements ContentRepository {
       showContact: s.showContact,
       homepageServiceIds: s.homepageServiceIds ?? [],
       gtmId: s.gtmId ?? "",
-      gaId: s.gaId ?? ""
+      gaId: s.gaId ?? "",
+      bankName: s.bankName ?? undefined,
+      bankIban: s.bankIban ?? undefined,
+      bankAccountNumber: s.bankAccountNumber ?? undefined,
+      bankSwiftCode: s.bankSwiftCode ?? undefined,
+      bankRoutingNumber: s.bankRoutingNumber ?? undefined,
+      bankAccountOpeningDate: s.bankAccountOpeningDate ?? undefined
     };
   }
 
@@ -133,6 +139,7 @@ export class PrismaContentRepository implements ContentRepository {
         width: s.imageWidth,
         height: s.imageHeight
       },
+      basePrice: s.basePrice ?? 199,
       order: s.order,
       isActive: s.isActive,
       createdAt: s.createdAt.toISOString(),

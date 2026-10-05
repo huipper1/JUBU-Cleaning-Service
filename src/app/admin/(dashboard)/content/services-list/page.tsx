@@ -20,6 +20,7 @@ export default async function ServicesCatalogPage() {
     icon: s.icon,
     imageSrc: s.imageSrc,
     imageAlt: s.imageAlt,
+    basePrice: s.basePrice ?? 199,
     order: s.order,
     isActive: s.isActive
   }));

@@ -50,6 +50,7 @@ export interface ServiceItem {
   icon: string;
   imageSrc: string;
   imageAlt: string;
+  basePrice?: number;
   order: number;
   isActive: boolean;
 }
@@ -91,6 +92,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
   const [formIcon, setFormIcon] = useState("sparkles");
   const [formImageSrc, setFormImageSrc] = useState("");
   const [formImageAlt, setFormImageAlt] = useState("");
+  const [formBasePrice, setFormBasePrice] = useState<number>(199);
   const [formOrder, setFormOrder] = useState(0);
   const [formIsActive, setFormIsActive] = useState(true);
 
@@ -107,6 +109,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
     setFormIcon("sparkles");
     setFormImageSrc("");
     setFormImageAlt("");
+    setFormBasePrice(199);
     setFormOrder(services.length + 1);
     setFormIsActive(true);
   };
@@ -125,6 +128,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
     setFormIcon(service.icon);
     setFormImageSrc(service.imageSrc);
     setFormImageAlt(service.imageAlt);
+    setFormBasePrice(service.basePrice ?? 199);
     setFormOrder(service.order);
     setFormIsActive(service.isActive);
     setIsDialogOpen(true);
@@ -161,6 +165,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
       icon: formIcon,
       imageSrc: formImageSrc,
       imageAlt: formImageAlt || formTitle,
+      basePrice: Number(formBasePrice) || 199,
       order: formOrder,
       isActive: formIsActive
     };
@@ -198,6 +203,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
             icon: res.service.icon,
             imageSrc: res.service.imageSrc,
             imageAlt: res.service.imageAlt,
+            basePrice: res.service.basePrice ?? payload.basePrice ?? 199,
             order: res.service.order,
             isActive: res.service.isActive
           };
@@ -359,6 +365,9 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                       <Badge variant="outline" className="font-mono text-[10px]">
                         Order #{s.order}
                       </Badge>
+                      <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20 font-bold text-xs">
+                        From {s.basePrice ?? 199} AED
+                      </Badge>
                     </div>
                     <p className="line-clamp-2 max-w-2xl text-xs text-muted-foreground">
                       {s.shortDescription}
@@ -426,8 +435,8 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
               </DialogDescription>
             </DialogHeader>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="flex flex-col gap-1.5 sm:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="flex flex-col gap-1.5 sm:col-span-3">
                 <Label htmlFor="service-title" className="text-xs">
                   Service Title *
                 </Label>
@@ -454,6 +463,23 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
               </div>
 
               <div className="flex flex-col gap-1.5">
+                <Label htmlFor="service-price" className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                  Base Price (AED) *
+                </Label>
+                <Input
+                  id="service-price"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="199"
+                  value={formBasePrice}
+                  onChange={(e) => setFormBasePrice(Number(e.target.value))}
+                  required
+                  className="font-bold border-emerald-500/40"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
                 <Label htmlFor="service-order" className="text-xs">
                   Display Order
                 </Label>
@@ -465,7 +491,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                 />
               </div>
 
-              <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <div className="flex flex-col gap-1.5 sm:col-span-3">
                 <Label htmlFor="service-short-desc" className="text-xs">
                   Short Description (Shown on Cards) *
                 </Label>

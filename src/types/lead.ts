@@ -6,6 +6,23 @@ export type LeadStatus =
   | "completed"
   | "lost_cancelled";
 
+export type RequestType = "quote" | "booking";
+
+export type PaymentMethod = "cash" | "bank_transfer";
+
+export type PaymentStatus = "pending" | "paid" | "cash_on_delivery" | "cancelled";
+
+export interface BankTransferDetails {
+  bankName: string;
+  iban: string;
+  accountNumber: string;
+  swiftCode: string;
+  routingNumber: string;
+  accountOpeningDate?: string;
+  transactionRef?: string;
+  senderAccountName?: string;
+}
+
 export interface Lead {
   id: string;
   fullName: string;
@@ -19,6 +36,16 @@ export interface Lead {
   message?: string;
   whatsappOptIn: boolean;
   sourceArea?: string;
+  
+  // Booking & Payment Information
+  requestType: RequestType;
+  paymentMethod?: PaymentMethod;
+  paymentStatus?: PaymentStatus;
+  amount?: number;
+  currency?: string;
+  transactionRef?: string;
+  bankDetails?: BankTransferDetails | Record<string, unknown>;
+
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -26,6 +53,7 @@ export interface Lead {
   fbclid?: string;
   landingUrl?: string;
   status: LeadStatus;
+  adminNotes?: string;
   createdAt: string;
 }
 
@@ -42,6 +70,16 @@ export interface CreateLeadInput {
   whatsappOptIn?: boolean;
   honeypot?: string;
   sourceArea?: string;
+
+  // Booking & Payment Information
+  requestType?: RequestType;
+  paymentMethod?: PaymentMethod;
+  paymentStatus?: PaymentStatus;
+  amount?: number;
+  currency?: string;
+  transactionRef?: string;
+  bankDetails?: BankTransferDetails | Record<string, unknown>;
+
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -56,3 +94,4 @@ export interface LeadServiceResult {
   id?: string;
   errors?: Record<string, string[]>;
 }
+

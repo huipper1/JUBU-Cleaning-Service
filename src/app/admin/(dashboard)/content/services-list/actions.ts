@@ -14,6 +14,7 @@ export interface ServiceFormData {
   icon: string;
   imageSrc: string;
   imageAlt: string;
+  basePrice?: number;
   order: number;
   isActive: boolean;
 }
@@ -42,6 +43,7 @@ export async function createServiceAction(data: ServiceFormData) {
         icon: data.icon || "Sparkles",
         imageSrc: data.imageSrc,
         imageAlt: data.imageAlt || data.title,
+        basePrice: data.basePrice !== undefined && !isNaN(Number(data.basePrice)) ? Number(data.basePrice) : 199,
         order: data.order ?? 0,
         isActive: data.isActive ?? true
       }
@@ -89,6 +91,7 @@ export async function updateServiceAction(id: string, data: ServiceFormData) {
         icon: data.icon || "Sparkles",
         imageSrc: data.imageSrc,
         imageAlt: data.imageAlt || data.title,
+        basePrice: data.basePrice !== undefined && !isNaN(Number(data.basePrice)) ? Number(data.basePrice) : 199,
         order: data.order ?? 0,
         isActive: data.isActive ?? true
       }

@@ -43,6 +43,12 @@ export default async function AdminSettingsPage() {
     licenceAuthority:
       settings?.licenceAuthority ?? "Dubai Department of Economy and Tourism (DET)",
     licenceIssueDate: settings?.licenceIssueDate ?? "25 January 2022",
+    bankName: settings?.bankName ?? "Dubai Islamic Bank (DIB)",
+    bankIban: settings?.bankIban ?? "AE070240001026183001",
+    bankAccountNumber: settings?.bankAccountNumber ?? "1026183001",
+    bankSwiftCode: settings?.bankSwiftCode ?? "DIBKAEAD",
+    bankRoutingNumber: settings?.bankRoutingNumber ?? "024",
+    bankAccountOpeningDate: settings?.bankAccountOpeningDate ?? "25 January 2022",
     showHero: settings?.showHero ?? true,
     showServices: settings?.showServices ?? true,
     showWhyChoose: settings?.showWhyChoose ?? true,

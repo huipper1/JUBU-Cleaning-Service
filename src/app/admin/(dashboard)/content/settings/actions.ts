@@ -26,6 +26,12 @@ export interface UpdateSettingsData {
   licenceStructure: string;
   licenceAuthority: string;
   licenceIssueDate: string;
+  bankName?: string;
+  bankIban?: string;
+  bankAccountNumber?: string;
+  bankSwiftCode?: string;
+  bankRoutingNumber?: string;
+  bankAccountOpeningDate?: string;
   showHero: boolean;
   showServices: boolean;
   showWhyChoose: boolean;

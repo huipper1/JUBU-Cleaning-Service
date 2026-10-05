@@ -75,6 +75,7 @@ interface LeadsClientProps {
   pageSize: number;
   searchValue: string;
   statusFilter: string;
+  paymentMethodFilter?: string;
   metrics: {
     total: number;
     new: number;
@@ -83,6 +84,9 @@ interface LeadsClientProps {
     confirmed: number;
     completed: number;
     lost_cancelled: number;
+    quotesCount?: number;
+    cashCount?: number;
+    bankTransferCount?: number;
   };
 }
 
@@ -93,6 +97,7 @@ export function LeadsClient({
   pageSize,
   searchValue,
   statusFilter,
+  paymentMethodFilter = "all",
   metrics
 }: LeadsClientProps) {
   const router = useRouter();
@@ -109,7 +114,7 @@ export function LeadsClient({
   const updateQuery = (newParams: Record<string, string | null>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     Object.entries(newParams).forEach(([k, v]) => {
-      if (v === null || v === "" || (k === "status" && v === "all")) {
+      if (v === null || v === "" || ((k === "status" || k === "paymentMethod") && v === "all")) {
         current.delete(k);
       } else {
         current.set(k, v);
@@ -143,7 +148,18 @@ export function LeadsClient({
 
         return (
           <div className="flex flex-col gap-1">
-            <span className="font-semibold text-foreground">{lead.fullName}</span>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-foreground">{lead.fullName}</span>
+              {lead.requestType === "booking" ? (
+                <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/30 text-[10px] font-bold">
+                  BOOKING
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-[10px] font-normal text-muted-foreground">
+                  QUOTE
+                </Badge>
+              )}
+            </div>
             <div className="flex items-center gap-3">
               <a
                 href={`tel:${lead.mobile}`}
@@ -180,6 +196,50 @@ export function LeadsClient({
       )
     },
     {
+      header: "Payment Details",
+      cell: (lead) => {
+        if (lead.paymentMethod === "cash") {
+          return (
+            <div className="flex flex-col gap-1">
+              <Badge className="w-fit border-emerald-500/30 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                Cash On Delivery
+              </Badge>
+              <span className="text-xs font-semibold text-foreground">
+                {lead.amount ? `${lead.amount} ${lead.currency || "AED"}` : "Pay on Arrival"}
+              </span>
+            </div>
+          );
+        }
+
+        if (lead.paymentMethod === "bank_transfer") {
+          return (
+            <div className="flex flex-col gap-1">
+              <Badge className="w-fit border-sky-500/30 bg-sky-500/15 text-sky-600 dark:text-sky-400">
+                Bank Transfer
+              </Badge>
+              <div className="flex flex-col text-[11px] text-muted-foreground">
+                <span className="font-semibold text-foreground">
+                  {lead.amount ? `${lead.amount} ${lead.currency || "AED"}` : "Emirates NBD"}
+                </span>
+                {lead.transactionRef && (
+                  <span className="truncate max-w-[140px]" title={lead.transactionRef}>
+                    Ref: {lead.transactionRef}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="flex flex-col gap-0.5">
+            <span className="text-xs text-muted-foreground">Free Quote Inquiry</span>
+            <span className="text-[11px] text-muted-foreground italic">No payment</span>
+          </div>
+        );
+      }
+    },
+    {
       header: "Source / Area",
       cell: (lead) => (
         <div className="flex flex-col gap-0.5">
@@ -193,7 +253,7 @@ export function LeadsClient({
       )
     },
     {
-      header: "Status",
+      header: "CRM Status",
       className: "min-w-[140px]",
       cell: (lead) => (
         <select
@@ -223,8 +283,9 @@ export function LeadsClient({
       className: "text-right whitespace-nowrap",
       cell: (lead) => (
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
+          className="h-8 text-xs font-semibold"
           onClick={() => {
             setSelectedLead(lead);
           }}
@@ -237,6 +298,65 @@ export function LeadsClient({
 
   return (
     <div className="flex w-full max-w-full min-w-0 flex-col gap-6">
+      {/* Primary Channel & Payment Section Tabs */}
+      <div className="flex flex-col gap-2 rounded-2xl border bg-card p-4 shadow-xs">
+        <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+          Inquiry & Payment Channels
+        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant={paymentMethodFilter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateQuery({ paymentMethod: "all", page: "1" })}
+            className="h-9 gap-2 text-xs font-semibold"
+          >
+            <span>All Leads</span>
+            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+              {metrics.total}
+            </Badge>
+          </Button>
+
+          <Button
+            variant={paymentMethodFilter === "quote" ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateQuery({ paymentMethod: "quote", page: "1" })}
+            className="h-9 gap-2 text-xs font-semibold"
+          >
+            <span className="size-2 rounded-full bg-slate-400" />
+            <span>Free Quotes (Standard Leads)</span>
+            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+              {metrics.quotesCount ?? 0}
+            </Badge>
+          </Button>
+
+          <Button
+            variant={paymentMethodFilter === "cash" ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateQuery({ paymentMethod: "cash", page: "1" })}
+            className="h-9 gap-2 text-xs font-semibold"
+          >
+            <span className="size-2 rounded-full bg-emerald-500" />
+            <span>Cash On Delivery</span>
+            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+              {metrics.cashCount ?? 0}
+            </Badge>
+          </Button>
+
+          <Button
+            variant={paymentMethodFilter === "bank_transfer" ? "default" : "outline"}
+            size="sm"
+            onClick={() => updateQuery({ paymentMethod: "bank_transfer", page: "1" })}
+            className="h-9 gap-2 text-xs font-semibold"
+          >
+            <span className="size-2 rounded-full bg-sky-500" />
+            <span>Bank Transfers (Emirates NBD)</span>
+            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+              {metrics.bankTransferCount ?? 0}
+            </Badge>
+          </Button>
+        </div>
+      </div>
+
       {/* Metric Cards */}
       <div className="grid w-full min-w-0 grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 xl:grid-cols-7">
         <Card className="min-w-0 overflow-hidden">
@@ -272,8 +392,9 @@ export function LeadsClient({
         ))}
       </div>
 
-      {/* Filter Chips */}
+      {/* Pipeline Status Filter Chips */}
       <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
+        <span className="text-xs font-medium text-muted-foreground mr-1">Pipeline:</span>
         <Button
           variant={statusFilter === "all" ? "default" : "outline"}
           size="sm"
@@ -303,15 +424,22 @@ export function LeadsClient({
         currentPage={currentPage}
         pageSize={pageSize}
         searchValue={searchValue}
-        searchPlaceholder="Search leads by name, phone, area..."
+        searchPlaceholder="Search leads by name, phone, area, or payment ref..."
         emptyMessage="No leads found matching your criteria."
       />
 
       {/* Lead Details Dialog */}
       <Dialog open={Boolean(selectedLead)} onOpenChange={(open) => !open && setSelectedLead(null)}>
-        <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto sm:w-full">
+        <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] max-w-xl overflow-y-auto sm:w-full">
           <DialogHeader>
-            <DialogTitle>{selectedLead?.fullName}</DialogTitle>
+            <div className="flex items-center gap-2">
+              <DialogTitle className="text-lg font-bold">{selectedLead?.fullName}</DialogTitle>
+              {selectedLead?.requestType === "booking" && (
+                <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/30 text-xs">
+                  BOOKING ORDER
+                </Badge>
+              )}
+            </div>
             <DialogDescription>
               Lead ID: {selectedLead?.id} &bull; Received on{" "}
               {selectedLead && new Date(selectedLead.createdAt).toLocaleString()}
@@ -320,13 +448,83 @@ export function LeadsClient({
 
           {selectedLead && (
             <div className="flex flex-col gap-4 py-2 text-xs">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xs">Contact & Service</CardTitle>
+              {/* Payment Section in Modal */}
+              <Card className="border-sky-500/20 bg-sky-500/5">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center justify-between text-xs font-bold">
+                    <span>Payment & Booking Details</span>
+                    <Badge
+                      className={
+                        selectedLead.paymentMethod === "cash"
+                          ? "bg-emerald-500/15 text-emerald-600 border-emerald-500/30"
+                          : selectedLead.paymentMethod === "bank_transfer"
+                            ? "bg-sky-500/15 text-sky-600 border-sky-500/30"
+                            : "bg-muted text-muted-foreground"
+                      }
+                    >
+                      {selectedLead.paymentMethod === "cash"
+                        ? "Cash on Delivery"
+                        : selectedLead.paymentMethod === "bank_transfer"
+                          ? "Bank Transfer (Emirates NBD)"
+                          : "Free Quote"}
+                    </Badge>
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-col gap-1 text-muted-foreground">
+                <CardContent className="flex flex-col gap-2 text-muted-foreground">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <span className="font-semibold text-foreground">Total Amount:</span>{" "}
+                      <span className="text-sm font-bold text-foreground">
+                        {selectedLead.amount
+                          ? `${selectedLead.amount} ${selectedLead.currency || "AED"}`
+                          : "Not Applicable"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-foreground">Payment Status:</span>{" "}
+                      <span className="font-semibold text-foreground capitalize">
+                        {selectedLead.paymentStatus?.replace(/_/g, " ") || "Pending"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {selectedLead.paymentMethod === "bank_transfer" && (
+                    <div className="mt-2 rounded-lg border bg-background p-3 flex flex-col gap-1.5">
+                      <span className="font-bold text-foreground">Admin Bank Account Credited:</span>
+                      <div className="text-[11px] grid grid-cols-2 gap-2 text-muted-foreground">
+                        <div>
+                          <span className="font-semibold text-foreground">Bank:</span> Emirates NBD
+                        </div>
+                        <div>
+                          <span className="font-semibold text-foreground">Swift:</span> EBILAEAD
+                        </div>
+                        <div className="col-span-2">
+                          <span className="font-semibold text-foreground">IBAN:</span>{" "}
+                          AE56 0260 0001 2595 4738 201
+                        </div>
+                        <div className="col-span-2">
+                          <span className="font-semibold text-foreground">Account:</span>{" "}
+                          0125954738201
+                        </div>
+                        {selectedLead.transactionRef && (
+                          <div className="col-span-2 mt-1 rounded bg-muted/60 p-1.5 font-mono text-foreground font-semibold">
+                            Customer Ref / Note: {selectedLead.transactionRef}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Contact & Service Info */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs">Client Contact & Service Information</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-1.5 text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-foreground">Status:</span>
+                    <span className="font-semibold text-foreground">CRM Status:</span>
                     <Badge
                       variant="outline"
                       className={
@@ -338,11 +536,19 @@ export function LeadsClient({
                     </Badge>
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground">Phone:</span>{" "}
-                    {selectedLead.mobile}
+                    <span className="font-semibold text-foreground">Mobile Phone:</span>{" "}
+                    <a href={`tel:${selectedLead.mobile}`} className="text-foreground hover:underline">
+                      {selectedLead.mobile}
+                    </a>
                   </div>
+                  {selectedLead.whatsappNumber && (
+                    <div>
+                      <span className="font-semibold text-foreground">WhatsApp Number:</span>{" "}
+                      {selectedLead.whatsappNumber}
+                    </div>
+                  )}
                   <div>
-                    <span className="font-semibold text-foreground">Service:</span>{" "}
+                    <span className="font-semibold text-foreground">Requested Service:</span>{" "}
                     {selectedLead.serviceId}
                   </div>
                   <div>
@@ -350,49 +556,27 @@ export function LeadsClient({
                     {selectedLead.location ?? "Not specified"}
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground">Preferred Date:</span>{" "}
-                    {selectedLead.preferredDate ?? "Flexible"}
+                    <span className="font-semibold text-foreground">Preferred Appointment:</span>{" "}
+                    {selectedLead.preferredDate ?? "Flexible"} ({selectedLead.preferredTime ?? "Anytime"})
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground">Preferred Time:</span>{" "}
-                    {selectedLead.preferredTime ?? "Flexible"}
+                    <span className="font-semibold text-foreground">Source / Campaign:</span>{" "}
+                    {selectedLead.sourceArea ?? "main-page"}{" "}
+                    {selectedLead.utmSource ? `(${selectedLead.utmSource})` : ""}
                   </div>
                 </CardContent>
               </Card>
 
               {selectedLead.message && (
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="text-xs">Inquiry Message</CardTitle>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xs">Customer Message / Requirements</CardTitle>
                   </CardHeader>
                   <CardContent className="text-foreground italic">
                     &quot;{selectedLead.message}&quot;
                   </CardContent>
                 </Card>
               )}
-
-              {/* <Card>
-                <CardHeader>
-                  <CardTitle className="text-xs">Internal Notes</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-2">
-                  <textarea
-                    rows={3}
-                    value={notesDraft}
-                    onChange={(e) => setNotesDraft(e.target.value)}
-                    placeholder="Quotation given, assigned team, etc..."
-                    className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
-                  />
-                  <Button
-                    size="sm"
-                    onClick={handleSaveNotes}
-                    disabled={isSavingNotes}
-                    className="w-fit"
-                  >
-                    {isSavingNotes ? "Saving..." : "Save Note"}
-                  </Button>
-                </CardContent>
-              </Card> */}
             </div>
           )}
         </DialogContent>

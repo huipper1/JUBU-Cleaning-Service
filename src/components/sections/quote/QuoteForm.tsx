@@ -24,7 +24,8 @@ import {
   ShieldCheck,
   Sparkles,
   Store,
-  User
+  User,
+  CreditCard
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -36,6 +37,8 @@ import { env } from "@/env";
 
 import { createLeadInputSchema } from "@/lib/content/types";
 import { trackFormStart, trackLeadGenerated, trackWhatsAppClick } from "@/lib/analytics";
+import { SERVICE_BASE_PRICES } from "@/constants/payment";
+import { BookingPaymentModal } from "./BookingPaymentModal";
 
 import { Calendar as CalendarPicker, Icon, Popover, PopoverContent, PopoverTrigger } from "@/ui";
 
@@ -135,6 +138,8 @@ export function QuoteForm({
     serviceName: string;
   } | null>(null);
 
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
   const hasTrackedFormStart = useRef(false);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -232,12 +237,10 @@ export function QuoteForm({
     }
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const validateCurrentForm = (): CreateLeadInput | null => {
     setFieldErrors({});
     setErrorMessage("");
 
-    // Capture latest UTM parameters and landing URL
     const searchParams =
       typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
     const fullPayload: CreateLeadInput = {
@@ -251,12 +254,32 @@ export function QuoteForm({
       landingUrl: typeof window !== "undefined" ? window.location.href : ""
     };
 
-    // Client-side validation using shared Zod schema
     const validationResult = createLeadInputSchema.safeParse(fullPayload);
     if (!validationResult.success) {
       setFieldErrors(validationResult.error.flatten().fieldErrors);
+      return null;
+    }
+
+    return fullPayload;
+  };
+
+  const handleOpenBookingModal = () => {
+    const validData = validateCurrentForm();
+    if (!validData) {
       return;
     }
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const fullPayload = validateCurrentForm();
+    if (!fullPayload) {
+      return;
+    }
+
+    const searchParams =
+      typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
 
     setStatus("submitting");
 
@@ -1271,24 +1294,59 @@ export function QuoteForm({
                     </label>
                   </div>
 
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={status === "submitting"}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover hover:shadow-brand-green/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {status === "submitting" ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Sending Request...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Request Free Quote</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </>
-                    )}
-                  </button>
+                  {/* Action Buttons: 1. Request Free Quote (original) & 2. Book & Pay with Dynamic Price */}
+                  <div className="mt-2 flex flex-col gap-2.5">
+                    {/* Primary Button 1: Original Request Free Quote */}
+                    <button
+                      type="submit"
+                      disabled={status === "submitting"}
+                      className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover hover:shadow-brand-green/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {status === "submitting" ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Sending Request...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Request Free Quote</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </button>
+
+                    {/* Secondary Button 2: Book & Pay Online / Cash with Dynamic Price */}
+                    <button
+                      type="button"
+                      disabled={status === "submitting"}
+                      onClick={handleOpenBookingModal}
+                      className="group relative inline-flex cursor-pointer items-center justify-between overflow-hidden rounded-full border-2 border-emerald-400/60 bg-gradient-to-r from-blue-700 via-sky-600 to-blue-800 px-6 py-4 text-sm font-extrabold text-white shadow-xl shadow-sky-950/40 transition-all duration-200 hover:border-emerald-300 hover:from-blue-600 hover:via-sky-500 hover:to-blue-700 hover:shadow-2xl hover:shadow-sky-500/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex size-7 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-xs transition-transform group-hover:scale-110">
+                          <CreditCard className="size-4 text-emerald-300" />
+                        </div>
+                        <span className="text-sm tracking-wide sm:text-base">Book & Pay Now</span>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/50 bg-emerald-500/90 px-3.5 py-1 text-xs font-black tracking-wide text-white shadow-md shadow-emerald-950/30 sm:text-sm">
+                          <span className="text-[10px] uppercase font-bold text-emerald-100">From</span>
+                          {(() => {
+                            const matchedService = services.find((s) => s.id === formData.serviceId);
+                            return (
+                              matchedService?.basePrice ??
+                              SERVICE_BASE_PRICES[formData.serviceId]?.basePrice ??
+                              199
+                            );
+                          })()}{" "}
+                          AED
+                        </span>
+                        <div className="flex size-7 items-center justify-center rounded-full bg-white/20 transition-transform group-hover:translate-x-1">
+                          <ArrowRight className="size-4 text-white" />
+                        </div>
+                      </div>
+                    </button>
+                  </div>
 
                   {/* Privacy note */}
                   <div className="mt-1 flex items-center justify-center gap-1.5 text-center text-[11px] text-slate-400">
@@ -1304,6 +1362,47 @@ export function QuoteForm({
           </div>
         </div>
       </div>
+
+      {/* Booking & Payment Modal (Cash or Bank Transfer) */}
+      <BookingPaymentModal
+        open={isPaymentModalOpen}
+        onOpenChange={setIsPaymentModalOpen}
+        serviceId={formData.serviceId}
+        serviceName={
+          services.find((s) => s.id === formData.serviceId)?.title ??
+          (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service")
+        }
+        basePrice={
+          services.find((s) => s.id === formData.serviceId)?.basePrice ??
+          SERVICE_BASE_PRICES[formData.serviceId]?.basePrice ??
+          199
+        }
+        bankDetails={{
+          bankName: settings.bankName,
+          iban: settings.bankIban,
+          accountNumber: settings.bankAccountNumber,
+          swiftCode: settings.bankSwiftCode,
+          routingNumber: settings.bankRoutingNumber,
+          accountOpeningDate: settings.bankAccountOpeningDate
+        }}
+        leadFormData={formData}
+        whatsappNumber={settings.whatsappNumber}
+        onSuccessSubmit={(payload, waUrl) => {
+          setIsPaymentModalOpen(false);
+          setSubmittedData({
+            name: payload.fullName,
+            mobile: payload.mobile,
+            serviceName:
+              services.find((s) => s.id === payload.serviceId)?.title ??
+              (payload.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service")
+          });
+          setRedirectUrl(waUrl);
+          setStatus("success");
+          setTimeout(() => {
+            window.location.href = waUrl;
+          }, 800);
+        }}
+      />
     </section>
   );
 }
