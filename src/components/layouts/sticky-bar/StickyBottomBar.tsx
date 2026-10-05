@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 
 import { FileText, Phone } from "lucide-react";
 
 import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
+import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
 
 interface StickyBottomBarProps {
   settings: SiteSettings;
@@ -23,6 +26,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
         {/* Direct Call Button */}
         <a
           href={`tel:${settings.phoneTel}`}
+          onClick={() => trackPhoneClick("sticky_bottom_bar", settings.phoneTel)}
           className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-blue px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-blue-hover active:scale-95"
           aria-label={`Call JUBU at ${settings.phoneDisplay}`}
         >
@@ -35,6 +39,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsAppClick("sticky_bottom_bar", undefined, settings.whatsappNumber)}
           className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-green px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-green-hover active:scale-95"
           aria-label="Chat with JUBU on WhatsApp"
         >

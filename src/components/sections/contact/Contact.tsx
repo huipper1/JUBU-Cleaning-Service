@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
+import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
 
 interface ContactProps {
   settings: SiteSettings;
@@ -22,7 +25,7 @@ export function Contact({ settings }: ContactProps) {
     >
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
         {/* Main Floating Banner Card matching website theme */}
-        <div className="relative overflow-visible rounded-3xl border border-white/15 bg-gradient-to-br from-[#061e45] via-[#041530] to-[#020b18] px-6 pt-10 pb-10 shadow-[0_25px_50px_-12px_rgba(2,11,24,0.7)] sm:px-12 sm:pt-14 sm:pb-14 lg:px-16 lg:py-16">
+        <div className="relative overflow-visible rounded-3xl border border-white/15 bg-linear-to-br from-[#061e45] via-[#041530] to-[#020b18] px-6 pt-10 pb-10 shadow-[0_25px_50px_-12px_rgba(2,11,24,0.7)] sm:px-12 sm:pt-14 sm:pb-14 lg:px-16 lg:py-16">
 
           {/* Subtle ambient lighting glows within card */}
           <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-[80px]" />
@@ -66,6 +69,7 @@ export function Contact({ settings }: ContactProps) {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackWhatsAppClick("contact_section_inline", undefined, settings.whatsappNumber)}
                     className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
                   >
                     <WhatsAppIcon className="h-4 w-4 shrink-0" />
@@ -78,6 +82,7 @@ export function Contact({ settings }: ContactProps) {
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
                 <Link
                   href="#quote"
+                  onClick={() => trackWhatsAppClick("contact_section_cta", undefined, settings.whatsappNumber)}
                   className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
                 >
                   <WhatsAppIcon monochrome className="h-4 w-4" />
@@ -86,6 +91,7 @@ export function Contact({ settings }: ContactProps) {
 
                 <a
                   href={`tel:${settings.phoneTel}`}
+                  onClick={() => trackPhoneClick("contact_section", settings.phoneTel)}
                   className="inline-flex items-center justify-center gap-2.5 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-xs transition-all duration-200 hover:border-sky-400 hover:bg-white/10 active:scale-98 sm:text-base"
                 >
                   <Phone className="h-4 w-4 text-sky-400" />
@@ -100,7 +106,7 @@ export function Contact({ settings }: ContactProps) {
           </div>
 
           {/* Cleaner Image: Stacks below text on mobile/tablet, anchors to bottom right on desktop */}
-          <div className="pointer-events-none -mb-10 flex w-full max-w-[280px] items-end justify-center self-center sm:-mb-14 sm:max-w-[340px] md:max-w-[380px] lg:pointer-events-none lg:absolute lg:right-6 lg:bottom-0 lg:mb-0 lg:w-[460px] lg:max-w-none xl:right-12 xl:w-[500px]">
+          <div className="pointer-events-none -mb-10 flex w-full max-w-70 items-end justify-center self-center sm:-mb-14 sm:max-w-85 md:max-w-95 lg:pointer-events-none lg:absolute lg:right-6 lg:bottom-0 lg:mb-0 lg:w-115 lg:max-w-none xl:right-12 xl:w-125">
             <Image
               src="/images/placeholder/contact-cleaner.png"
               alt="Friendly professional JUBU cleaner giving OK gesture with spray and microfibre cloth"

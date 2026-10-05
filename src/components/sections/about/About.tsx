@@ -100,7 +100,7 @@ export function About({ content, settings }: AboutProps) {
             </div>
 
             {/* Bottom Dark Card: Factual Business Info (JUBU Brand Navy) */}
-            <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#152c4f] bg-gradient-to-br from-[#0a1e3b] via-[#07152b] to-[#040e1e] p-6 text-white shadow-lg sm:p-7">
+            <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#152c4f] bg-linear-to-br from-[#0a1e3b] via-[#07152b] to-[#040e1e] p-6 text-white shadow-lg sm:p-7">
               <div className="flex items-start justify-between">
                 <span className="text-sm font-bold text-slate-200">
                   Licensed in Dubai

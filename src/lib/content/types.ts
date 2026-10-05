@@ -77,7 +77,9 @@ export const siteSettingsSchema = z.object({
   socialLinks: z.array(socialLinkSchema),
   defaultSeo: seoMetadataSchema,
   copyrightText: z.string().min(1),
-  licence: tradeLicenceSchema
+  licence: tradeLicenceSchema,
+  gtmId: z.string().optional(),
+  gaId: z.string().optional()
 });
 
 // Trust Badge Schema

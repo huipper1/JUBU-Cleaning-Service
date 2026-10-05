@@ -58,6 +58,8 @@ export interface SiteSettings {
   showAreas?: boolean;
   showContact?: boolean;
   homepageServiceIds?: string[];
+  gtmId?: string;
+  gaId?: string;
 }
 
 export interface TrustBadgeItem {

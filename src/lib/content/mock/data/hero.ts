@@ -7,8 +7,8 @@ export const mockHeroData: HeroContent = {
   subheadline:
     "Home, Villa, Office, Deep Cleaning & Post-Construction Cleaning. Reliable service with professional equipment.",
   primaryCta: {
-    label: "Get a Free Quote",
-    href: "#quote"
+    label: "Book via WhatsApp",
+    href: "https://wa.me/971542995191"
   },
   secondaryCta: {
     label: "WhatsApp Us",

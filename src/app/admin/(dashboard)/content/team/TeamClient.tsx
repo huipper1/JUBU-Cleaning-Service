@@ -6,7 +6,6 @@ import { CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 import { toggleTeamMemberActiveAction, updateTeamMemberAction } from "./actions";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

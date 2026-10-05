@@ -5,6 +5,7 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 
 import type { FaqItem } from "@/types/content";
 import { SectionHeading } from "@/ui";
+import { trackFaqExpand } from "@/lib/analytics";
 
 interface FaqProps {
   faqs: FaqItem[];
@@ -25,9 +26,13 @@ export function Faq({
   const [openIndexes, setOpenIndexes] = useState<number[]>([0]);
 
   const toggleIndex = (index: number) => {
-    setOpenIndexes((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
+    setOpenIndexes((prev) => {
+      const isExpanding = !prev.includes(index);
+      if (isExpanding && faqs[index]) {
+        trackFaqExpand(faqs[index].question, index);
+      }
+      return isExpanding ? [...prev, index] : prev.filter((i) => i !== index);
+    });
   };
 
   const sectionTitle =

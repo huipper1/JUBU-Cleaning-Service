@@ -11,6 +11,7 @@ import { WhatsAppIcon } from "@/components/icons";
 import type { ServiceArea, SiteSettings } from "@/types/content";
 import { AREA_NAV_ITEMS, MAIN_NAV_ITEMS } from "@/constants/navigation";
 import { getPublicImageUrl } from "@/lib/content/image-url";
+import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
 
 interface HeaderProps {
   settings: SiteSettings;
@@ -87,7 +88,7 @@ export function Header({ settings, areas }: HeaderProps) {
                     aria-orientation="vertical"
                     aria-label="Service Areas Submenu"
                   >
-                    <div className="w-[520px] rounded-2xl border border-white/15 bg-[#041633]/95 p-3.5 shadow-2xl backdrop-blur-xl">
+                    <div className="w-130 rounded-2xl border border-white/15 bg-[#041633]/95 p-3.5 shadow-2xl backdrop-blur-xl">
                       <div className="grid grid-cols-2 gap-2">
                         {navAreas.map((area) => (
                           <Link
@@ -121,7 +122,7 @@ export function Header({ settings, areas }: HeaderProps) {
                 key={link.label}
                 href={linkHref}
                 className={`relative py-1 text-sm font-medium transition-colors hover:text-white ${idx === 0 && isRoot
-                  ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-brand-sky"
+                  ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-brand-sky"
                   : "text-slate-300 hover:text-white"
                   }`}
               >
@@ -136,6 +137,7 @@ export function Header({ settings, areas }: HeaderProps) {
           {/* Direct Call / WhatsApp Link */}
           <a
             href={`tel:${settings.phoneTel}`}
+            onClick={() => trackPhoneClick("header", settings.phoneTel)}
             className="group flex items-center gap-3 rounded-full text-left transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-brand-sky"
             aria-label={`Call us at ${settings.phoneDisplay}`}
           >
@@ -250,7 +252,10 @@ export function Header({ settings, areas }: HeaderProps) {
             <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
               <a
                 href={`tel:${settings.phoneTel}`}
-                onClick={closeMobileMenu}
+                onClick={() => {
+                  trackPhoneClick("mobile_header_menu", settings.phoneTel);
+                  closeMobileMenu();
+                }}
                 className="flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10"
               >
                 <Phone className="h-4 w-4" />
@@ -263,7 +268,10 @@ export function Header({ settings, areas }: HeaderProps) {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={closeMobileMenu}
+                onClick={() => {
+                  trackWhatsAppClick("mobile_header_menu", undefined, settings.whatsappNumber);
+                  closeMobileMenu();
+                }}
                 className="flex items-center justify-center gap-2 rounded-xl bg-brand-green py-3 text-sm font-bold text-white shadow-md shadow-brand-green/20 transition-colors hover:bg-brand-green-hover"
               >
                 <WhatsAppIcon monochrome className="h-4 w-4" />

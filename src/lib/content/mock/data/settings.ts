@@ -46,5 +46,7 @@ export const mockSettingsData: SiteSettings = {
     legalStructure: "Limited Liability Company (LLC)",
     issuingAuthority: "Dubai Department of Economy and Tourism",
     issueDate: "25 January 2022"
-  }
+  },
+  gtmId: "",
+  gaId: ""
 };

@@ -4,7 +4,6 @@ import {
   BadgeCheck,
   ChevronsUpDown,
   LogOut,
-  User as UserIcon,
 } from "lucide-react";
 import {
   Avatar,

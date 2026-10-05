@@ -9,6 +9,7 @@ import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
+import { trackPhoneClick } from "@/lib/analytics";
 
 import { Icon } from "@/ui";
 
@@ -48,7 +49,7 @@ export function Footer({ settings }: FooterProps) {
           priority
         />
         {/* Navy gradient wash matching the screenshot */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#051733]/40 via-[#061d40]/60 to-[#041126]/40" />
+        <div className="absolute inset-0 bg-linear-to-b from-[#051733]/40 via-[#061d40]/60 to-[#041126]/40" />
       </div>
 
       {/* Main Footer Content */}
@@ -90,6 +91,7 @@ export function Footer({ settings }: FooterProps) {
 
               <a
                 href={`tel:${settings.phoneTel}`}
+                onClick={() => trackPhoneClick("footer", settings.phoneTel)}
                 className="flex items-center gap-2 transition-colors hover:text-white"
               >
                 <Phone className="h-4 w-4 shrink-0 text-[#38bdf8]" />
@@ -118,7 +120,7 @@ export function Footer({ settings }: FooterProps) {
                     aria-label={`Follow JUBU on ${social.platform}`}
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white backdrop-blur-xs transition-all duration-200 hover:border-white hover:bg-white hover:text-[#0070ba]"
                   >
-                    <Icon name={social.icon} className="h-4 w-4 stroke-[2]" />
+                    <Icon name={social.icon} className="h-4 w-4 stroke-2" />
                   </a>
                 ))}
             </div>

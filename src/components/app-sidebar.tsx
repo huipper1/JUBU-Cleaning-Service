@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -12,11 +11,9 @@ import {
   Sparkles,
   Layers,
   MapPin,
-  ShieldCheck,
-  Users,
-  Image as ImageIcon,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  BarChart3
 } from "lucide-react";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -217,6 +214,19 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
                 </CollapsibleContent>
               </SidebarMenuItem>
             </Collapsible>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/admin/content/tracking"}
+                tooltip="Tracking & Analytics"
+              >
+                <Link href="/admin/content/tracking">
+                  <BarChart3 />
+                  <span>Tracking & Analytics</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
 
             <SidebarMenuItem>
               <SidebarMenuButton

@@ -22,7 +22,7 @@ import {
   DialogTitle
 } from "@/components/ui/dialog";
 
-import { updateLeadNotesAction, updateLeadStatusAction } from "./actions";
+import { updateLeadStatusAction } from "./actions";
 
 const STATUS_OPTIONS: {
   id: LeadStatus;
@@ -101,8 +101,6 @@ export function LeadsClient({
 
   const [localLeads, setLocalLeads] = React.useState<Lead[]>(leads);
   const [selectedLead, setSelectedLead] = React.useState<Lead | null>(null);
-  const [notesDraft, setNotesDraft] = React.useState("");
-  const [isSavingNotes, setIsSavingNotes] = React.useState(false);
 
   React.useEffect(() => {
     setLocalLeads(leads);
@@ -132,18 +130,6 @@ export function LeadsClient({
       const opt = STATUS_OPTIONS.find((s) => s.id === newStatus);
       toast.success(`Lead marked as ${opt?.label ?? newStatus}`);
     }
-  };
-
-  const handleSaveNotes = async () => {
-    if (!selectedLead) return;
-    setIsSavingNotes(true);
-    const res = await updateLeadNotesAction(selectedLead.id, notesDraft);
-    if (res.success) {
-      toast.success("Internal notes saved");
-    } else {
-      toast.error("Failed to save notes");
-    }
-    setIsSavingNotes(false);
   };
 
   const columns: ColumnDef<Lead>[] = [
@@ -241,7 +227,6 @@ export function LeadsClient({
           size="sm"
           onClick={() => {
             setSelectedLead(lead);
-            setNotesDraft("");
           }}
         >
           Details

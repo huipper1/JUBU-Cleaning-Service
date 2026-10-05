@@ -9,6 +9,7 @@ import type { Service } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { Icon, SectionHeading } from "@/ui";
+import { trackServiceSelect } from "@/lib/analytics";
 
 interface ServicesProps {
   services: Service[];
@@ -21,7 +22,14 @@ export function Services({
   title = "Cleaning Solutions for Every Space",
   description = "From deep home sanitization to specialized commercial cleaning, Our trained cleaning team delivers reliable and professional cleaning results with care and attention to detail."
 }: ServicesProps) {
-  const handleSelectService = (serviceId: string) => {
+  const handleSelectService = (serviceId: string, serviceTitle: string) => {
+    // Fire DataLayer select_item event
+    trackServiceSelect({
+      item_id: serviceId,
+      item_name: serviceTitle,
+      item_category: "Cleaning Service"
+    });
+
     if (typeof window !== "undefined") {
       // Dispatch custom event for the QuoteForm listener
       window.dispatchEvent(
@@ -49,7 +57,7 @@ export function Services({
             <Link
               key={service.id}
               href={`#quote?service=${service.id}`}
-              onClick={() => handleSelectService(service.id)}
+              onClick={() => handleSelectService(service.id, service.title)}
               aria-label={`Get a quote for ${service.title}`}
               className="group relative flex cursor-pointer overflow-hidden rounded-3xl border border-slate-200/90 bg-white  shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-[#0070ba]"
             >
@@ -84,7 +92,7 @@ export function Services({
                 </div>
 
                 {/* Right Half: Rounded Image Preview */}
-                <figure className="relative m-0 aspect-[4/5] w-full overflow-hidden rounded-2xl bg-slate-100">
+                <figure className="relative m-0 aspect-4/5 w-full overflow-hidden rounded-2xl bg-slate-100">
                   <Image
                     src={getPublicImageUrl(service.image.src, "/images/placeholder/gallery-home.png")}
                     alt={service.image.alt || service.title}

@@ -35,6 +35,7 @@ import type { CreateLeadInput } from "@/types/lead";
 import { env } from "@/env";
 
 import { createLeadInputSchema } from "@/lib/content/types";
+import { trackFormStart, trackLeadGenerated, trackWhatsAppClick } from "@/lib/analytics";
 
 import { Calendar as CalendarPicker, Icon, Popover, PopoverContent, PopoverTrigger } from "@/ui";
 
@@ -134,6 +135,8 @@ export function QuoteForm({
     serviceName: string;
   } | null>(null);
 
+  const hasTrackedFormStart = useRef(false);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -206,6 +209,11 @@ export function QuoteForm({
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
+    if (!hasTrackedFormStart.current) {
+      hasTrackedFormStart.current = true;
+      trackFormStart(sourceArea);
+    }
+
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
@@ -317,6 +325,27 @@ export function QuoteForm({
     } catch (err: unknown) {
       console.error("[QuoteForm] Lead submission save failed:", err);
     }
+
+    // Trigger GA4, Google Ads Enhanced Conversions, and Meta Advanced Matching DataLayer Event
+    trackLeadGenerated({
+      serviceId: formData.serviceId,
+      serviceName: currentService,
+      propertyType: formData.propertyType || "other",
+      locationArea: submittedLocation,
+      preferredDate: submittedPreferredDate,
+      preferredTime: submittedPreferredTime,
+      fullName: submittedName,
+      mobile: submittedMobile,
+      sourceArea: activeSourceArea,
+      trafficSource: {
+        utm_source: fullPayload.utmSource,
+        utm_medium: fullPayload.utmMedium,
+        utm_campaign: fullPayload.utmCampaign,
+        utm_content: fullPayload.utmContent,
+        fbclid: fullPayload.fbclid,
+        gclid: searchParams?.get("gclid") ?? undefined
+      }
+    });
 
     // Mark as success and redirect to WhatsApp
     setStatus("success");
@@ -450,10 +479,11 @@ export function QuoteForm({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick("quote_section_cta")}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-6 py-3.5 text-xs font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
                 >
                   <WhatsAppIcon monochrome className="h-4 w-4" />
-                  <span>Contact Us on WhatsApp</span>
+                  <span>Book via WhatsApp</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
 

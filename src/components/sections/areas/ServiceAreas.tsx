@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import type { ServiceArea, SiteSettings } from "@/types/content";
+import { trackLocationSelect, trackPhoneClick } from "@/lib/analytics";
 
 // Skeleton loader matching the dimensions of the map card
 function MapSkeleton() {
@@ -13,7 +14,7 @@ function MapSkeleton() {
     <div
       role="status"
       aria-label="Loading interactive map"
-      className="relative flex h-[480px] w-full animate-pulse flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 text-slate-400 shadow-sm sm:h-[520px] lg:h-[560px]"
+      className="relative flex h-120 w-full animate-pulse flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 text-slate-400 shadow-sm sm:h-130 lg:h-140"
     >
       <div className="flex items-center gap-2">
         <MapPin className="h-5 w-5 animate-bounce text-brand-green" />
@@ -52,8 +53,15 @@ export function ServiceAreas({
     initialActiveAreaId ?? null
   );
 
-  const handleAreaClick = (id: string) => {
-    setActiveId((prev) => (prev === id ? null : id));
+  const handleAreaClick = (id: string, name?: string) => {
+    setActiveId((prev) => {
+      const nextId = prev === id ? null : id;
+      if (nextId) {
+        const areaObj = areas.find((a) => a.id === id);
+        trackLocationSelect(id, name || areaObj?.name || id);
+      }
+      return nextId;
+    });
   };
 
   const phoneDisplay = settings?.phoneDisplay || "+971 54 299 5191";
@@ -99,7 +107,7 @@ export function ServiceAreas({
           {/* Left Column: Rounded-2xl Map Container with no extra padding/whitespace */}
           <div className="w-full lg:col-span-6">
             <div className="overflow-hidden rounded-2xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)]">
-              <div className="h-[460px] w-full sm:h-[500px] lg:h-[540px]">
+              <div className="h-115 w-full sm:h-125 lg:h-135">
                 <ServiceAreaMap
                   areas={areas}
                   activeId={activeId}
@@ -138,6 +146,9 @@ export function ServiceAreas({
                     type="button"
                     onClick={() => {
                       const targetId = isSelected ? null : zone.areaIds[0];
+                      if (!isSelected && targetId) {
+                        trackLocationSelect(zone.id, zone.title.replace(":", ""), zone.title);
+                      }
                       setActiveId(targetId);
                     }}
                     className={`cursor-pointer rounded-2xl p-4 text-left transition-all duration-200 ${
@@ -168,7 +179,7 @@ export function ServiceAreas({
                   <button
                     key={area.id}
                     type="button"
-                    onClick={() => handleAreaClick(area.id)}
+                    onClick={() => handleAreaClick(area.id, area.name)}
                     className={`cursor-pointer rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors ${
                       isActive
                         ? "bg-[#00a651] text-white"
@@ -194,6 +205,7 @@ export function ServiceAreas({
               {/* Secondary Phone Pill Button */}
               <a
                 href={`tel:${phoneTel}`}
+                onClick={() => trackPhoneClick("service_areas_section", phoneTel)}
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-7 py-3 text-xs font-bold text-[#0a1e3b] shadow-xs transition-all duration-200 hover:border-[#0a1e3b] hover:bg-slate-50 active:scale-98 sm:text-sm"
               >
                 <span>({phoneDisplay})</span>

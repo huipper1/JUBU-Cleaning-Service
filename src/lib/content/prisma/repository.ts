@@ -76,7 +76,9 @@ export class PrismaContentRepository implements ContentRepository {
       showQuote: s.showQuote,
       showAreas: s.showAreas,
       showContact: s.showContact,
-      homepageServiceIds: s.homepageServiceIds ?? []
+      homepageServiceIds: s.homepageServiceIds ?? [],
+      gtmId: s.gtmId ?? "",
+      gaId: s.gaId ?? ""
     };
   }
 

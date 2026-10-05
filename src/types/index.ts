@@ -23,3 +23,18 @@ export type { SiteConfig, SocialLinks } from "./site-config";
 export type { User } from "./user";
 export type { AreaNavItem, NavItem } from "./navigation";
 export type { WhatsAppIconProps } from "./icon";
+export type {
+  AnalyticsEvent,
+  ContactPhoneEventData,
+  ContactWhatsAppEventData,
+  FaqExpandEventData,
+  FormStartEventData,
+  GenerateLeadEventData,
+  GoogleUserData,
+  ItemData,
+  MetaUserData,
+  SelectItemEventData,
+  SelectLocationEventData,
+  TrafficSourceData,
+  ViewGalleryItemEventData
+} from "./analytics";

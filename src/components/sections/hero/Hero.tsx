@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,6 +8,7 @@ import { ArrowRight, Check, ShieldCheck, Users, Wrench } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons";
 import type { HeroContent } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
+import { trackWhatsAppClick } from "@/lib/analytics";
 
 interface HeroProps {
   content: HeroContent;
@@ -62,12 +65,12 @@ export function Hero({
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-gradient-to-b from-[#041633] via-[#051c3f] to-[#030f24] text-white"
+      className="relative overflow-hidden bg-linear-to-b from-[#041633] via-[#051c3f] to-[#030f24] text-white"
       aria-label="Hero Section"
     >
       {/* Subtle radial ambient glows */}
       <div className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full bg-brand-sky/15 blur-[120px]" />
-      <div className="pointer-events-none absolute top-1/3 right-0 h-[500px] w-[500px] rounded-full bg-brand-blue/20 blur-[150px]" />
+      <div className="pointer-events-none absolute top-1/3 right-0 h-125 w-125 rounded-full bg-brand-blue/20 blur-[150px]" />
       <div className="pointer-events-none absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-emerald-500/10 blur-[130px]" />
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,6 +127,11 @@ export function Hero({
             <div className="mb-10 flex flex-row items-center justify-center gap-2 sm:gap-3 lg:justify-start">
               <Link
                 href={content.primaryCta.href}
+                onClick={() => {
+                  if (content.primaryCta.href.includes("wa.me") || content.primaryCta.href.includes("whatsapp")) {
+                    trackWhatsAppClick("hero_primary_cta");
+                  }
+                }}
                 className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand-green px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-base"
               >
                 <WhatsAppIcon monochrome className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
@@ -132,8 +140,13 @@ export function Hero({
 
               <Link
                 href={content.secondaryCta.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={content.secondaryCta.href.startsWith("http") ? "_blank" : undefined}
+                rel={content.secondaryCta.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                onClick={() => {
+                  if (content.secondaryCta.href.includes("wa.me") || content.secondaryCta.href.includes("whatsapp")) {
+                    trackWhatsAppClick("hero_secondary_cta");
+                  }
+                }}
                 className="group inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/20 bg-[#092348]/90 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:border-sky-400 hover:bg-[#0d2f5e] active:scale-98 sm:gap-2 sm:px-7 sm:py-3.5 sm:text-base"
               >
                 <span className="whitespace-nowrap">{content.secondaryCta.label}</span>
@@ -170,7 +183,7 @@ export function Hero({
           <div className="relative flex items-end justify-center self-end lg:col-span-6 lg:-ml-6 lg:justify-start xl:col-span-6 xl:-ml-10">
 
             {/* Cleaner visual wrapper with relative badge positioning */}
-            <div className="relative mx-auto flex w-full max-w-[420px] items-end justify-center sm:max-w-[520px] lg:mx-0 lg:max-w-[620px] xl:max-w-[680px]">
+            <div className="relative mx-auto flex w-full max-w-105 items-end justify-center sm:max-w-130 lg:mx-0 lg:max-w-155 xl:max-w-170">
 
               {/* Decorative Four-Point Sparkles around cleaner */}
               <div className="pointer-events-none absolute top-12 -left-2 z-10 text-sky-400 animate-pulse sm:left-2 lg:-left-6">
@@ -193,7 +206,7 @@ export function Hero({
               <Image
                 src={displayImage.src}
                 alt={displayImage.alt}
-                width={displayImage.width || 800}
+                width={displayImage.width || 750}
                 height={displayImage.height || 950}
                 priority
                 className="relative z-10 block h-auto w-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
@@ -202,7 +215,7 @@ export function Hero({
               {/* Floating Badge 1: Top Right - Licensed in Dubai */}
               <div className="absolute top-16 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:flex sm:top-14 sm:right-2 lg:top-16 lg:-right-10 xl:-right-14">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs">
-                  <Check className="h-4 w-4 stroke-[3]" />
+                  <Check className="h-4 w-4 stroke-3" />
                 </div>
                 <span className="text-xs font-extrabold tracking-tight text-slate-900 sm:text-sm">
                   Licensed in Dubai
@@ -212,7 +225,7 @@ export function Hero({
               {/* Floating Badge 2: Mid Right - Free Quotes */}
               <div className="absolute top-36 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:flex sm:top-36 sm:right-0 lg:top-36 lg:-right-12 xl:-right-18">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue text-white shadow-xs">
-                  <Check className="h-4 w-4 stroke-[3]" />
+                  <Check className="h-4 w-4 stroke-3" />
                 </div>
                 <span className="text-xs font-extrabold tracking-tight text-slate-900 sm:text-sm">
                   Free Custom Quotes

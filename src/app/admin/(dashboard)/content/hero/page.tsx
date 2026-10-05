@@ -20,8 +20,8 @@ export default async function AdminHeroPage() {
     subheadline:
       hero?.subheadline ??
       "Home, Villa, Office, Deep Cleaning & Post-Construction Cleaning. Reliable service with professional equipment.",
-    primaryCtaLabel: hero?.primaryCtaLabel ?? "Get a Free Quote",
-    primaryCtaHref: hero?.primaryCtaHref ?? "#quote",
+    primaryCtaLabel: hero?.primaryCtaLabel ?? "Book via WhatsApp",
+    primaryCtaHref: hero?.primaryCtaHref ?? "https://wa.me/971542995191",
     secondaryCtaLabel: hero?.secondaryCtaLabel ?? "WhatsApp Us",
     secondaryCtaHref: hero?.secondaryCtaHref ?? "https://wa.me/971542995191",
     heroImageSrc: hero?.heroImageSrc ?? "/images/placeholder/hero-cleaner.png",

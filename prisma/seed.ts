@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { createClient } from "@supabase/supabase-js";
 import { mockSettingsData } from "../src/lib/content/mock/data/settings";
 import { mockHeroData } from "../src/lib/content/mock/data/hero";
 import { mockAboutData } from "../src/lib/content/mock/data/about";

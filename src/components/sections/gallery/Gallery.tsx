@@ -9,6 +9,7 @@ import { ArrowLeftRight, ArrowRight, ChevronLeft, ChevronRight, X } from "lucide
 import { SectionHeading } from "@/ui";
 import type { GalleryItem } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
+import { trackGalleryView } from "@/lib/analytics";
 
 interface GalleryProps {
   items: GalleryItem[];
@@ -23,6 +24,10 @@ export function Gallery({ items }: GalleryProps) {
   const openLightbox = (index: number) => {
     setSelectedIndex(index);
     setActiveTab("after");
+    const item = items[index];
+    if (item) {
+      trackGalleryView(item.id, item.title, "after");
+    }
   };
 
   const closeLightbox = () => {
@@ -31,14 +36,22 @@ export function Gallery({ items }: GalleryProps) {
 
   const handlePrev = () => {
     if (selectedIndex === null) return;
-    setSelectedIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : items.length - 1));
+    const nextIdx = selectedIndex > 0 ? selectedIndex - 1 : items.length - 1;
+    setSelectedIndex(nextIdx);
     setActiveTab("after");
+    if (items[nextIdx]) {
+      trackGalleryView(items[nextIdx].id, items[nextIdx].title, "after");
+    }
   };
 
   const handleNext = () => {
     if (selectedIndex === null) return;
-    setSelectedIndex((prev) => (prev !== null && prev < items.length - 1 ? prev + 1 : 0));
+    const nextIdx = selectedIndex < items.length - 1 ? selectedIndex + 1 : 0;
+    setSelectedIndex(nextIdx);
     setActiveTab("after");
+    if (items[nextIdx]) {
+      trackGalleryView(items[nextIdx].id, items[nextIdx].title, "after");
+    }
   };
 
   // Keyboard navigation & accessibility
@@ -122,7 +135,7 @@ export function Gallery({ items }: GalleryProps) {
                 <figcaption className="sr-only">{item.title}</figcaption>
 
                 {/* Dark gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy-dark/70 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-80" />
+                <div className="absolute inset-0 bg-linear-to-t from-brand-navy-dark/70 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-80" />
 
                 {/* Title badge in bottom-left */}
                 <div className="absolute bottom-3.5 left-3.5 z-10">
@@ -252,7 +265,10 @@ export function Gallery({ items }: GalleryProps) {
                 <div className="inline-flex shrink-0 rounded-xl border border-brand-border/60 bg-brand-pale-blue p-1">
                   <button
                     type="button"
-                    onClick={() => setActiveTab("before")}
+                    onClick={() => {
+                      setActiveTab("before");
+                      trackGalleryView(selectedItem.id, selectedItem.title, "before");
+                    }}
                     className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${activeTab === "before"
                       ? "bg-amber-500 text-white shadow-xs"
                       : "text-brand-navy hover:text-brand-blue"
@@ -262,7 +278,10 @@ export function Gallery({ items }: GalleryProps) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab("after")}
+                    onClick={() => {
+                      setActiveTab("after");
+                      trackGalleryView(selectedItem.id, selectedItem.title, "after");
+                    }}
                     className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${activeTab === "after"
                       ? "bg-brand-green text-white shadow-xs"
                       : "text-brand-navy hover:text-brand-blue"

@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { ShieldCheck, CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
 import { toggleWhyChooseActiveAction, updateWhyChooseAction } from "./actions";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
