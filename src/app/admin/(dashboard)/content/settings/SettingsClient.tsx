@@ -217,18 +217,6 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   />
                   <p className="text-[11px] text-muted-foreground">Branch identifier or central clearing code.</p>
                 </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-foreground">
-                    Account Opening / Registration Date
-                  </label>
-                  <Input
-                    value={formData.bankAccountOpeningDate ?? ""}
-                    onChange={(e) => handleChange("bankAccountOpeningDate", e.target.value)}
-                    placeholder="e.g. 25 January 2022"
-                  />
-                  <p className="text-[11px] text-muted-foreground">Date registered with the bank.</p>
-                </div>
               </div>
             </CardContent>
           </Card>

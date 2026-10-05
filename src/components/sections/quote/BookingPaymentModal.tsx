@@ -386,14 +386,6 @@ export function BookingPaymentModal({
                       </button>
                     </div>
                   </div>
-
-                  {/* Account Opening Date */}
-                  <div className="flex items-center justify-between p-3.5 sm:p-4">
-                    <span className="font-medium text-slate-300">Account opening date</span>
-                    <span className="font-mono text-slate-200">
-                      {activeBankDetails.accountOpeningDate}
-                    </span>
-                  </div>
                 </div>
               </div>
 
