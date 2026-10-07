@@ -95,6 +95,27 @@ export function splitFullName(fullName: string): { firstName: string; lastName: 
 }
 
 /**
+ * Infer 2-letter ISO country code dynamically from dial code
+ */
+export function getCountryCodeFromPhone(phone: string): string {
+  if (!phone) return "AE";
+  const p = phone.trim();
+  if (p.startsWith("+971")) return "AE";
+  if (p.startsWith("+880")) return "BD";
+  if (p.startsWith("+91")) return "IN";
+  if (p.startsWith("+92")) return "PK";
+  if (p.startsWith("+44")) return "GB";
+  if (p.startsWith("+1")) return "US";
+  if (p.startsWith("+966")) return "SA";
+  if (p.startsWith("+968")) return "OM";
+  if (p.startsWith("+974")) return "QA";
+  if (p.startsWith("+973")) return "BH";
+  if (p.startsWith("+965")) return "KW";
+  if (p.startsWith("+63")) return "PH";
+  return "AE";
+}
+
+/**
  * Extract browser cookie by name safely
  */
 export function getCookie(name: string): string {
@@ -157,6 +178,10 @@ export function trackLeadGenerated(payload: {
   const fbp = getCookie("_fbp");
   const fbc = getFacebookClickId();
 
+  const dynamicCity = payload.locationArea && payload.locationArea !== "N/A" ? payload.locationArea.trim() : "Dubai";
+  const dynamicCountry = getCountryCodeFromPhone(googlePhone || payload.mobile);
+  const dynamicRegion = dynamicCountry === "AE" ? "Dubai" : dynamicCity;
+
   const eventPayload: GenerateLeadEventData = {
     event: "generate_lead",
     event_category: "Conversion",
@@ -188,10 +213,10 @@ export function trackLeadGenerated(payload: {
       address: {
         first_name: firstName,
         last_name: lastName,
-        city: "Dubai",
-        region: "Dubai",
+        city: dynamicCity,
+        region: dynamicRegion,
         postal_code: "00000",
-        country: "AE"
+        country: dynamicCountry
       }
     },
 
@@ -200,9 +225,9 @@ export function trackLeadGenerated(payload: {
       fn: firstName.toLowerCase(),
       ln: lastName.toLowerCase(),
       ph: metaPhone,
-      ct: "dubai",
-      st: "dubai",
-      country: "ae",
+      ct: dynamicCity.toLowerCase(),
+      st: dynamicRegion.toLowerCase(),
+      country: dynamicCountry.toLowerCase(),
       ...(fbp ? { fbp } : {}),
       ...(fbc ? { fbc } : {})
     }
@@ -352,6 +377,10 @@ export function trackBookingConfirmed(payload: {
   const fbp = getCookie("_fbp");
   const fbc = getFacebookClickId();
 
+  const dynamicCity = payload.locationArea && payload.locationArea !== "N/A" ? payload.locationArea.trim() : "Dubai";
+  const dynamicCountry = getCountryCodeFromPhone(googlePhone || payload.mobile);
+  const dynamicRegion = dynamicCountry === "AE" ? "Dubai" : dynamicCity;
+
   const eventPayload = {
     event: "booking_confirmed",
     event_category: "Conversion",
@@ -383,10 +412,10 @@ export function trackBookingConfirmed(payload: {
       address: {
         first_name: firstName,
         last_name: lastName,
-        city: "Dubai",
-        region: "Dubai",
+        city: dynamicCity,
+        region: dynamicRegion,
         postal_code: "00000",
-        country: "AE"
+        country: dynamicCountry
       }
     },
 
@@ -395,9 +424,9 @@ export function trackBookingConfirmed(payload: {
       fn: firstName.toLowerCase(),
       ln: lastName.toLowerCase(),
       ph: metaPhone,
-      ct: "dubai",
-      st: "dubai",
-      country: "ae",
+      ct: dynamicCity.toLowerCase(),
+      st: dynamicRegion.toLowerCase(),
+      country: dynamicCountry.toLowerCase(),
       ...(fbp ? { fbp } : {}),
       ...(fbc ? { fbc } : {})
     }
