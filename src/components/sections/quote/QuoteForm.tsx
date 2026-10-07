@@ -288,9 +288,17 @@ export function QuoteForm({
       services.find((s) => s.id === formData.serviceId)?.title ??
       (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service");
 
-    const submittedName = formData.fullName;
-    const submittedMobile = formData.mobile;
-    const submittedWhatsApp = formData.whatsappNumber?.trim() || submittedMobile;
+    // Standard UAE mobile format with +971
+    const rawCleanMobile = formData.mobile.replace(/[^\d]/g, "");
+    const formattedUaeMobile = rawCleanMobile.startsWith("971")
+      ? `+${rawCleanMobile}`
+      : rawCleanMobile.startsWith("05")
+        ? `+971${rawCleanMobile.slice(1)}`
+        : `+971${rawCleanMobile}`;
+
+    const submittedName = formData.fullName.trim();
+    const submittedMobile = formattedUaeMobile;
+    const submittedWhatsApp = formData.whatsappNumber?.trim() || "";
     const submittedLocation = formData.location?.trim() || "N/A";
     const submittedPropertyType = formData.propertyType
       ? formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1)
@@ -315,7 +323,7 @@ export function QuoteForm({
       `New Quote Request - JUBU Cleaning Service`,
       `Name: ${submittedName}`,
       `Phone: ${submittedMobile}`,
-      `WhatsApp: ${submittedWhatsApp}`,
+      `WhatsApp: ${submittedWhatsApp || submittedMobile}`,
       `Service: ${currentService}`,
       `Location: ${submittedLocation}`,
       `Property: ${submittedPropertyType}`,
@@ -359,7 +367,7 @@ export function QuoteForm({
       preferredTime: submittedPreferredTime,
       fullName: submittedName,
       mobile: submittedMobile,
-      whatsappNumber: submittedWhatsApp,
+      whatsappNumber: submittedWhatsApp || undefined,
       sourceArea: activeSourceArea,
       trafficSource: {
         utm_source: fullPayload.utmSource,
