@@ -39,9 +39,25 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    const gtm = formData.gtmId?.trim();
+    const ga = formData.gaId?.trim();
+
+    if (gtm && !/^GTM-[A-Z0-9]+$/i.test(gtm)) {
+      toast.error("Invalid GTM ID format. Must match GTM-XXXXXXX (e.g. GTM-N5DZLXX2)");
+      return;
+    }
+
+    if (ga && !/^G-[A-Z0-9]+$/i.test(ga)) {
+      toast.error("Invalid GA4 Measurement ID format. Must match G-XXXXXXXXXX (e.g. G-1234567890)");
+      return;
+    }
+
     setIsSaving(true);
     try {
-      const res = await updateTrackingAction(formData);
+      const res = await updateTrackingAction({
+        gtmId: gtm ? gtm.toUpperCase() : "",
+        gaId: ga ? ga.toUpperCase() : ""
+      });
       if (res.success) {
         toast.success("Tracking IDs saved and activated live!");
       } else {

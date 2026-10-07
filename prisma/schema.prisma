@@ -375,10 +375,12 @@ model Lead {
 
   status         LeadStatus     @default(new)
   adminNotes     String?        // Internal CRM remarks
+  deletedAt      DateTime?      // Soft delete timestamp for Trash pipeline
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
   @@index([status, createdAt])
+  @@index([deletedAt])
   @@index([requestType])
   @@index([paymentMethod])
   @@index([sourceArea])

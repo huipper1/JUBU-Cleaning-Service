@@ -231,8 +231,33 @@ export const areaLandingPageSchema = z.object({
   order: z.number().int().nonnegative()
 });
 
-// International phone regex: accepts 7-15 digits, optional +, spaces, dashes, parentheses
-export const phoneRegex = /^[+]?[\d\s\-().]{7,20}$/;
+// UAE Mobile Number regex: allows 05x, 5x, or +9715x / 009715x followed by 7 digits
+// e.g., 0501234567, 501234567, +971542995191
+export function isValidUaeMobile(val: string): boolean {
+  if (!val) return false;
+  const digits = val.replace(/\D/g, "");
+  // If starts with 9715 (country code + 5x): total length must be 11 digits (971 + 5 + 7 digits)
+  if (digits.startsWith("9715") && digits.length === 12) return true;
+  // If local format starting with 05: total 10 digits (050xxxxxxx ... 058xxxxxxx)
+  if (/^05[024568]\d{7}$/.test(digits)) return true;
+  // If local format starting with 5 (without 0): total 9 digits (50xxxxxxx ... 58xxxxxxx)
+  if (/^5[024568]\d{7}$/.test(digits)) return true;
+  // If with country code: 971 5[024568] + 7 digits (total 12 digits)
+  if (/^9715[024568]\d{7}$/.test(digits)) return true;
+  return false;
+}
+
+// Global / International WhatsApp validator:
+// Accepts UAE format OR international E.164 (8-15 digits starting with + or valid country code)
+export function isValidWhatsAppNumber(val: string): boolean {
+  if (!val || val.trim() === "") return true; // optional
+  const digits = val.replace(/\D/g, "");
+  // Must have between 8 and 15 digits
+  if (digits.length < 8 || digits.length > 15) return false;
+  // Disallow obvious fake repeated/consecutive patterns like 11111111 or 12345678
+  if (/^(\d)\1+$/.test(digits)) return false;
+  return true;
+}
 
 // Lead Creation Input Schema (for Lead Form and /api/lead)
 export const createLeadInputSchema = z.object({
@@ -242,12 +267,17 @@ export const createLeadInputSchema = z.object({
     .max(60, "Full name must be under 60 characters"),
   mobile: z
     .string()
-    .min(7, "Mobile number is required")
-    .transform((val) => val.replace(/[\s\-()\u200e]/g, ""))
-    .refine((val) => phoneRegex.test(val), {
-      message: "Please enter a valid mobile number"
+    .min(1, "Mobile number is required")
+    .refine((val) => isValidUaeMobile(val), {
+      message: "Please enter a valid UAE mobile number (e.g. 054 299 5191 or 50 123 4567)"
     }),
-  whatsappNumber: z.string().max(20, "WhatsApp number is too long").optional().or(z.literal("")),
+  whatsappNumber: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .refine((val) => !val || isValidWhatsAppNumber(val), {
+      message: "Please enter a valid WhatsApp number with country code (e.g. +44... or 05x...)"
+    }),
   serviceId: z.string().min(1, "Please select a cleaning service"),
   location: z
     .string()

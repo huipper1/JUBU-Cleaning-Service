@@ -3,7 +3,16 @@
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { MessageSquare, Phone } from "lucide-react";
+import {
+  AlertTriangle,
+  ArchiveRestore,
+  Calendar,
+  MessageSquare,
+  Phone,
+  RotateCcw,
+  Trash2,
+  X
+} from "lucide-react";
 import { toast } from "sonner";
 
 import type { Lead, LeadStatus } from "@/types/lead";
@@ -18,11 +27,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
-import { updateLeadStatusAction } from "./actions";
+import {
+  clearLeadsByDateRangeAction,
+  emptyTrashAction,
+  moveToTrashAction,
+  permanentDeleteLeadAction,
+  restoreFromTrashAction,
+  updateLeadStatusAction
+} from "./actions";
 
 const STATUS_OPTIONS: {
   id: LeadStatus;
@@ -76,6 +94,10 @@ interface LeadsClientProps {
   searchValue: string;
   statusFilter: string;
   paymentMethodFilter?: string;
+  startDateFilter?: string;
+  endDateFilter?: string;
+  viewFilter?: string;
+  trashCount?: number;
   metrics: {
     total: number;
     new: number;
@@ -98,6 +120,10 @@ export function LeadsClient({
   searchValue,
   statusFilter,
   paymentMethodFilter = "all",
+  startDateFilter = "",
+  endDateFilter = "",
+  viewFilter = "active",
+  trashCount = 0,
   metrics
 }: LeadsClientProps) {
   const router = useRouter();
@@ -107,20 +133,95 @@ export function LeadsClient({
   const [localLeads, setLocalLeads] = React.useState<Lead[]>(leads);
   const [selectedLead, setSelectedLead] = React.useState<Lead | null>(null);
 
+  // Date inputs state
+  const [startDate, setStartDate] = React.useState(startDateFilter);
+  const [endDate, setEndDate] = React.useState(endDateFilter);
+
+  // 2-Step Clear / Delete Modals state
+  const [leadToDelete, setLeadToDelete] = React.useState<Lead | null>(null);
+  const [isDeletingLead, setIsDeletingLead] = React.useState(false);
+
+  // 2-step Clear Data modal: step 0 (closed), step 1 (warning), step 2 (typed confirmation)
+  const [clearDataModalStep, setClearDataModalStep] = React.useState<0 | 1 | 2>(0);
+  const [confirmDeleteText, setConfirmDeleteText] = React.useState("");
+  const [isClearingData, setIsClearingData] = React.useState(false);
+
   React.useEffect(() => {
     setLocalLeads(leads);
   }, [leads]);
 
+  React.useEffect(() => {
+    setStartDate(startDateFilter);
+    setEndDate(endDateFilter);
+  }, [startDateFilter, endDateFilter]);
+
   const updateQuery = (newParams: Record<string, string | null>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     Object.entries(newParams).forEach(([k, v]) => {
-      if (v === null || v === "" || ((k === "status" || k === "paymentMethod") && v === "all")) {
+      if (
+        v === null ||
+        v === "" ||
+        ((k === "status" || k === "paymentMethod") && v === "all") ||
+        (k === "view" && v === "active")
+      ) {
         current.delete(k);
       } else {
         current.set(k, v);
       }
     });
     router.push(`${pathname}?${current.toString()}`);
+  };
+
+  const applyDateFilter = (start?: string, end?: string) => {
+    const s = start !== undefined ? start : startDate;
+    const e = end !== undefined ? end : endDate;
+    updateQuery({
+      startDate: s || null,
+      endDate: e || null,
+      page: "1"
+    });
+  };
+
+  const clearDateFilter = () => {
+    setStartDate("");
+    setEndDate("");
+    updateQuery({
+      startDate: null,
+      endDate: null,
+      page: "1"
+    });
+  };
+
+  const setDatePreset = (preset: "today" | "last7" | "last30" | "thisMonth") => {
+    const today = new Date();
+    const formatYMD = (d: Date) => d.toISOString().split("T")[0];
+    const todayStr = formatYMD(today);
+
+    if (preset === "today") {
+      setStartDate(todayStr);
+      setEndDate(todayStr);
+      applyDateFilter(todayStr, todayStr);
+    } else if (preset === "last7") {
+      const past = new Date();
+      past.setDate(past.getDate() - 7);
+      const pastStr = formatYMD(past);
+      setStartDate(pastStr);
+      setEndDate(todayStr);
+      applyDateFilter(pastStr, todayStr);
+    } else if (preset === "last30") {
+      const past = new Date();
+      past.setDate(past.getDate() - 30);
+      const pastStr = formatYMD(past);
+      setStartDate(pastStr);
+      setEndDate(todayStr);
+      applyDateFilter(pastStr, todayStr);
+    } else if (preset === "thisMonth") {
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      const firstStr = formatYMD(firstDay);
+      setStartDate(firstStr);
+      setEndDate(todayStr);
+      applyDateFilter(firstStr, todayStr);
+    }
   };
 
   const handleStatusChange = async (leadId: string, newStatus: LeadStatus) => {
@@ -136,6 +237,89 @@ export function LeadsClient({
       toast.success(`Lead marked as ${opt?.label ?? newStatus}`);
     }
   };
+
+  const handleMoveToTrash = async (lead: Lead) => {
+    const prev = [...localLeads];
+    setLocalLeads(localLeads.filter((l) => l.id !== lead.id));
+    toast.loading("Moving lead to Trash...", { id: `trash-${lead.id}` });
+
+    const res = await moveToTrashAction(lead.id);
+    if (!res.success) {
+      toast.error(res.error || "Failed to move lead to Trash", { id: `trash-${lead.id}` });
+      setLocalLeads(prev);
+    } else {
+      toast.success(`"${lead.fullName}" moved to Trash`, { id: `trash-${lead.id}` });
+      router.refresh();
+    }
+  };
+
+  const handleRestoreFromTrash = async (lead: Lead) => {
+    const prev = [...localLeads];
+    setLocalLeads(localLeads.filter((l) => l.id !== lead.id));
+    toast.loading("Restoring lead from Trash...", { id: `restore-${lead.id}` });
+
+    const res = await restoreFromTrashAction(lead.id);
+    if (!res.success) {
+      toast.error(res.error || "Failed to restore lead", { id: `restore-${lead.id}` });
+      setLocalLeads(prev);
+    } else {
+      toast.success(`"${lead.fullName}" restored to active leads`, { id: `restore-${lead.id}` });
+      router.refresh();
+    }
+  };
+
+  const handlePermanentDeleteSingle = async () => {
+    if (!leadToDelete) return;
+    setIsDeletingLead(true);
+    const target = leadToDelete;
+
+    const res = await permanentDeleteLeadAction(target.id);
+    setIsDeletingLead(false);
+    setLeadToDelete(null);
+
+    if (!res.success) {
+      toast.error(res.error || "Failed to permanently delete lead");
+    } else {
+      toast.success(`"${target.fullName}" was permanently removed from database and website`);
+      router.refresh();
+    }
+  };
+
+  const handleExecuteClearData = async () => {
+    if (confirmDeleteText !== "DELETE") {
+      toast.error('Please type "DELETE" to confirm');
+      return;
+    }
+
+    setIsClearingData(true);
+    if (viewFilter === "trash") {
+      // Empty entire Trash
+      const res = await emptyTrashAction();
+      setIsClearingData(false);
+      setClearDataModalStep(0);
+      setConfirmDeleteText("");
+      if (!res.success) {
+        toast.error(res.error || "Failed to empty Trash");
+      } else {
+        toast.success(`Trash cleared! ${res.count ?? 0} leads permanently deleted`);
+        router.refresh();
+      }
+    } else {
+      // Clear leads by active Date Range filter or all
+      const res = await clearLeadsByDateRangeAction(startDate || undefined, endDate || undefined);
+      setIsClearingData(false);
+      setClearDataModalStep(0);
+      setConfirmDeleteText("");
+      if (!res.success) {
+        toast.error(res.error || "Failed to clear leads");
+      } else {
+        toast.success(`Cleared ${res.count ?? 0} leads permanently from the database`);
+        router.refresh();
+      }
+    }
+  };
+
+  const isTrashView = viewFilter === "trash";
 
   const columns: ColumnDef<Lead>[] = [
     {
@@ -255,19 +439,24 @@ export function LeadsClient({
     {
       header: "CRM Status",
       className: "min-w-[140px]",
-      cell: (lead) => (
-        <select
-          value={lead.status}
-          onChange={(e) => handleStatusChange(lead.id, e.target.value as LeadStatus)}
-          className="rounded-md border bg-background px-2 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
-        >
-          {STATUS_OPTIONS.map((opt) => (
-            <option key={opt.id} value={opt.id}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      )
+      cell: (lead) =>
+        isTrashView ? (
+          <Badge variant="outline" className="text-xs text-rose-500 border-rose-500/30 bg-rose-500/10">
+            In Trash
+          </Badge>
+        ) : (
+          <select
+            value={lead.status}
+            onChange={(e) => handleStatusChange(lead.id, e.target.value as LeadStatus)}
+            className="rounded-md border bg-background px-2 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+          >
+            {STATUS_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        )
     },
     {
       header: "Date",
@@ -282,139 +471,360 @@ export function LeadsClient({
       header: "Action",
       className: "text-right whitespace-nowrap",
       cell: (lead) => (
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-8 text-xs font-semibold"
-          onClick={() => {
-            setSelectedLead(lead);
-          }}
-        >
-          Details
-        </Button>
+        <div className="flex items-center justify-end gap-1.5">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 text-xs font-semibold"
+            onClick={() => {
+              setSelectedLead(lead);
+            }}
+          >
+            Details
+          </Button>
+
+          {isTrashView ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                title="Restore Lead"
+                className="h-8 gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400"
+                onClick={() => handleRestoreFromTrash(lead)}
+              >
+                <RotateCcw className="size-3.5" />
+                <span className="hidden sm:inline">Restore</span>
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                title="Delete Permanently"
+                className="h-8 gap-1 text-xs font-semibold"
+                onClick={() => setLeadToDelete(lead)}
+              >
+                <Trash2 className="size-3.5" />
+                <span className="hidden sm:inline">Delete Permanently</span>
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              title="Move to Trash"
+              className="h-8 text-xs font-semibold text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10"
+              onClick={() => handleMoveToTrash(lead)}
+            >
+              <Trash2 className="size-3.5" />
+              <span className="sr-only sm:not-sr-only sm:inline">Trash</span>
+            </Button>
+          )}
+        </div>
       )
     }
   ];
 
   return (
     <div className="flex w-full max-w-full min-w-0 flex-col gap-6">
-      {/* Primary Channel & Payment Section Tabs */}
-      <div className="flex flex-col gap-2 rounded-2xl border bg-card p-4 shadow-xs">
-        <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-          Inquiry & Payment Channels
-        </span>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant={paymentMethodFilter === "all" ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateQuery({ paymentMethod: "all", page: "1" })}
-            className="h-9 gap-2 text-xs font-semibold"
-          >
-            <span>All Leads</span>
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-              {metrics.total}
-            </Badge>
-          </Button>
+      {/* Top Controls: View Tabs (Active vs Trash) + Date Range Filter + Clear Data */}
+      <div className="flex flex-col gap-4 rounded-2xl border bg-card p-4 shadow-xs">
+        {/* Active vs Trash View Switcher */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3">
+          <div className="flex items-center gap-2">
+            <Button
+              variant={!isTrashView ? "default" : "outline"}
+              size="sm"
+              onClick={() => updateQuery({ view: "active", page: "1" })}
+              className="h-8 gap-1.5 text-xs font-semibold"
+            >
+              <span>Active Leads</span>
+              <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                {metrics.total}
+              </Badge>
+            </Button>
 
-          <Button
-            variant={paymentMethodFilter === "quote" ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateQuery({ paymentMethod: "quote", page: "1" })}
-            className="h-9 gap-2 text-xs font-semibold"
-          >
-            <span className="size-2 rounded-full bg-slate-400" />
-            <span>Free Quotes (Standard Leads)</span>
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-              {metrics.quotesCount ?? 0}
-            </Badge>
-          </Button>
+            <Button
+              variant={isTrashView ? "destructive" : "outline"}
+              size="sm"
+              onClick={() => updateQuery({ view: "trash", page: "1" })}
+              className={cn(
+                "h-8 gap-1.5 text-xs font-semibold",
+                !isTrashView && trashCount > 0 && "text-rose-600 hover:text-rose-700"
+              )}
+            >
+              <Trash2 className="size-3.5" />
+              <span>Trash</span>
+              <Badge
+                variant={isTrashView ? "outline" : "secondary"}
+                className={cn(
+                  "ml-1 px-1.5 py-0 text-[10px]",
+                  trashCount > 0 && "bg-rose-500/15 text-rose-600 font-bold"
+                )}
+              >
+                {trashCount}
+              </Badge>
+            </Button>
+          </div>
 
-          <Button
-            variant={paymentMethodFilter === "cash" ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateQuery({ paymentMethod: "cash", page: "1" })}
-            className="h-9 gap-2 text-xs font-semibold"
-          >
-            <span className="size-2 rounded-full bg-emerald-500" />
-            <span>Cash On Delivery</span>
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-              {metrics.cashCount ?? 0}
-            </Badge>
-          </Button>
-
-          <Button
-            variant={paymentMethodFilter === "bank_transfer" ? "default" : "outline"}
-            size="sm"
-            onClick={() => updateQuery({ paymentMethod: "bank_transfer", page: "1" })}
-            className="h-9 gap-2 text-xs font-semibold"
-          >
-            <span className="size-2 rounded-full bg-sky-500" />
-            <span>Bank Transfers (Emirates NBD)</span>
-            <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
-              {metrics.bankTransferCount ?? 0}
-            </Badge>
-          </Button>
+          {/* 2-Step Clear Data / Empty Trash Action Button */}
+          <div className="flex items-center gap-2">
+            {isTrashView ? (
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={trashCount === 0}
+                onClick={() => {
+                  setClearDataModalStep(1);
+                  setConfirmDeleteText("");
+                }}
+                className="h-8 gap-1.5 text-xs font-semibold"
+              >
+                <Trash2 className="size-3.5" />
+                <span>Empty Trash</span>
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setClearDataModalStep(1);
+                  setConfirmDeleteText("");
+                }}
+                className="h-8 gap-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-500/10 hover:text-rose-700 dark:text-rose-400"
+              >
+                <AlertTriangle className="size-3.5" />
+                <span>
+                  {startDateFilter || endDateFilter ? "Clear Filtered Data" : "Clear All Data"}
+                </span>
+              </Button>
+            )}
+          </div>
         </div>
+
+        {/* Date Range Filter Bar */}
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              <Calendar className="size-3.5" />
+              Date Range:
+            </span>
+
+            {/* Quick Presets */}
+            <div className="flex flex-wrap items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDatePreset("today")}
+                className="h-7 px-2 text-[11px]"
+              >
+                Today
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDatePreset("last7")}
+                className="h-7 px-2 text-[11px]"
+              >
+                Last 7 Days
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDatePreset("last30")}
+                className="h-7 px-2 text-[11px]"
+              >
+                Last 30 Days
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDatePreset("thisMonth")}
+                className="h-7 px-2 text-[11px]"
+              >
+                This Month
+              </Button>
+            </div>
+          </div>
+
+          {/* Date Pickers & Apply Button */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="h-8 w-36 text-xs"
+                placeholder="From"
+              />
+              <span className="text-xs text-muted-foreground">to</span>
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="h-8 w-36 text-xs"
+                placeholder="To"
+              />
+            </div>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => applyDateFilter()}
+              disabled={!startDate && !endDate}
+              className="h-8 text-xs font-semibold"
+            >
+              Apply Filter
+            </Button>
+
+            {(startDateFilter || endDateFilter) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearDateFilter}
+                className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
+                title="Reset Date Range"
+              >
+                <X className="size-3.5 mr-1" />
+                Reset
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Primary Channel & Payment Section Tabs */}
+        {!isTrashView && (
+          <div className="flex flex-col gap-2 pt-2 border-t">
+            <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+              Inquiry & Payment Channels
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant={paymentMethodFilter === "all" ? "default" : "outline"}
+                size="sm"
+                onClick={() => updateQuery({ paymentMethod: "all", page: "1" })}
+                className="h-9 gap-2 text-xs font-semibold"
+              >
+                <span>All Channels</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  {metrics.total}
+                </Badge>
+              </Button>
+
+              <Button
+                variant={paymentMethodFilter === "quote" ? "default" : "outline"}
+                size="sm"
+                onClick={() => updateQuery({ paymentMethod: "quote", page: "1" })}
+                className="h-9 gap-2 text-xs font-semibold"
+              >
+                <span className="size-2 rounded-full bg-slate-400" />
+                <span>Free Quotes (Standard Leads)</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  {metrics.quotesCount ?? 0}
+                </Badge>
+              </Button>
+
+              <Button
+                variant={paymentMethodFilter === "cash" ? "default" : "outline"}
+                size="sm"
+                onClick={() => updateQuery({ paymentMethod: "cash", page: "1" })}
+                className="h-9 gap-2 text-xs font-semibold"
+              >
+                <span className="size-2 rounded-full bg-emerald-500" />
+                <span>Cash On Delivery</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  {metrics.cashCount ?? 0}
+                </Badge>
+              </Button>
+
+              <Button
+                variant={paymentMethodFilter === "bank_transfer" ? "default" : "outline"}
+                size="sm"
+                onClick={() => updateQuery({ paymentMethod: "bank_transfer", page: "1" })}
+                className="h-9 gap-2 text-xs font-semibold"
+              >
+                <span className="size-2 rounded-full bg-sky-500" />
+                <span>Bank Transfers (Emirates NBD)</span>
+                <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                  {metrics.bankTransferCount ?? 0}
+                </Badge>
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid w-full min-w-0 grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 xl:grid-cols-7">
-        <Card className="min-w-0 overflow-hidden">
-          <CardHeader className="min-w-0 p-3 pb-1 sm:p-4 sm:pb-2">
-            <CardTitle
-              className="truncate text-xs font-medium text-muted-foreground"
-              title="Total Inquiries"
-            >
-              Total Inquiries
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="min-w-0 p-3 pt-0 sm:p-4 sm:pt-0">
-            <div className="truncate text-xl font-bold sm:text-2xl">{metrics.total}</div>
-          </CardContent>
-        </Card>
-
-        {STATUS_OPTIONS.map((st) => (
-          <Card key={st.id} className="min-w-0 overflow-hidden">
+      {/* Metric Cards (Displayed for active leads) */}
+      {!isTrashView && (
+        <div className="grid w-full min-w-0 grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 xl:grid-cols-7">
+          <Card className="min-w-0 overflow-hidden">
             <CardHeader className="min-w-0 p-3 pb-1 sm:p-4 sm:pb-2">
               <CardTitle
-                className={cn("truncate text-xs font-medium", st.cardClass)}
-                title={st.label}
+                className="truncate text-xs font-medium text-muted-foreground"
+                title="Total Inquiries"
               >
-                {st.label}
+                Total Inquiries
               </CardTitle>
             </CardHeader>
             <CardContent className="min-w-0 p-3 pt-0 sm:p-4 sm:pt-0">
-              <div className={cn("truncate text-xl font-bold sm:text-2xl", st.cardClass)}>
-                {metrics[st.id]}
-              </div>
+              <div className="truncate text-xl font-bold sm:text-2xl">{metrics.total}</div>
             </CardContent>
           </Card>
-        ))}
-      </div>
+
+          {STATUS_OPTIONS.map((st) => (
+            <Card key={st.id} className="min-w-0 overflow-hidden">
+              <CardHeader className="min-w-0 p-3 pb-1 sm:p-4 sm:pb-2">
+                <CardTitle
+                  className={cn("truncate text-xs font-medium", st.cardClass)}
+                  title={st.label}
+                >
+                  {st.label}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="min-w-0 p-3 pt-0 sm:p-4 sm:pt-0">
+                <div className={cn("truncate text-xl font-bold sm:text-2xl", st.cardClass)}>
+                  {metrics[st.id]}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Pipeline Status Filter Chips */}
-      <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
-        <span className="text-xs font-medium text-muted-foreground mr-1">Pipeline:</span>
-        <Button
-          variant={statusFilter === "all" ? "default" : "outline"}
-          size="sm"
-          className="h-8 shrink-0 text-xs font-medium"
-          onClick={() => updateQuery({ status: "all", page: "1" })}
-        >
-          All ({metrics.total})
-        </Button>
-        {STATUS_OPTIONS.map((st) => (
+      {!isTrashView && (
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
+          <span className="text-xs font-medium text-muted-foreground mr-1">Pipeline:</span>
           <Button
-            key={st.id}
-            variant={statusFilter === st.id ? "default" : "outline"}
+            variant={statusFilter === "all" ? "default" : "outline"}
             size="sm"
             className="h-8 shrink-0 text-xs font-medium"
-            onClick={() => updateQuery({ status: st.id, page: "1" })}
+            onClick={() => updateQuery({ status: "all", page: "1" })}
           >
-            {st.label} ({metrics[st.id]})
+            All ({metrics.total})
           </Button>
-        ))}
-      </div>
+          {STATUS_OPTIONS.map((st) => (
+            <Button
+              key={st.id}
+              variant={statusFilter === st.id ? "default" : "outline"}
+              size="sm"
+              className="h-8 shrink-0 text-xs font-medium"
+              onClick={() => updateQuery({ status: st.id, page: "1" })}
+            >
+              {st.label} ({metrics[st.id]})
+            </Button>
+          ))}
+        </div>
+      )}
+
+      {isTrashView && (
+        <div className="flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-700 dark:text-amber-400">
+          <AlertTriangle className="size-4 shrink-0" />
+          <span>
+            You are currently viewing <strong>Trash ({totalCount} items)</strong>. Items in trash are
+            hidden from your live pipeline and dashboard. You can restore them anytime or delete them
+            permanently from the database.
+          </span>
+        </div>
+      )}
 
       {/* Reusable Data Table with Server-side Pagination */}
       <AdminDataTable
@@ -424,8 +834,16 @@ export function LeadsClient({
         currentPage={currentPage}
         pageSize={pageSize}
         searchValue={searchValue}
-        searchPlaceholder="Search leads by name, phone, area, or payment ref..."
-        emptyMessage="No leads found matching your criteria."
+        searchPlaceholder={
+          isTrashView
+            ? "Search trashed leads..."
+            : "Search leads by name, phone, area, or payment ref..."
+        }
+        emptyMessage={
+          isTrashView
+            ? "Trash is empty. No deleted leads found."
+            : "No leads found matching your criteria."
+        }
       />
 
       {/* Lead Details Dialog */}
@@ -482,21 +900,22 @@ export function LeadsClient({
                     </div>
                     <div>
                       <span className="font-semibold text-foreground">Payment Status:</span>{" "}
-                      <span className="font-semibold text-foreground capitalize">
-                        {selectedLead.paymentStatus?.replace(/_/g, " ") || "Pending"}
+                      <span className="font-medium text-foreground capitalize">
+                        {selectedLead.paymentStatus?.replace(/_/g, " ") || "Pending Confirmation"}
                       </span>
                     </div>
                   </div>
 
                   {selectedLead.paymentMethod === "bank_transfer" && (
-                    <div className="mt-2 rounded-lg border bg-background p-3 flex flex-col gap-1.5">
-                      <span className="font-bold text-foreground">Admin Bank Account Credited:</span>
-                      <div className="text-[11px] grid grid-cols-2 gap-2 text-muted-foreground">
+                    <div className="mt-2 rounded-lg border border-sky-500/20 bg-background/50 p-2.5">
+                      <div className="mb-1.5 font-bold text-foreground">Official Bank Account:</div>
+                      <div className="grid grid-cols-2 gap-1.5 text-[11px]">
                         <div>
                           <span className="font-semibold text-foreground">Bank:</span> Emirates NBD
                         </div>
                         <div>
-                          <span className="font-semibold text-foreground">Swift:</span> EBILAEAD
+                          <span className="font-semibold text-foreground">Title:</span> JUBU CLEANING
+                          SERVICES L.L.C
                         </div>
                         <div className="col-span-2">
                           <span className="font-semibold text-foreground">IBAN:</span>{" "}
@@ -581,6 +1000,163 @@ export function LeadsClient({
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Confirmation Dialog: Permanent Delete Single Lead */}
+      <Dialog open={Boolean(leadToDelete)} onOpenChange={(open) => !open && setLeadToDelete(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-600">
+              <AlertTriangle className="size-5" />
+              <span>Delete Permanently</span>
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to permanently delete lead &ldquo;{leadToDelete?.fullName}&rdquo;?
+              <br />
+              <strong className="text-rose-600 dark:text-rose-400">
+                This action cannot be undone. This record will be permanently deleted from the database
+                and website.
+              </strong>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isDeletingLead}
+              onClick={() => setLeadToDelete(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              disabled={isDeletingLead}
+              onClick={handlePermanentDeleteSingle}
+            >
+              {isDeletingLead ? "Deleting..." : "Permanently Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 2-Step Confirmation Modal: Clear Data / Empty Trash */}
+      <Dialog
+        open={clearDataModalStep > 0}
+        onOpenChange={(open) => {
+          if (!open) {
+            setClearDataModalStep(0);
+            setConfirmDeleteText("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-lg">
+          {clearDataModalStep === 1 && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-rose-600 text-lg">
+                  <AlertTriangle className="size-5" />
+                  <span>
+                    Step 1 of 2: {isTrashView ? "Empty Trash" : "Clear Lead Data"} Warning
+                  </span>
+                </DialogTitle>
+                <DialogDescription className="space-y-2 text-sm pt-2">
+                  {isTrashView ? (
+                    <p>
+                      You are about to permanently purge <strong>all items currently in the Trash</strong>.
+                      Once purged, these leads cannot be recovered by anyone.
+                    </p>
+                  ) : (
+                    <p>
+                      {startDateFilter || endDateFilter ? (
+                        <>
+                          You are about to permanently delete all leads between{" "}
+                          <strong>{startDateFilter || "start"}</strong> and{" "}
+                          <strong>{endDateFilter || "now"}</strong>.
+                        </>
+                      ) : (
+                        <>
+                          You are about to permanently delete <strong>ALL leads</strong> from the
+                          database.
+                        </>
+                      )}
+                    </p>
+                  )}
+                  <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-700 dark:text-rose-300">
+                    <strong>Critical Warning:</strong> This will execute a permanent hard-delete
+                    from PostgreSQL database. All customer data, booking history, and references
+                    will be irrecoverably wiped.
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="mt-4 flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setClearDataModalStep(0)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setClearDataModalStep(2)}
+                >
+                  Proceed to Step 2 &rarr;
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+
+          {clearDataModalStep === 2 && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-rose-600 text-lg">
+                  <AlertTriangle className="size-5" />
+                  <span>Step 2 of 2: Confirm Destruction</span>
+                </DialogTitle>
+                <DialogDescription className="space-y-3 text-sm pt-2">
+                  <p>
+                    To prevent accidental deletion, please type{" "}
+                    <span className="font-mono font-bold text-foreground bg-muted px-1.5 py-0.5 rounded border">
+                      DELETE
+                    </span>{" "}
+                    below to confirm:
+                  </p>
+                  <Input
+                    placeholder='Type "DELETE"'
+                    value={confirmDeleteText}
+                    onChange={(e) => setConfirmDeleteText(e.target.value)}
+                    className="font-mono text-sm"
+                    autoFocus
+                  />
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="mt-4 flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isClearingData}
+                  onClick={() => {
+                    setClearDataModalStep(1);
+                    setConfirmDeleteText("");
+                  }}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={confirmDeleteText !== "DELETE" || isClearingData}
+                  onClick={handleExecuteClearData}
+                >
+                  {isClearingData ? "Purging Records..." : "Permanently Delete Now"}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+

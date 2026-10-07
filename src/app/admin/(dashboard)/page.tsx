@@ -26,11 +26,12 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboardPage() {
   const [leadCount, newLeadCount, servicesCount, landingPagesCount, recentLeads] =
     await Promise.all([
-      prisma.lead.count(),
-      prisma.lead.count({ where: { status: "new" } }),
+      prisma.lead.count({ where: { deletedAt: null } }),
+      prisma.lead.count({ where: { deletedAt: null, status: "new" } }),
       prisma.service.count({ where: { isActive: true } }),
       prisma.areaLandingPage.count({ where: { isActive: true } }),
       prisma.lead.findMany({
+        where: { deletedAt: null },
         take: 5,
         orderBy: { createdAt: "desc" },
       }),

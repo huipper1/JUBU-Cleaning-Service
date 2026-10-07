@@ -16,6 +16,9 @@ interface AdminLeadsPageProps {
     search?: string;
     status?: string;
     paymentMethod?: string;
+    startDate?: string;
+    endDate?: string;
+    view?: string;
   }>;
 }
 
@@ -26,12 +29,23 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
   const search = resolvedParams.search || "";
   const status = resolvedParams.status || "all";
   const paymentMethod = resolvedParams.paymentMethod || "all";
+  const startDate = resolvedParams.startDate || "";
+  const endDate = resolvedParams.endDate || "";
+  const view = resolvedParams.view === "trash" ? "trash" : "active";
 
   // Build prisma filter
   const where: Prisma.LeadWhereInput = {};
+
+  if (view === "trash") {
+    where.deletedAt = { not: null };
+  } else {
+    where.deletedAt = null;
+  }
+
   if (status !== "all" && status) {
     where.status = status as Prisma.LeadWhereInput["status"];
   }
+
   if (paymentMethod !== "all" && paymentMethod) {
     if (paymentMethod === "quote") {
       where.requestType = "quote";
@@ -41,6 +55,18 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
       where.paymentMethod = "bank_transfer";
     }
   }
+
+  // Date range filter
+  if (startDate || endDate) {
+    where.createdAt = {};
+    if (startDate) {
+      where.createdAt.gte = new Date(`${startDate}T00:00:00.000Z`);
+    }
+    if (endDate) {
+      where.createdAt.lte = new Date(`${endDate}T23:59:59.999Z`);
+    }
+  }
+
   if (search) {
     where.OR = [
       { fullName: { contains: search, mode: "insensitive" } },
@@ -50,6 +76,10 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
       { transactionRef: { contains: search, mode: "insensitive" } }
     ];
   }
+
+  // Common condition for metrics (scoped to active or trash view)
+  const baseViewWhere: Prisma.LeadWhereInput =
+    view === "trash" ? { deletedAt: { not: null } } : { deletedAt: null };
 
   const [
     totalCount,
@@ -62,7 +92,8 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
     lostCancelledCount,
     quoteOnlyCount,
     cashCount,
-    bankTransferCount
+    bankTransferCount,
+    trashCount
   ] = await Promise.all([
     prisma.lead.count({ where }),
     prisma.lead.findMany({
@@ -71,15 +102,16 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
       skip: (page - 1) * pageSize,
       take: pageSize
     }),
-    prisma.lead.count({ where: { status: "new" } }),
-    prisma.lead.count({ where: { status: "contacted" } }),
-    prisma.lead.count({ where: { status: "quotation_sent" } }),
-    prisma.lead.count({ where: { status: "confirmed" } }),
-    prisma.lead.count({ where: { status: "completed" } }),
-    prisma.lead.count({ where: { status: "lost_cancelled" } }),
-    prisma.lead.count({ where: { requestType: "quote" } }),
-    prisma.lead.count({ where: { paymentMethod: "cash" } }),
-    prisma.lead.count({ where: { paymentMethod: "bank_transfer" } })
+    prisma.lead.count({ where: { ...baseViewWhere, status: "new" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, status: "contacted" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, status: "quotation_sent" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, status: "confirmed" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, status: "completed" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, status: "lost_cancelled" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, requestType: "quote" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, paymentMethod: "cash" } }),
+    prisma.lead.count({ where: { ...baseViewWhere, paymentMethod: "bank_transfer" } }),
+    prisma.lead.count({ where: { deletedAt: { not: null } } })
   ]);
 
   const allTotalCount =
@@ -118,6 +150,7 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
     landingUrl: l.landingUrl ?? undefined,
     status: l.status as Lead["status"],
     adminNotes: l.adminNotes ?? undefined,
+    deletedAt: l.deletedAt ? l.deletedAt.toISOString() : undefined,
     createdAt: l.createdAt.toISOString()
   }));
 
@@ -136,6 +169,10 @@ export default async function AdminLeadsPage({ searchParams }: AdminLeadsPagePro
         searchValue={search}
         statusFilter={status}
         paymentMethodFilter={paymentMethod}
+        startDateFilter={startDate}
+        endDateFilter={endDate}
+        viewFilter={view}
+        trashCount={trashCount}
         metrics={{
           total: allTotalCount,
           new: newCount,

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import type { ServiceArea, SiteSettings } from "@/types/content";
-import { trackLocationSelect, trackPhoneClick } from "@/lib/analytics";
+import { trackCtaClick, trackLocationSelect, trackPhoneClick } from "@/lib/analytics";
 
 // Skeleton loader matching the dimensions of the map card
 function MapSkeleton() {
@@ -197,6 +197,13 @@ export function ServiceAreas({
               {/* Primary JUBU Green Pill Button */}
               <Link
                 href="#quote"
+                onClick={() => {
+                  const currentArea = areas.find((a) => a.id === activeId);
+                  trackCtaClick("book_cleaning_now", "service_areas_section", {
+                    selected_area: currentArea?.name || "All Areas",
+                    area_id: activeId || "dubai"
+                  });
+                }}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#00a651] px-7 py-3 text-xs font-bold text-white shadow-md shadow-[#00a651]/20 transition-all duration-200 hover:bg-[#008f45] active:scale-98 sm:text-sm"
               >
                 <span>Book A Cleaning Now</span>

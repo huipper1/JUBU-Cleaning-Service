@@ -649,13 +649,16 @@ export function QuoteForm({
                     <div>
                       <label
                         htmlFor="mobile"
-                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                        className="mb-1.5 flex items-center justify-between text-xs font-bold text-slate-200"
                       >
-                        Mobile Number
+                        <span>Mobile Number</span>
+                        <span className="text-[10px] font-normal text-slate-400">UAE (Dubai)</span>
                       </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                          <Phone className="h-4 w-4" />
+                      <div className="relative flex rounded-xl border border-white/15 bg-white/10 transition-all focus-within:border-brand-sky focus-within:bg-white/15 focus-within:ring-2 focus-within:ring-brand-sky/30">
+                        {/* Static UAE Flag & Dial Code Badge */}
+                        <div className="flex shrink-0 items-center gap-1.5 border-r border-white/15 bg-white/5 px-3 py-3 text-xs font-bold text-white">
+                          <span className="text-sm">🇦🇪</span>
+                          <span>+971</span>
                         </div>
                         <input
                           type="tel"
@@ -664,29 +667,45 @@ export function QuoteForm({
                           required
                           disabled={status === "submitting"}
                           value={formData.mobile}
-                          onChange={handleChange}
-                          placeholder="e.g. +971 50 123 4567"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.mobile
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
+                          onChange={(e) => {
+                            let val = e.target.value.replace(/[^\d\s]/g, "");
+                            // Auto-clean if user pastes +971 or starts with 0
+                            if (val.startsWith("971")) val = val.slice(3);
+                            handleChange({
+                              ...e,
+                              target: {
+                                ...e.target,
+                                name: "mobile",
+                                value: val
+                              }
+                            });
+                          }}
+                          placeholder="50 123 4567"
+                          className={`w-full bg-transparent px-3 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none ${
+                            fieldErrors.mobile ? "text-red-300" : ""
+                          }`}
                         />
                       </div>
-                      {fieldErrors.mobile && (
+                      {fieldErrors.mobile ? (
                         <p className="mt-1 text-[11px] text-red-300">{fieldErrors.mobile[0]}</p>
+                      ) : (
+                        <p className="mt-1 text-[10px] text-slate-400">e.g. 054 299 5191 or 50 123 4567</p>
                       )}
                     </div>
 
                     <div>
                       <label
                         htmlFor="whatsappNumber"
-                        className="mb-1.5 block text-xs font-bold text-slate-200"
+                        className="mb-1.5 flex items-center justify-between text-xs font-bold text-slate-200"
                       >
-                        WhatsApp Number{" "}
-                        <span className="font-normal text-slate-400">(if different)</span>
+                        <span>
+                          WhatsApp Number{" "}
+                          <span className="font-normal text-slate-400">(if different)</span>
+                        </span>
+                        <span className="text-[10px] font-normal text-slate-400">Any Country</span>
                       </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                      <div className="relative flex rounded-xl border border-white/15 bg-white/10 transition-all focus-within:border-brand-sky focus-within:bg-white/15 focus-within:ring-2 focus-within:ring-brand-sky/30">
+                        <div className="pointer-events-none flex shrink-0 items-center pl-3 text-slate-400">
                           <WhatsAppIcon className="h-4 w-4" />
                         </div>
                         <input
@@ -696,17 +715,18 @@ export function QuoteForm({
                           disabled={status === "submitting"}
                           value={formData.whatsappNumber}
                           onChange={handleChange}
-                          placeholder="e.g. +971 55 987 6543"
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.whatsappNumber
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
+                          placeholder="+44... or 050 123 4567"
+                          className={`w-full bg-transparent px-3 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none ${
+                            fieldErrors.whatsappNumber ? "text-red-300" : ""
+                          }`}
                         />
                       </div>
-                      {fieldErrors.whatsappNumber && (
+                      {fieldErrors.whatsappNumber ? (
                         <p className="mt-1 text-[11px] text-red-300">
                           {fieldErrors.whatsappNumber[0]}
                         </p>
+                      ) : (
+                        <p className="mt-1 text-[10px] text-slate-400">Include country code if outside UAE</p>
                       )}
                     </div>
                   </div>

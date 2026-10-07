@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { trackBookingConfirmed } from "@/lib/analytics/data-layer";
 import { ADMIN_BANK_DETAILS, SERVICE_BASE_PRICES } from "@/constants/payment";
 import type { BankTransferDetails, CreateLeadInput, PaymentMethod } from "@/types/lead";
 import {
@@ -140,6 +141,22 @@ export function BookingPaymentModal({
       setIsConfirmed(true);
       toast.success("Booking placed successfully!");
 
+      // 3. Fire Google Ads & Meta Pixel DataLayer Conversion Event
+      trackBookingConfirmed({
+        serviceId,
+        serviceName,
+        locationArea: leadFormData.location || "Dubai",
+        propertyType: leadFormData.propertyType,
+        preferredDate: leadFormData.preferredDate,
+        preferredTime: leadFormData.preferredTime,
+        fullName: leadFormData.fullName,
+        mobile: leadFormData.mobile,
+        amount,
+        currency,
+        paymentMethod: selectedMethod,
+        sourceArea: leadFormData.sourceArea || "booking-modal"
+      });
+
       setTimeout(() => {
         onSuccessSubmit(fullBookingPayload, waUrl);
       }, 700);
@@ -153,321 +170,404 @@ export function BookingPaymentModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[94vh] w-[calc(100vw-1rem)] max-w-lg sm:max-w-xl overflow-y-auto overflow-x-hidden rounded-2xl border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-2xl">
+      <DialogContent className="max-h-[96vh] w-[calc(100vw-1.5rem)] max-w-lg lg:max-w-4xl overflow-y-auto lg:overflow-visible overflow-x-hidden rounded-2xl border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-2xl [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* Modal Top Header with Price Badge */}
-        <div className="border-b border-white/10 bg-gradient-to-r from-blue-950/90 via-[#0a234f] to-blue-950/90 p-4 sm:p-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="border-b border-white/10 bg-gradient-to-r from-blue-950/90 via-[#0a234f] to-blue-950/90 px-4 py-3 sm:px-6 sm:py-3.5">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <DialogHeader className="text-left">
-              <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold text-brand-green">
-                <Sparkles className="size-3 shrink-0" />
-                <span>Instant Service Booking</span>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 px-2 py-0.5 text-[10px] sm:text-[11px] font-semibold text-brand-green">
+                  <Sparkles className="size-3 shrink-0" />
+                  <span>Instant Service Booking</span>
+                </span>
+                <span className="hidden sm:inline-block text-[11px] text-slate-400">•</span>
+                <span className="hidden sm:inline-block text-[11px] text-slate-300">
+                  {serviceName}
+                </span>
               </div>
-              <DialogTitle className="mt-1.5 text-lg font-extrabold text-white sm:text-2xl">
+              <DialogTitle className="mt-0.5 text-base font-extrabold text-white sm:text-xl">
                 Choose Payment Method
               </DialogTitle>
-              <DialogDescription className="mt-0.5 text-xs text-slate-300 sm:text-sm">
-                Complete booking for{" "}
-                <span className="font-semibold text-brand-sky">{serviceName}</span>
+              <DialogDescription className="sr-only">
+                Complete booking and payment for {serviceName}
               </DialogDescription>
             </DialogHeader>
 
             {/* Price Badge */}
-            <div className="flex items-center justify-between sm:flex-col sm:items-end rounded-xl sm:rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2 sm:px-4 sm:py-2.5 shadow-inner">
-              <span className="text-[11px] font-medium text-slate-300">Total Price</span>
-              <div className="flex items-baseline gap-1.5 sm:flex-col sm:items-end sm:gap-0">
-                <span className="text-lg font-extrabold text-brand-green sm:text-2xl leading-none">
+            <div className="flex items-center justify-between sm:justify-end gap-2.5 rounded-xl border border-white/15 bg-white/10 px-3 py-1.5 shadow-inner">
+              <span className="text-[11px] font-medium text-slate-300">Total:</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-base font-extrabold text-brand-green sm:text-xl leading-none">
                   {amount} {currency}
                 </span>
-                <span className="text-[10px] text-slate-400">{defaultPricing.unitLabel}</span>
+                <span className="text-[10px] text-slate-400">({defaultPricing.unitLabel})</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 p-4 sm:p-6">
-          {/* Method Selection Tabs */}
-          <div>
-            <label className="mb-2 block text-[11px] sm:text-xs font-bold tracking-wider text-slate-300 uppercase">
-              1. Select How You Want to Pay
-            </label>
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
-              {/* Option 1: Cash Payment */}
-              <button
-                type="button"
-                onClick={() => setSelectedMethod("cash")}
-                className={`relative flex cursor-pointer items-start sm:flex-col gap-3 rounded-xl sm:rounded-2xl border p-3.5 sm:p-4 text-left transition-all duration-200 ${
-                  selectedMethod === "cash"
-                    ? "border-brand-green bg-brand-green/15 ring-2 ring-brand-green/40 shadow-md shadow-brand-green/10"
-                    : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
-                }`}
-              >
-                <div className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-brand-green/20 text-brand-green">
-                  <Banknote className="size-4 sm:size-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className="block text-sm font-bold text-white">Cash Payment</span>
-                    {selectedMethod === "cash" && (
-                      <div className="flex size-5 sm:size-6 shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-xs">
-                        <Check className="size-3 sm:size-3.5" />
+        {/* Modal Body: Compact single column when Cash is selected, 2-column when Bank Transfer is selected */}
+        <div className="p-4 sm:p-5 lg:p-6">
+          {selectedMethod === "cash" ? (
+            /* Cash Payment View: Clean, Compact, Zero Scroll, Centered */
+            <div className="mx-auto flex max-w-md flex-col gap-3.5">
+              <div>
+                <label className="mb-2 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                  Select Payment Method
+                </label>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {/* Option 1: Cash Payment (Active) */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMethod("cash")}
+                    className="relative flex cursor-pointer items-start gap-2.5 rounded-xl border border-brand-green bg-brand-green/15 p-3 text-left ring-2 ring-brand-green/40 shadow-md shadow-brand-green/10"
+                  >
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-green/20 text-brand-green">
+                      <Banknote className="size-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="block text-xs sm:text-sm font-bold text-white">Cash</span>
+                        <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-brand-green text-white">
+                          <Check className="size-2.5" />
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <span className="mt-0.5 sm:mt-1 block text-[11px] sm:text-xs text-slate-300 leading-snug">
-                    Pay directly in cash to cleaners upon completion of service.
-                  </span>
-                </div>
-              </button>
-
-              {/* Option 2: Bank Transfer */}
-              <button
-                type="button"
-                onClick={() => setSelectedMethod("bank_transfer")}
-                className={`relative flex cursor-pointer items-start sm:flex-col gap-3 rounded-xl sm:rounded-2xl border p-3.5 sm:p-4 text-left transition-all duration-200 ${
-                  selectedMethod === "bank_transfer"
-                    ? "border-brand-sky bg-brand-sky/15 ring-2 ring-brand-sky/40 shadow-md shadow-brand-sky/10"
-                    : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
-                }`}
-              >
-                <div className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-brand-sky/20 text-brand-sky">
-                  <CreditCard className="size-4 sm:size-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className="block text-sm font-bold text-white">Bank Transfer</span>
-                    {selectedMethod === "bank_transfer" && (
-                      <div className="flex size-5 sm:size-6 shrink-0 items-center justify-center rounded-full bg-brand-sky text-white shadow-xs">
-                        <Check className="size-3 sm:size-3.5" />
-                      </div>
-                    )}
-                  </div>
-                  <span className="mt-0.5 sm:mt-1 block text-[11px] sm:text-xs text-slate-300 leading-snug">
-                    Instant transfer to official UAE account ({activeBankDetails.bankName}).
-                  </span>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Conditional View: Cash Payment Explainer */}
-          {selectedMethod === "cash" && (
-            <div className="rounded-xl sm:rounded-2xl border border-white/15 bg-white/5 p-3.5 sm:p-5">
-              <div className="flex items-start gap-3">
-                <div className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-full bg-brand-green/20 text-brand-green mt-0.5">
-                  <ShieldCheck className="size-3.5 sm:size-4" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Cash on Delivery Policy</h4>
-                  <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-slate-300">
-                    No advance payment required. Our vetted cleaners will inspect and complete the work
-                    to your satisfaction, and provide an official receipt upon receiving cash payment of{" "}
-                    <strong className="text-white font-extrabold">
-                      {amount} {currency}
-                    </strong>
-                    .
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Conditional View: Bank Transfer Details */}
-          {selectedMethod === "bank_transfer" && (
-            <div className="flex flex-col gap-3 sm:gap-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs font-bold tracking-wider text-slate-300 uppercase">
-                  2. Bank Transfer Details
-                </span>
-                <span className="text-[10px] sm:text-[11px] text-brand-sky font-medium">Tap icon to copy</span>
-              </div>
-
-              {/* Bank Details Card */}
-              <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-white/15 bg-white/10 shadow-lg">
-                <div className="divide-y divide-white/10 text-xs sm:text-sm">
-                  {/* Bank Name */}
-                  <div className="flex flex-wrap items-center justify-between gap-1 p-3 sm:p-4">
-                    <span className="font-medium text-slate-300 text-[11px] sm:text-xs">Bank</span>
-                    <span className="font-semibold text-white text-xs sm:text-sm">
-                      {activeBankDetails.bankName}
-                    </span>
-                  </div>
-
-                  {/* IBAN */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 p-3 sm:p-4">
-                    <span className="font-medium text-slate-300 text-[11px] sm:text-xs">IBAN</span>
-                    <div className="flex items-center justify-between sm:justify-end gap-2">
-                      <span className="font-mono font-bold text-brand-sky text-xs sm:text-sm break-all">
-                        {activeBankDetails.iban}
+                      <span className="mt-0.5 block text-[10px] sm:text-[11px] text-slate-300 leading-tight">
+                        Pay on completion
                       </span>
+                    </div>
+                  </button>
+
+                  {/* Option 2: Bank Transfer */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMethod("bank_transfer")}
+                    className="relative flex cursor-pointer items-start gap-2.5 rounded-xl border border-white/15 bg-white/5 p-3 text-left transition-all duration-200 hover:border-white/30 hover:bg-white/10"
+                  >
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-sky/20 text-brand-sky">
+                      <CreditCard className="size-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="block text-xs sm:text-sm font-bold text-white">Bank Transfer</span>
+                      <span className="mt-0.5 block text-[10px] sm:text-[11px] text-slate-300 leading-tight">
+                        Direct UAE transfer
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Cash Policy Info */}
+              <div className="rounded-xl border border-white/15 bg-white/5 p-3">
+                <div className="flex items-start gap-2.5">
+                  <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-green/20 text-brand-green mt-0.5">
+                    <ShieldCheck className="size-3.5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-bold text-white">Zero Advance Payment</h4>
+                    <p className="mt-0.5 text-[11px] leading-relaxed text-slate-300">
+                      Pay directly in cash to cleaners upon service completion. Official receipt will be provided on-site.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Booking Summary Box */}
+              <div className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-[11px] text-slate-300">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Client:</span>
+                    <span className="font-semibold text-white truncate block">{leadFormData.fullName || "Valued Customer"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Location:</span>
+                    <span className="font-semibold text-white truncate block">{leadFormData.location || "Dubai"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-2 pt-1">
+                <button
+                  type="button"
+                  disabled={isProcessing || isConfirmed}
+                  onClick={handleConfirmBooking}
+                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand-green px-4 py-3 text-xs sm:text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover hover:shadow-brand-green/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin shrink-0" />
+                      <span>Confirming Booking...</span>
+                    </>
+                  ) : isConfirmed ? (
+                    <>
+                      <CheckCircle2 className="size-4 shrink-0 text-white" />
+                      <span>Booking Confirmed!</span>
+                    </>
+                  ) : (
+                    <span>
+                      Confirm Booking ({amount} {currency} — Cash)
+                    </span>
+                  )}
+                </button>
+
+                <div className="flex items-center justify-center gap-1.5 text-center text-[10px] text-slate-400">
+                  <Lock className="size-3 shrink-0" />
+                  <span>100% satisfaction guarantee. Free cancellation.</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Bank Transfer View: 2-Column Responsive Layout */
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6 lg:items-start">
+              {/* Left Column: Method Selection & Actions */}
+              <div className="flex flex-col gap-3.5 lg:col-span-5">
+                <div>
+                  <label className="mb-2 block text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                    Select Payment Method
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {/* Option 1: Cash Payment */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedMethod("cash")}
+                      className="relative flex cursor-pointer items-start gap-2.5 rounded-xl border border-white/15 bg-white/5 p-3 text-left transition-all duration-200 hover:border-white/30 hover:bg-white/10"
+                    >
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-green/20 text-brand-green">
+                        <Banknote className="size-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="block text-xs sm:text-sm font-bold text-white">Cash</span>
+                        <span className="mt-0.5 block text-[10px] sm:text-[11px] text-slate-300 leading-tight">
+                          Pay on service
+                        </span>
+                      </div>
+                    </button>
+
+                    {/* Option 2: Bank Transfer (Active) */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedMethod("bank_transfer")}
+                      className="relative flex cursor-pointer items-start gap-2.5 rounded-xl border border-brand-sky bg-brand-sky/15 ring-2 ring-brand-sky/40 shadow-md shadow-brand-sky/10 p-3 text-left"
+                    >
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-sky/20 text-brand-sky">
+                        <CreditCard className="size-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className="block text-xs sm:text-sm font-bold text-white">Bank</span>
+                          <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-brand-sky text-white">
+                            <Check className="size-2.5" />
+                          </div>
+                        </div>
+                        <span className="mt-0.5 block text-[10px] sm:text-[11px] text-slate-300 leading-tight">
+                          Direct UAE transfer
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Booking Summary Box */}
+                <div className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-[11px] text-slate-300">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Client:</span>
+                      <span className="font-semibold text-white truncate block">{leadFormData.fullName || "Valued Customer"}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Location:</span>
+                      <span className="font-semibold text-white truncate block">{leadFormData.location || "Dubai"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2 pt-1">
+                  <button
+                    type="button"
+                    disabled={isProcessing || isConfirmed}
+                    onClick={handleConfirmBooking}
+                    className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand-green px-4 py-3 text-xs sm:text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover hover:shadow-brand-green/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader2 className="size-4 animate-spin shrink-0" />
+                        <span>Confirming Booking...</span>
+                      </>
+                    ) : isConfirmed ? (
+                      <>
+                        <CheckCircle2 className="size-4 shrink-0 text-white" />
+                        <span>Booking Confirmed!</span>
+                      </>
+                    ) : (
+                      <span>
+                        Confirm Booking ({amount} {currency} — Bank Transfer)
+                      </span>
+                    )}
+                  </button>
+
+                  <div className="flex items-center justify-center gap-1.5 text-center text-[10px] text-slate-400">
+                    <Lock className="size-3 shrink-0" />
+                    <span>100% satisfaction guarantee. Free cancellation.</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Bank Details & Reference */}
+              <div className="flex flex-col gap-3 lg:col-span-7">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+                    Account Details ({activeBankDetails.bankName})
+                  </span>
+                  <span className="text-[10px] text-brand-sky font-medium">Click icon to copy</span>
+                </div>
+
+                {/* Compact Bank Details Card */}
+                <div className="overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-md">
+                  <div className="divide-y divide-white/10 text-xs">
+                    {/* Bank & Swift Row */}
+                    <div className="grid grid-cols-2 divide-x divide-white/10">
+                      <div className="p-2 sm:p-2.5">
+                        <span className="font-medium text-slate-400 text-[10px] block">Bank</span>
+                        <span className="font-semibold text-white text-xs truncate block">
+                          {activeBankDetails.bankName}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between p-2 sm:p-2.5">
+                        <div>
+                          <span className="font-medium text-slate-400 text-[10px] block">Swift Code</span>
+                          <span className="font-mono font-bold text-brand-sky text-xs">
+                            {activeBankDetails.swiftCode}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleCopy("Swift code", activeBankDetails.swiftCode)}
+                          title="Copy Swift Code"
+                          className="rounded-md border border-white/15 bg-white/10 p-1 text-slate-300 hover:bg-white/20 active:scale-95"
+                        >
+                          {copiedField === "Swift code" ? (
+                            <Check className="size-3 text-brand-green" />
+                          ) : (
+                            <Copy className="size-3" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* IBAN */}
+                    <div className="flex items-center justify-between gap-1.5 p-2 sm:p-2.5">
+                      <div className="min-w-0 flex-1">
+                        <span className="font-medium text-slate-400 text-[10px] block">IBAN Number</span>
+                        <span className="font-mono font-bold text-brand-sky text-xs truncate block">
+                          {activeBankDetails.iban}
+                        </span>
+                      </div>
                       <button
                         type="button"
                         onClick={() =>
                           handleCopy("IBAN", activeBankDetails.iban.replace(/\s+/g, ""))
                         }
                         title="Copy IBAN"
-                        className="rounded-lg border border-white/15 bg-white/10 p-1.5 text-slate-300 transition-colors hover:bg-white/20 hover:text-white shrink-0 active:scale-95"
+                        className="rounded-md border border-white/15 bg-white/10 p-1.5 text-slate-300 hover:bg-white/20 active:scale-95 shrink-0"
                       >
                         {copiedField === "IBAN" ? (
-                          <Check className="size-3.5 sm:size-4 text-brand-green" />
+                          <Check className="size-3.5 text-brand-green" />
                         ) : (
-                          <Copy className="size-3.5 sm:size-4" />
+                          <Copy className="size-3.5" />
                         )}
                       </button>
                     </div>
-                  </div>
 
-                  {/* Account Number */}
-                  <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
-                    <span className="font-medium text-slate-300 text-[11px] sm:text-xs">Account number</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-brand-sky text-xs sm:text-sm">
-                        {activeBankDetails.accountNumber}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleCopy("Account number", activeBankDetails.accountNumber)
-                        }
-                        title="Copy Account Number"
-                        className="rounded-lg border border-white/15 bg-white/10 p-1.5 text-slate-300 transition-colors hover:bg-white/20 hover:text-white shrink-0 active:scale-95"
-                      >
-                        {copiedField === "Account number" ? (
-                          <Check className="size-3.5 sm:size-4 text-brand-green" />
-                        ) : (
-                          <Copy className="size-3.5 sm:size-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Swift Code */}
-                  <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
-                    <span className="font-medium text-slate-300 text-[11px] sm:text-xs">Swift code</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-brand-sky text-xs sm:text-sm">
-                        {activeBankDetails.swiftCode}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy("Swift code", activeBankDetails.swiftCode)}
-                        title="Copy Swift Code"
-                        className="rounded-lg border border-white/15 bg-white/10 p-1.5 text-slate-300 transition-colors hover:bg-white/20 hover:text-white shrink-0 active:scale-95"
-                      >
-                        {copiedField === "Swift code" ? (
-                          <Check className="size-3.5 sm:size-4 text-brand-green" />
-                        ) : (
-                          <Copy className="size-3.5 sm:size-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Routing Number */}
-                  <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
-                    <span className="font-medium text-slate-300 text-[11px] sm:text-xs">Routing number</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-brand-sky text-xs sm:text-sm">
-                        {activeBankDetails.routingNumber}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleCopy("Routing number", activeBankDetails.routingNumber)
-                        }
-                        title="Copy Routing Number"
-                        className="rounded-lg border border-white/15 bg-white/10 p-1.5 text-slate-300 transition-colors hover:bg-white/20 hover:text-white shrink-0 active:scale-95"
-                      >
-                        {copiedField === "Routing number" ? (
-                          <Check className="size-3.5 sm:size-4 text-brand-green" />
-                        ) : (
-                          <Copy className="size-3.5 sm:size-4" />
-                        )}
-                      </button>
+                    {/* Account Number & Routing */}
+                    <div className="grid grid-cols-2 divide-x divide-white/10">
+                      <div className="flex items-center justify-between p-2 sm:p-2.5">
+                        <div className="min-w-0">
+                          <span className="font-medium text-slate-400 text-[10px] block">Account #</span>
+                          <span className="font-mono font-bold text-brand-sky text-xs truncate block">
+                            {activeBankDetails.accountNumber}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopy("Account number", activeBankDetails.accountNumber)
+                          }
+                          title="Copy Account Number"
+                          className="rounded-md border border-white/15 bg-white/10 p-1 text-slate-300 hover:bg-white/20 active:scale-95"
+                        >
+                          {copiedField === "Account number" ? (
+                            <Check className="size-3 text-brand-green" />
+                          ) : (
+                            <Copy className="size-3" />
+                          )}
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between p-2 sm:p-2.5">
+                        <div className="min-w-0">
+                          <span className="font-medium text-slate-400 text-[10px] block">Routing #</span>
+                          <span className="font-mono font-bold text-brand-sky text-xs truncate block">
+                            {activeBankDetails.routingNumber}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopy("Routing number", activeBankDetails.routingNumber)
+                          }
+                          title="Copy Routing Number"
+                          className="rounded-md border border-white/15 bg-white/10 p-1 text-slate-300 hover:bg-white/20 active:scale-95"
+                        >
+                          {copiedField === "Routing number" ? (
+                            <Check className="size-3 text-brand-green" />
+                          ) : (
+                            <Copy className="size-3" />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Optional User Proof Reference & Sender Account Name */}
-              <div className="grid grid-cols-1 gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-white/15 bg-white/5 p-3.5 sm:p-4 sm:grid-cols-2">
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="senderAccountName"
-                    className="text-[11px] sm:text-xs font-semibold text-slate-200"
-                  >
-                    Sender Account Name (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="senderAccountName"
-                    value={senderAccountName}
-                    onChange={(e) => setSenderAccountName(e.target.value)}
-                    placeholder="e.g. John Doe / Account title"
-                    className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs text-white placeholder:text-slate-400 focus:border-brand-sky focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="transactionRef"
-                    className="text-[11px] sm:text-xs font-semibold text-slate-200"
-                  >
-                    Transfer Ref / Transaction # (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="transactionRef"
-                    value={transactionRef}
-                    onChange={(e) => setTransactionRef(e.target.value)}
-                    placeholder="e.g. FT26001234567"
-                    className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs text-white placeholder:text-slate-400 focus:border-brand-sky focus:outline-none"
-                  />
-                </div>
-
-                <div className="col-span-full">
-                  <span className="text-[10px] sm:text-[11px] text-slate-400 leading-tight block">
-                    After initiating the transfer, you can also share the payment slip directly via WhatsApp.
-                  </span>
+                {/* Compact Reference inputs */}
+                <div className="grid grid-cols-1 gap-2 rounded-xl border border-white/15 bg-white/5 p-2.5 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="senderAccountName"
+                      className="text-[10px] font-semibold text-slate-300 block mb-1"
+                    >
+                      Sender Name (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      id="senderAccountName"
+                      value={senderAccountName}
+                      onChange={(e) => setSenderAccountName(e.target.value)}
+                      placeholder="e.g. John Doe"
+                      className="w-full rounded-lg border border-white/15 bg-white/10 px-2.5 py-1.5 text-xs text-white placeholder:text-slate-500 focus:border-brand-sky focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="transactionRef"
+                      className="text-[10px] font-semibold text-slate-300 block mb-1"
+                    >
+                      Transfer Ref # (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      id="transactionRef"
+                      value={transactionRef}
+                      onChange={(e) => setTransactionRef(e.target.value)}
+                      placeholder="e.g. FT2600123"
+                      className="w-full rounded-lg border border-white/15 bg-white/10 px-2.5 py-1.5 text-xs text-white placeholder:text-slate-500 focus:border-brand-sky focus:outline-none"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           )}
-
-          {/* Action Buttons */}
-          <div className="mt-1 flex flex-col gap-2.5 sm:gap-3">
-            <button
-              type="button"
-              disabled={isProcessing || isConfirmed}
-              onClick={handleConfirmBooking}
-              className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-green px-5 py-3.5 sm:px-6 sm:py-4 text-xs sm:text-sm font-bold text-white shadow-lg transition-all duration-200 hover:bg-brand-green-hover hover:shadow-brand-green/30 active:scale-98 disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="size-4 animate-spin shrink-0" />
-                  <span>Confirming Booking...</span>
-                </>
-              ) : isConfirmed ? (
-                <>
-                  <CheckCircle2 className="size-4 shrink-0 text-white" />
-                  <span>Booking Confirmed!</span>
-                </>
-              ) : (
-                <>
-                  <span className="text-center">
-                    Confirm Booking ({amount} {currency} —{" "}
-                    {selectedMethod === "cash" ? "Cash" : "Bank Transfer"})
-                  </span>
-                </>
-              )}
-            </button>
-
-            <div className="flex items-center justify-center gap-1.5 text-center text-[10px] sm:text-[11px] text-slate-400">
-              <Lock className="size-3 sm:size-3.5 shrink-0" />
-              <span>
-                100% satisfaction guarantee. Free cancellation up to 4h before arrival.
-              </span>
-            </div>
-          </div>
         </div>
       </DialogContent>
     </Dialog>

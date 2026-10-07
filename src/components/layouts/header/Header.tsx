@@ -157,6 +157,7 @@ export function Header({ settings, areas }: HeaderProps) {
           {/* Quote Button */}
           <Link
             href="#quote"
+            onClick={() => trackWhatsAppClick("header_desktop_cta")}
             className="inline-flex items-center gap-2 rounded-full bg-brand-green px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-brand-green/25 transition-all hover:bg-brand-green-hover hover:shadow-lg active:scale-98 sm:text-sm"
           >
             <WhatsAppIcon monochrome className="h-4 w-4" />

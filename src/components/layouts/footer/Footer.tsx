@@ -9,7 +9,7 @@ import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
-import { trackPhoneClick } from "@/lib/analytics";
+import { trackCtaClick, trackEmailClick, trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
 
 import { Icon } from "@/ui";
 
@@ -100,6 +100,7 @@ export function Footer({ settings }: FooterProps) {
 
               <a
                 href={`mailto:${settings.email}`}
+                onClick={() => trackEmailClick("footer", settings.email)}
                 className="flex items-center gap-2 transition-colors hover:text-white"
               >
                 <Mail className="h-4 w-4 shrink-0 text-[#38bdf8]" />
@@ -117,6 +118,7 @@ export function Footer({ settings }: FooterProps) {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackCtaClick(`social_${social.platform}`, "footer_social")}
                     aria-label={`Follow JUBU on ${social.platform}`}
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white backdrop-blur-xs transition-all duration-200 hover:border-white hover:bg-white hover:text-[#0070ba]"
                   >
@@ -164,6 +166,7 @@ export function Footer({ settings }: FooterProps) {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick("footer_cta")}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-5 py-3 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-brand-green-hover sm:text-sm"
               >
                 <WhatsAppIcon monochrome className="h-4 w-4" />
@@ -172,6 +175,7 @@ export function Footer({ settings }: FooterProps) {
 
               <Link
                 href="#quote"
+                onClick={() => trackCtaClick("request_free_quote", "footer_cta")}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-xs font-bold text-white backdrop-blur-xs transition-colors hover:bg-white/20 sm:text-sm"
               >
                 <span>Request Free Quote</span>

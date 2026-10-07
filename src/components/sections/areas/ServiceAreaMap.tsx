@@ -50,6 +50,7 @@ function MapController({
 }
 
 export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProps) {
+  const [mounted, setMounted] = useState(false);
   const markerRefs = useRef<Record<string, L.Marker>>({});
   const activeArea = useMemo(
     () => areas.find((a) => a.id === activeId),
@@ -57,13 +58,21 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
   );
   const [resetCount, setResetCount] = useState(0);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Auto open popup when activeId changes via chip click
   useEffect(() => {
     if (activeId && markerRefs.current[activeId]) {
       const marker = markerRefs.current[activeId];
       // Small delay to allow the flyTo animation to start smoothly
       const timer = setTimeout(() => {
-        marker.openPopup();
+        try {
+          marker.openPopup();
+        } catch {
+          // Prevent any popup error on unmounted elements
+        }
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -74,7 +83,11 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
     setResetCount((c) => c + 1);
     // close any open popups
     Object.values(markerRefs.current).forEach((marker) => {
-      marker.closePopup();
+      try {
+        marker.closePopup();
+      } catch {
+        // Safe guard
+      }
     });
   };
 
@@ -89,13 +102,23 @@ export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProp
     });
   };
 
+  if (!mounted) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-slate-100 text-slate-400">
+        <span className="text-xs">Loading map...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="relative h-full w-full overflow-hidden">
       <MapContainer
+        key={`leaflet-map-${resetCount}`}
         center={DUBAI_CENTER}
         zoom={DEFAULT_ZOOM}
         scrollWheelZoom={false}
         className="h-full w-full"
+        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'

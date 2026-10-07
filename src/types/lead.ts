@@ -54,6 +54,7 @@ export interface Lead {
   landingUrl?: string;
   status: LeadStatus;
   adminNotes?: string;
+  deletedAt?: string;
   createdAt: string;
 }
 

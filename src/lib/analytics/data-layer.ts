@@ -40,6 +40,11 @@ export function formatPhoneForGoogle(rawPhone: string): string {
     return `+971${cleaned.slice(1)}`;
   }
 
+  // If local UAE number starting with 5 (without leading 0)
+  if (/^5[024568]\d{7}$/.test(cleaned)) {
+    return `+971${cleaned}`;
+  }
+
   // If starts with 971 without '+'
   if (cleaned.startsWith("971")) {
     return `+${cleaned}`;
@@ -60,6 +65,11 @@ export function formatPhoneForMeta(rawPhone: string): string {
   // If local UAE number starting with 05
   if (digitsOnly.startsWith("05")) {
     return `971${digitsOnly.slice(1)}`;
+  }
+
+  // If local UAE number starting with 5 (without leading 0)
+  if (/^5[024568]\d{7}$/.test(digitsOnly)) {
+    return `971${digitsOnly}`;
   }
 
   // If already starts with 971
@@ -290,6 +300,108 @@ export function trackGalleryView(itemId: string, itemTitle: string, activeView: 
 }
 
 /**
+ * Track Primary Conversion: Direct Phone Call Click
+ */
+export function trackEmailClick(buttonLocation: string, emailAddress: string): void {
+  const eventPayload = {
+    event: "contact_email",
+    event_category: "Conversion",
+    button_location: buttonLocation,
+    email_address: emailAddress,
+    page_path: typeof window !== "undefined" ? window.location.pathname : "/"
+  };
+
+  pushDataLayer(eventPayload);
+}
+
+/**
+ * Track Primary Conversion: Instant Booking Confirmed (Service Booking Submission)
+ * Google Ads Conversion + GA4 generate_lead / booking_confirmed + Enhanced Conversions & Meta Matching
+ */
+export function trackBookingConfirmed(payload: {
+  serviceId: string;
+  serviceName: string;
+  locationArea: string;
+  propertyType?: string;
+  preferredDate?: string;
+  preferredTime?: string;
+  fullName: string;
+  mobile: string;
+  amount?: number;
+  currency?: string;
+  paymentMethod?: string;
+  sourceArea?: string;
+  trafficSource?: TrafficSourceData;
+}): void {
+  const { firstName, lastName } = splitFullName(payload.fullName);
+  const googlePhone = formatPhoneForGoogle(payload.mobile);
+  const metaPhone = formatPhoneForMeta(payload.mobile);
+
+  const fbp = getCookie("_fbp");
+  const fbc = getFacebookClickId();
+
+  const eventPayload = {
+    event: "booking_confirmed",
+    event_category: "Conversion",
+    lead_type: "instant_booking",
+    service_id: payload.serviceId,
+    service_name: payload.serviceName,
+    property_type: payload.propertyType || "N/A",
+    location_area: payload.locationArea,
+    preferred_date: payload.preferredDate || "N/A",
+    preferred_time: payload.preferredTime || "N/A",
+    source_area: payload.sourceArea || "booking-modal",
+    payment_method: payload.paymentMethod || "cash",
+    currency: payload.currency || "AED",
+    value: payload.amount || 0,
+    traffic_source: payload.trafficSource,
+
+    // Google Ads Enhanced Conversions
+    userData: {
+      email: "",
+      phone_number: googlePhone,
+      address: {
+        first_name: firstName,
+        last_name: lastName,
+        city: "Dubai",
+        region: "Dubai",
+        country: "AE"
+      }
+    },
+
+    // Meta Advanced Matching
+    user_data: {
+      fn: firstName.toLowerCase(),
+      ln: lastName.toLowerCase(),
+      ph: metaPhone,
+      ct: "dubai",
+      st: "dubai",
+      country: "ae",
+      ...(fbp ? { fbp } : {}),
+      ...(fbc ? { fbc } : {})
+    }
+  };
+
+  pushDataLayer(eventPayload);
+}
+
+/**
+ * Track General CTA Button Clicks
+ */
+export function trackCtaClick(ctaName: string, buttonLocation: string, additionalContext?: Record<string, unknown>): void {
+  const eventPayload = {
+    event: "cta_click",
+    event_category: "Engagement",
+    cta_name: ctaName,
+    button_location: buttonLocation,
+    page_path: typeof window !== "undefined" ? window.location.pathname : "/",
+    ...(additionalContext || {})
+  };
+
+  pushDataLayer(eventPayload);
+}
+
+/**
  * Track FAQ Accordion Expand
  */
 export function trackFaqExpand(question: string, index: number): void {
@@ -301,3 +413,4 @@ export function trackFaqExpand(question: string, index: number): void {
 
   pushDataLayer(eventPayload);
 }
+

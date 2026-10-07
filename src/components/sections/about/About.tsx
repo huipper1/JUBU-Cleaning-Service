@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import type { AboutContent, SiteSettings } from "@/types/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
+import { trackCtaClick } from "@/lib/analytics";
 
 interface AboutProps {
   content: AboutContent;
@@ -36,6 +39,7 @@ export function About({ content, settings }: AboutProps) {
 
             <Link
               href={content.cta.href}
+              onClick={() => trackCtaClick("view_all_services", "about_section")}
               className="group inline-flex items-center gap-3 rounded-full bg-[#00a651] py-2.5 pr-2.5 pl-6 text-xs font-bold text-white shadow-md transition-all duration-200 hover:bg-[#008f45] active:scale-98 sm:text-sm"
             >
               <span>{content.cta.label}</span>
