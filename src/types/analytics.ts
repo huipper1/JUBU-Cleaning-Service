@@ -44,6 +44,9 @@ export interface GenerateLeadEventData {
   event: "generate_lead";
   event_category: "Conversion";
   lead_type: string;
+  full_name: string;
+  mobile_number: string;
+  whatsapp_number?: string;
   service_id: string;
   service_name: string;
   property_type: string;

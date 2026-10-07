@@ -359,6 +359,7 @@ export function QuoteForm({
       preferredTime: submittedPreferredTime,
       fullName: submittedName,
       mobile: submittedMobile,
+      whatsappNumber: submittedWhatsApp,
       sourceArea: activeSourceArea,
       trafficSource: {
         utm_source: fullPayload.utmSource,

@@ -146,6 +146,7 @@ export function trackLeadGenerated(payload: {
   preferredTime?: string;
   fullName: string;
   mobile: string;
+  whatsappNumber?: string;
   sourceArea?: string;
   trafficSource?: TrafficSourceData;
 }): void {
@@ -160,6 +161,9 @@ export function trackLeadGenerated(payload: {
     event: "generate_lead",
     event_category: "Conversion",
     lead_type: "quote_form",
+    full_name: payload.fullName,
+    mobile_number: payload.mobile,
+    whatsapp_number: payload.whatsappNumber || payload.mobile,
     service_id: payload.serviceId,
     service_name: payload.serviceName,
     property_type: payload.propertyType,
