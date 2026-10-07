@@ -204,6 +204,7 @@ export function trackLeadGenerated(payload: {
     source_area: payload.sourceArea || "main-page",
     currency: "AED",
     value: 0,
+    postal_code: "00000",
     traffic_source: payload.trafficSource,
 
     // Google Ads Enhanced Conversions (User-Provided Data Variable in GTM)
@@ -403,6 +404,7 @@ export function trackBookingConfirmed(payload: {
     payment_method: payload.paymentMethod || "cash",
     currency: payload.currency || "AED",
     value: payload.amount || 0,
+    postal_code: "00000",
     traffic_source: payload.trafficSource,
 
     // Google Ads Enhanced Conversions

@@ -62,6 +62,7 @@ export interface GenerateLeadEventData {
   source_area?: string;
   currency?: string;
   value?: number;
+  postal_code?: string;
   traffic_source?: TrafficSourceData;
   userData?: GoogleUserData;
   user_data?: MetaUserData;
