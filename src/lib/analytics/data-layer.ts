@@ -190,6 +190,7 @@ export function trackLeadGenerated(payload: {
         last_name: lastName,
         city: "Dubai",
         region: "Dubai",
+        postal_code: "00000",
         country: "AE"
       }
     },
@@ -384,6 +385,7 @@ export function trackBookingConfirmed(payload: {
         last_name: lastName,
         city: "Dubai",
         region: "Dubai",
+        postal_code: "00000",
         country: "AE"
       }
     },
