@@ -6,10 +6,11 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import type { Service } from "@/types/content";
+
+import { trackServiceSelect } from "@/lib/analytics";
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { Icon, SectionHeading } from "@/ui";
-import { trackServiceSelect } from "@/lib/analytics";
 
 interface ServicesProps {
   services: Service[];
@@ -41,15 +42,14 @@ export function Services({
   };
 
   return (
-    <section id="services" className="relative bg-white py-16 sm:py-20 lg:py-24" aria-label="Our Services">
+    <section
+      id="services"
+      className="relative bg-white py-16 sm:py-20 lg:py-24"
+      aria-label="Our Services"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* Section Header */}
-        <SectionHeading
-          badge="OUR SERVICES"
-          title={title}
-          description={description}
-        />
+        <SectionHeading badge="OUR SERVICES" title={title} description={description} />
 
         {/* 6 Services Grid matching reference split card style */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
@@ -59,10 +59,9 @@ export function Services({
               href={`#quote?service=${service.id}`}
               onClick={() => handleSelectService(service.id, service.title)}
               aria-label={`Get a quote for ${service.title}`}
-              className="group relative flex cursor-pointer overflow-hidden rounded-3xl border border-slate-200/90 bg-white  shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-[#0070ba]"
+              className="group relative flex cursor-pointer overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-[#0070ba]"
             >
               <div className="grid w-full grid-cols-2 items-center gap-3">
-
                 {/* Left Half: Icon, Title, Description, Round Arrow Button */}
                 <div className="flex h-full flex-col justify-between py-2 pl-2 md:py-4.5 md:pl-4.5">
                   <div>
@@ -71,7 +70,7 @@ export function Services({
                       <Icon name={service.icon} className="h-5 w-5" />
                     </div>
 
-                    <h3 className="mb-1.5 text-base font-extrabold leading-snug text-[#081839] transition-colors group-hover:text-[#0070ba] sm:text-lg">
+                    <h3 className="mb-1.5 text-base leading-snug font-extrabold text-[#081839] transition-colors group-hover:text-[#0070ba] sm:text-lg">
                       {service.title}
                     </h3>
 
@@ -94,7 +93,10 @@ export function Services({
                 {/* Right Half: Rounded Image Preview */}
                 <figure className="relative m-0 aspect-4/5 w-full overflow-hidden rounded-2xl bg-slate-100">
                   <Image
-                    src={getPublicImageUrl(service.image.src, "/images/placeholder/gallery-home.png")}
+                    src={getPublicImageUrl(
+                      service.image.src,
+                      "/images/placeholder/gallery-home.png"
+                    )}
                     alt={service.image.alt || service.title}
                     fill
                     sizes="(max-width: 768px) 50vw, 33vw"
@@ -102,7 +104,6 @@ export function Services({
                   />
                   <figcaption className="sr-only">{service.title}</figcaption>
                 </figure>
-
               </div>
             </Link>
           ))}
@@ -126,7 +127,6 @@ export function Services({
             </div>
           </div>
         </div> */}
-
       </div>
     </section>
   );

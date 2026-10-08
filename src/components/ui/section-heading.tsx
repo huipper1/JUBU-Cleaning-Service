@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface SectionHeadingProps {
@@ -53,9 +54,7 @@ export function SectionHeading({
     <div
       className={cn(
         "mb-10 flex flex-col sm:mb-12",
-        isCenter
-          ? "mx-auto max-w-2xl items-center text-center"
-          : "max-w-xl items-start text-left",
+        isCenter ? "mx-auto max-w-2xl items-center text-center" : "max-w-xl items-start text-left",
         className
       )}
     >

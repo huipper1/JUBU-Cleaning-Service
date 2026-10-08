@@ -9,10 +9,13 @@ import { seoConfig } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import { env } from "@/env";
 
+import { AnalyticsRouteTracker } from "@/components/analytics";
 import { Toaster } from "@/ui";
 import { Providers } from "@/providers";
 
 import "@/tailwind";
+
+import { getPublicImageUrl, getSettings } from "@/lib/content";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -27,8 +30,6 @@ const caveat = Caveat({
   weight: ["400", "600", "700"],
   display: "swap"
 });
-
-import { getPublicImageUrl, getSettings } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
@@ -48,10 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description,
     icons: {
-      icon: [
-        { url: logoUrl, type: "image/png" },
-        { url: "/favicon.ico" }
-      ],
+      icon: [{ url: logoUrl, type: "image/png" }, { url: "/favicon.ico" }],
       shortcut: logoUrl,
       apple: logoUrl
     },
@@ -128,6 +126,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         )}
 
         <Providers>
+          <AnalyticsRouteTracker />
           <main className="flex-1">{children}</main>
           <Toaster richColors />
         </Providers>
@@ -138,4 +137,3 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     </html>
   );
 }
-

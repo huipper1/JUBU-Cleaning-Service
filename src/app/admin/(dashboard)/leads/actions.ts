@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db/prisma";
+
 import type { LeadStatus } from "@/types/lead";
+
+import { prisma } from "@/lib/db/prisma";
 
 export async function updateLeadStatusAction(id: string, status: LeadStatus) {
   try {

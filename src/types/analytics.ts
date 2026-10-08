@@ -120,13 +120,40 @@ export interface FaqExpandEventData {
   faq_index: number;
 }
 
+export interface PageViewEventData {
+  event: "virtual_page_view";
+  page_path: string;
+  page_location: string;
+  page_title: string;
+}
+
+export interface ContactEmailEventData {
+  event: "contact_email";
+  event_category: "Conversion";
+  button_location: string;
+  email_address: string;
+  page_path: string;
+}
+
+export interface CtaClickEventData {
+  event: "cta_click";
+  event_category: "Engagement";
+  cta_name: string;
+  button_location: string;
+  page_path: string;
+  [key: string]: unknown;
+}
+
 export type AnalyticsEvent =
   | GenerateLeadEventData
   | ContactWhatsAppEventData
   | ContactPhoneEventData
+  | ContactEmailEventData
   | FormStartEventData
   | SelectItemEventData
   | SelectLocationEventData
   | ViewGalleryItemEventData
   | FaqExpandEventData
+  | PageViewEventData
+  | CtaClickEventData
   | Record<string, unknown>;

@@ -3,6 +3,7 @@ import type {
   AboutHighlightItem,
   AreaGalleryItem,
   AreaLandingPage,
+  BlogPost,
   FaqItem,
   FeaturedContentBlock,
   GalleryItem,
@@ -20,6 +21,7 @@ import type { TestimonialItem } from "@/types/testimonial";
 
 import type { ContentRepository } from "@/lib/content/repository";
 import { prisma } from "@/lib/db/prisma";
+
 import { mockAboutData } from "../mock/data/about";
 import { mockHeroData } from "../mock/data/hero";
 import { mockSettingsData } from "../mock/data/settings";
@@ -369,6 +371,66 @@ export class PrismaContentRepository implements ContentRepository {
       faqs: (p.faqs as unknown as FaqItem[]) ?? [],
       isActive: p.isActive,
       order: p.order
+    };
+  }
+
+  async getBlogPosts(): Promise<BlogPost[]> {
+    try {
+      const rows = await prisma.$queryRawUnsafe<Record<string, unknown>[]>(
+        `SELECT * FROM "BlogPost" WHERE "status" = 'PUBLISHED' ORDER BY "publishedAt" DESC NULLS LAST, "createdAt" DESC`
+      );
+      return rows.map(this.mapBlogPost);
+    } catch {
+      return [];
+    }
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+    try {
+      const rows = await prisma.$queryRawUnsafe<Record<string, unknown>[]>(
+        `SELECT * FROM "BlogPost" WHERE "slug" = $1 AND "status" = 'PUBLISHED' LIMIT 1`,
+        slug
+      );
+      if (!rows || rows.length === 0) return null;
+      return this.mapBlogPost(rows[0]);
+    } catch {
+      return null;
+    }
+  }
+
+  async getRecentBlogPosts(limit = 3): Promise<BlogPost[]> {
+    try {
+      const rows = await prisma.$queryRawUnsafe<Record<string, unknown>[]>(
+        `SELECT * FROM "BlogPost" WHERE "status" = 'PUBLISHED' ORDER BY "publishedAt" DESC NULLS LAST, "createdAt" DESC LIMIT $1`,
+        limit
+      );
+      return rows.map(this.mapBlogPost);
+    } catch {
+      return [];
+    }
+  }
+
+  private mapBlogPost(row: Record<string, unknown>): BlogPost {
+    return {
+      id: String(row.id),
+      title: String(row.title),
+      slug: String(row.slug),
+      excerpt: String(row.excerpt),
+      content: String(row.content),
+      coverImage: String(row.coverImage),
+      coverImageAlt: String(row.coverImageAlt || row.title),
+      category: String(row.category || "Cleaning Tips"),
+      tags: Array.isArray(row.tags) ? row.tags : [],
+      author: String(row.author || "JUBU Expert Team"),
+      authorRole: row.authorRole ? String(row.authorRole) : undefined,
+      status: row.status as "DRAFT" | "PUBLISHED",
+      publishedAt: row.publishedAt ? new Date(String(row.publishedAt)).toISOString() : undefined,
+      readTime: row.readTime ? String(row.readTime) : "5 min read",
+      metaTitle: row.metaTitle ? String(row.metaTitle) : undefined,
+      metaDescription: row.metaDescription ? String(row.metaDescription) : undefined,
+      order: Number(row.order ?? 0),
+      createdAt: new Date(String(row.createdAt)).toISOString(),
+      updatedAt: new Date(String(row.updatedAt)).toISOString()
     };
   }
 }

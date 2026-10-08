@@ -10,17 +10,17 @@
 
 ## 1. Decisions & Architectural Rationale
 
-| Topic | Decision | Details & Justification |
-| :--- | :--- | :--- |
-| **Architecture** | **Unified Next.js Monorepo (App Router)** | Admin dashboard lives directly in the same Next.js repository under `src/app/admin/*`. Public site and admin share data contracts, Zod schemas, Tailwind tokens, and Prisma models. Zero secondary deployment pipelines or microservices. |
-| **Database & Auth** | **Supabase Postgres + Supabase Auth** | Managed Postgres database with connection pooling, built-in GoTrue auth engine for administrative credentials, session cookies, and JWT handling. |
-| **Data Access Layer** | **Prisma Client (`PrismaContentRepository` & `PrismaLeadService`)** | Provides compile-time TypeScript type safety, automated migrations (`prisma migrate`), relational model validations, and IDE autocomplete. Satisfies existing [`ContentRepository`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/content/repository.ts) and [`LeadService`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/leads/lead-service.ts) interfaces seamlessly. Section components remain 100% untouched. |
-| **Security & RLS** | **Server-Only Access Architecture (Recommended)** | Direct database connections from Next.js server components, server actions, and route handlers execute via Prisma using elevated connection strings (`DATABASE_URL`). Postgres tables are kept internal (`REST` disabled on public schema). Supabase client-side access is restricted strictly to Auth and direct Storage uploads. |
-| **Connection Pooling** | **Transaction Pooler (Supabase Supavisor / PgBouncer Port 6543)** | Serverless/edge Next.js environments spawn ephemeral instances. Prisma will connect to Supabase via pooled connection string (`?pgbouncer=true` / transaction mode) for runtime queries, and use `DIRECT_URL` (direct port 5432) for `prisma migrate`. |
-| **Publishing Workflow** | **Direct Publish + Cache Revalidation** | Changes saved in the admin immediately update database records and trigger on-demand tag revalidation (`revalidateTag`). No draft/preview complexity needed for a single business owner. |
-| **Lead Routing** | **Dual Pipeline (WhatsApp Redirect + DB Inbox)** | Quote requests preserve instant WhatsApp conversation redirect for customers while asynchronously persisting to Supabase Postgres via `PrismaLeadService` for admin inbox triage. No email notification overhead. |
-| **Image Management** | **Direct Supabase Storage with Admin Cropper & Aspect Ratio Locking** | Uploads happen directly from browser to Supabase Storage via `@supabase/supabase-js`. Admin UI provides an interactive modal cropper enforcing exact section ratios before upload. Public URLs saved in Prisma. |
-| **Role Modeling** | **Single Admin with Extensible Enum** | Single administrative account initially (`role: ADMIN`), modeled with an extensible enum in database for future expansion (`EDITOR`, `STAFF`) without schema rebuilds. |
+| Topic                   | Decision                                                              | Details & Justification                                                                                                                                                                                                                                                                                                                                                                                                            |
+| :---------------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Architecture**        | **Unified Next.js Monorepo (App Router)**                             | Admin dashboard lives directly in the same Next.js repository under `src/app/admin/*`. Public site and admin share data contracts, Zod schemas, Tailwind tokens, and Prisma models. Zero secondary deployment pipelines or microservices.                                                                                                                                                                                          |
+| **Database & Auth**     | **Supabase Postgres + Supabase Auth**                                 | Managed Postgres database with connection pooling, built-in GoTrue auth engine for administrative credentials, session cookies, and JWT handling.                                                                                                                                                                                                                                                                                  |
+| **Data Access Layer**   | **Prisma Client (`PrismaContentRepository` & `PrismaLeadService`)**   | Provides compile-time TypeScript type safety, automated migrations (`prisma migrate`), relational model validations, and IDE autocomplete. Satisfies existing [`ContentRepository`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/content/repository.ts) and [`LeadService`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/leads/lead-service.ts) interfaces seamlessly. Section components remain 100% untouched. |
+| **Security & RLS**      | **Server-Only Access Architecture (Recommended)**                     | Direct database connections from Next.js server components, server actions, and route handlers execute via Prisma using elevated connection strings (`DATABASE_URL`). Postgres tables are kept internal (`REST` disabled on public schema). Supabase client-side access is restricted strictly to Auth and direct Storage uploads.                                                                                                 |
+| **Connection Pooling**  | **Transaction Pooler (Supabase Supavisor / PgBouncer Port 6543)**     | Serverless/edge Next.js environments spawn ephemeral instances. Prisma will connect to Supabase via pooled connection string (`?pgbouncer=true` / transaction mode) for runtime queries, and use `DIRECT_URL` (direct port 5432) for `prisma migrate`.                                                                                                                                                                             |
+| **Publishing Workflow** | **Direct Publish + Cache Revalidation**                               | Changes saved in the admin immediately update database records and trigger on-demand tag revalidation (`revalidateTag`). No draft/preview complexity needed for a single business owner.                                                                                                                                                                                                                                           |
+| **Lead Routing**        | **Dual Pipeline (WhatsApp Redirect + DB Inbox)**                      | Quote requests preserve instant WhatsApp conversation redirect for customers while asynchronously persisting to Supabase Postgres via `PrismaLeadService` for admin inbox triage. No email notification overhead.                                                                                                                                                                                                                  |
+| **Image Management**    | **Direct Supabase Storage with Admin Cropper & Aspect Ratio Locking** | Uploads happen directly from browser to Supabase Storage via `@supabase/supabase-js`. Admin UI provides an interactive modal cropper enforcing exact section ratios before upload. Public URLs saved in Prisma.                                                                                                                                                                                                                    |
+| **Role Modeling**       | **Single Admin with Extensible Enum**                                 | Single administrative account initially (`role: ADMIN`), modeled with an extensible enum in database for future expansion (`EDITOR`, `STAFF`) without schema rebuilds.                                                                                                                                                                                                                                                             |
 
 ### 1.1 Tradeoff Analysis: Row Level Security (RLS) vs. Server-Only Access
 
@@ -28,12 +28,12 @@ In Supabase, two data access patterns exist:
 
 1. **Client-Facing RLS Pattern (PostgREST / Supabase JS API):**
    - The browser directly queries Postgres tables using the anonymous key (`anonKey`). Postgres policies (`CREATE POLICY`) evaluate every row based on `auth.uid()`.
-   - *Downside:* Duplicates business validation logic between TypeScript and SQL, complicates relational joins, and bypasses Prisma ORM's typed client.
+   - _Downside:_ Duplicates business validation logic between TypeScript and SQL, complicates relational joins, and bypasses Prisma ORM's typed client.
 2. **Server-Only Access via Prisma (Recommended & Selected):**
    - Database operations are restricted to Next.js Server Components, Server Actions, and Route Handlers using Prisma Client.
    - Connections use `DATABASE_URL` (which uses Postgres service credentials / direct connection string). Public access via PostgREST is disabled or locked down with a default deny (`ALTER TABLE "..." ENABLE ROW LEVEL SECURITY;` with no public policies).
    - Authentication is strictly checked at the Next.js boundary via Middleware (`src/middleware.ts`) and Server Action session validation using `@supabase/ssr`.
-   - *Advantage:* Full TypeScript type inference, zero policy maintenance overhead in SQL, immune to client-side data scraping, and complete reuse of existing Zod schemas.
+   - _Advantage:_ Full TypeScript type inference, zero policy maintenance overhead in SQL, immune to client-side data scraping, and complete reuse of existing Zod schemas.
 
 ---
 
@@ -98,7 +98,7 @@ model SiteSettings {
   businessName            String   @default("JUBU Cleaning Service")
   tagline                 String   @default("Cleaner Spaces, Brighter Lives")
   badgeText               String   @default("Licensed Cleaning Services in Dubai")
-  
+
   // Embedded Logo
   logoSrc                 String   @default("/images/logo.png")
   logoAlt                 String   @default("JUBU Cleaning Service Logo")
@@ -140,7 +140,7 @@ model HeroContent {
   badge          String   @default("Professional Cleaning Services in Dubai")
   headline       String   @default("Professional Cleaning Services in Dubai")
   subheadline    String   @default("Home, Villa, Office, Deep Cleaning & Post-Construction Cleaning. Reliable service with professional equipment.")
-  
+
   primaryCtaLabel   String @default("Get a Free Quote")
   primaryCtaHref    String @default("#quote")
   secondaryCtaLabel String @default("WhatsApp Us")
@@ -166,7 +166,7 @@ model AboutContent {
   paragraphs     String[] // Postgres text array
   ctaLabel       String   @default("Get a Free Quote")
   ctaHref        String   @default("#quote")
-  
+
   // Highlights JSON: Array of { id: string, title: string, description?: string, icon: string }
   highlights     Json     @default("[]")
 
@@ -193,7 +193,7 @@ model Service {
   shortDescription String
   longDescription  String?
   icon             String        // lucide icon identifier
-  
+
   imageSrc         String
   imageAlt         String
   imageWidth       Int           @default(800)
@@ -227,7 +227,7 @@ model TeamMember {
   name      String
   role      String
   bio       String?
-  
+
   photoSrc  String
   photoAlt  String
   photoWidth Int     @default(400)
@@ -247,7 +247,7 @@ model GalleryItem {
   caption       String?
   serviceId     String
   service       Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  
+
   imageSrc      String
   imageAlt      String
   imageWidth    Int      @default(800)
@@ -290,7 +290,7 @@ model AreaLandingPage {
   metaDescription      String
   heroHeadline         String
   heroIntro            String
-  
+
   heroImageSrc         String?
   heroImageAlt         String?
   heroImageWidth       Int?
@@ -350,7 +350,7 @@ model Lead {
   message        String?
   whatsappOptIn  Boolean    @default(true)
   sourceArea     String?    @default("main-page")
-  
+
   // Campaign & Tracking
   utmSource      String?
   utmMedium      String?
@@ -542,23 +542,22 @@ Because the 5 ad landing pages (`/business-bay`, `/dubai-marina`, `/jumeirah`, `
    - Intro paragraph textarea.
    - Hero cutout/banner image picker (falls back to default hero cleaner cutout).
 3. **Services Section Customization:**
-   - Section Heading (e.g. *"Our Cleaning Services in Business Bay"*).
+   - Section Heading (e.g. _"Our Cleaning Services in Business Bay"_).
    - Descriptive service bullet list (dynamic tag/chips editor).
 4. **Featured Secondary Block(s):**
-   - Block Title (e.g. *"Post-Construction Office & Apartment Cleaning"*).
+   - Block Title (e.g. _"Post-Construction Office & Apartment Cleaning"_).
    - Layout selector: **Single Content Card** (Business Bay, Dubai Marina, Jumeirah, Downtown) vs. **3-Card Split Grid** (JVC).
    - Card title & description editor.
 5. **Near-You Section:**
-   - Near-You Heading (e.g. *"Cleaning Services Near You in Business Bay"*).
+   - Near-You Heading (e.g. _"Cleaning Services Near You in Business Bay"_).
    - Introductory paragraph.
 6. **FAQ Accordion Manager:**
    - Drag-and-drop reorderable list of question and answer pairs.
    - Add/Remove FAQ buttons (pre-populated with client's 4 verified Q&As).
 7. **Final CTA:**
-   - Custom quote band heading (e.g. *"Need Cleaning Services in Business Bay?"*).
+   - Custom quote band heading (e.g. _"Need Cleaning Services in Business Bay?"_).
 8. **Cache Purge on Save:**
    - Submitting the form calls `updateAreaLandingPageAction(slug, data)`, purging `tags: ["content-areas", `content-area-${slug}`]` and `revalidatePath("/[area]", "page")` for immediate live reflection.
-
 
 ---
 
@@ -581,7 +580,7 @@ The admin's Lead Inbox directly addresses the business owner's day-to-day operat
 - **Detail Modal / Drawer:**
   - Full client message and preferred date.
   - Acquisition tracking details: `utm_source`, `utm_campaign`, `utm_medium`, `fbclid`, and `landingUrl`.
-  - Admin Internal Notes textarea with auto-save for operational remarks (e.g. *"Quoted 450 AED for 2-bedroom deep clean on Thursday"*).
+  - Admin Internal Notes textarea with auto-save for operational remarks (e.g. _"Quoted 450 AED for 2-bedroom deep clean on Thursday"_).
 
 ---
 
@@ -597,22 +596,25 @@ Since **Direct Publish** was selected:
      - `getHero()`, `getAbout()`, `getWhyChoose()`, `getTeam()`, `getGallery()` -> corresponding tags.
 2. **Server Action Invalidation:**
    - On saving an entity in the admin dashboard:
+
      ```ts
      "use server";
-     import { revalidateTag, revalidatePath } from "next/cache";
+
+     import { revalidatePath, revalidateTag } from "next/cache";
 
      export async function updateServiceAction(id: string, data: UpdateServiceInput) {
        await assertAdmin();
        await prismaContentRepository.updateService(id, data);
-       
+
        // Instant cache purge
        revalidateTag("content-services");
        revalidatePath("/");
        revalidatePath("/[area]", "page");
-       
+
        return { success: true };
      }
      ```
+
 3. **Outcome:** Changes appear on the live website within milliseconds without restarting the server or triggering a Netlify/Vercel build deployment.
 
 ---
@@ -625,15 +627,16 @@ To ensure zero content degradation or missing copy during rollout, the database 
 
 ```ts
 import { PrismaClient } from "@prisma/client";
-import { mockSettingsData } from "../src/lib/content/mock/data/settings";
+
+import { mockAboutData } from "../src/lib/content/mock/data/about";
+import { mockAreaLandingPagesData } from "../src/lib/content/mock/data/area-landing-pages";
+import { mockAreasData } from "../src/lib/content/mock/data/areas";
+import { mockGalleryData } from "../src/lib/content/mock/data/gallery";
 import { mockHeroData } from "../src/lib/content/mock/data/hero";
 import { mockServicesData } from "../src/lib/content/mock/data/services";
-import { mockWhyChooseData } from "../src/lib/content/mock/data/why-choose";
-import { mockAboutData } from "../src/lib/content/mock/data/about";
+import { mockSettingsData } from "../src/lib/content/mock/data/settings";
 import { mockTeamData } from "../src/lib/content/mock/data/team";
-import { mockGalleryData } from "../src/lib/content/mock/data/gallery";
-import { mockAreasData } from "../src/lib/content/mock/data/areas";
-import { mockAreaLandingPagesData } from "../src/lib/content/mock/data/area-landing-pages";
+import { mockWhyChooseData } from "../src/lib/content/mock/data/why-choose";
 
 const prisma = new PrismaClient();
 
@@ -676,6 +679,7 @@ async function main() {
 ```
 
 Command configured in `package.json`:
+
 ```json
 "prisma": {
   "seed": "tsx prisma/seed.ts"
@@ -696,14 +700,14 @@ Command configured in `package.json`:
 
 The following variables will be defined in `.env` and `.env.example`:
 
-| Variable | Scope | Purpose |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | **Server-only** | Pooled Supabase connection string (`postgresql://postgres:[PASSWORD]@aws-0-me-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true`) |
-| `DIRECT_URL` | **Server-only** | Direct Supabase connection string for schema migrations (`postgresql://postgres:[PASSWORD]@aws-0-me-central-1.pooler.supabase.com:5432/postgres`) |
-| `NEXT_PUBLIC_SUPABASE_URL` | **Public** | Supabase project API endpoint (`https://[PROJECT-REF].supabase.co`) |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | **Public** | Client-side key for Auth and Storage uploads |
-| `SUPABASE_SERVICE_ROLE_KEY` | **Server-only** | Elevated privileges for admin server tasks |
-| `CONTENT_SOURCE` | **Server-only** | Feature flag: `"mock"` (default) or `"prisma"` |
+| Variable                        | Scope           | Purpose                                                                                                                                           |
+| :------------------------------ | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `DATABASE_URL`                  | **Server-only** | Pooled Supabase connection string (`postgresql://postgres:[PASSWORD]@aws-0-me-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true`)        |
+| `DIRECT_URL`                    | **Server-only** | Direct Supabase connection string for schema migrations (`postgresql://postgres:[PASSWORD]@aws-0-me-central-1.pooler.supabase.com:5432/postgres`) |
+| `NEXT_PUBLIC_SUPABASE_URL`      | **Public**      | Supabase project API endpoint (`https://[PROJECT-REF].supabase.co`)                                                                               |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | **Public**      | Client-side key for Auth and Storage uploads                                                                                                      |
+| `SUPABASE_SERVICE_ROLE_KEY`     | **Server-only** | Elevated privileges for admin server tasks                                                                                                        |
+| `CONTENT_SOURCE`                | **Server-only** | Feature flag: `"mock"` (default) or `"prisma"`                                                                                                    |
 
 ---
 
@@ -723,6 +727,7 @@ Before toggling `CONTENT_SOURCE="prisma"` in production:
 ## 13. Phased Implementation Roadmap
 
 ### Phase 1: Supabase Setup & Prisma Data Layer (No Public Site Impact)
+
 - [ ] Create Supabase project in `me-central-1` (UAE / Middle East region for lowest latency).
 - [ ] Install Prisma dependencies (`prisma`, `@prisma/client`, `tsx`).
 - [ ] Configure `DATABASE_URL` and `DIRECT_URL` in `.env` and `src/env.ts`.
@@ -730,57 +735,63 @@ Before toggling `CONTENT_SOURCE="prisma"` in production:
 - [ ] Run initial migration `npx prisma migrate dev --name init_cms_models`.
 - [ ] Write `prisma/seed.ts` importing existing mock datasets and execute `npx prisma db seed`.
 - [ ] Verify database tables and seed rows in Supabase Studio.
-- *Done when:* The database is populated with current site content and `prisma studio` displays all records accurately.
+- _Done when:_ The database is populated with current site content and `prisma studio` displays all records accurately.
 
 ### Phase 2: Repository Swap Behind Flag (`PrismaContentRepository`)
+
 - [ ] Create Prisma client singleton in `src/lib/db/prisma.ts`.
 - [ ] Implement `PrismaContentRepository` fulfilling [`ContentRepository`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/content/repository.ts).
 - [ ] Implement `PrismaLeadService` fulfilling [`LeadService`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/leads/lead-service.ts).
 - [ ] Add `CONTENT_SOURCE` toggle to [`src/lib/content/index.ts`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/content/index.ts) and [`src/lib/leads/index.ts`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/lib/leads/index.ts).
 - [ ] Test toggling `CONTENT_SOURCE="prisma"` locally.
 - [ ] Verify `/` and all 5 area pages render byte-identical DOM and pass all tests.
-- *Done when:* Public site runs off Supabase Postgres with zero visual or layout regressions.
+- _Done when:_ Public site runs off Supabase Postgres with zero visual or layout regressions.
 
 ### Phase 3: Supabase Auth & Admin Shell Layout
+
 - [ ] Install `@supabase/supabase-js` and `@supabase/ssr`.
 - [ ] Create Supabase client factories (`src/lib/supabase/client.ts`, `server.ts`, `middleware.ts`).
 - [ ] Implement Next.js middleware in `src/middleware.ts` guarding `/admin/*`.
 - [ ] Build `/admin/login` page with clean branding and error handling.
 - [ ] Build `/admin/layout.tsx` (sidebar navigation, breadcrumbs, user dropdown, sign out button).
 - [ ] Seed initial `AdminUser` row linking to the business owner's credentials.
-- *Done when:* Business owner can securely log in, navigate the admin shell, and unauthenticated requests are blocked.
+- _Done when:_ Business owner can securely log in, navigate the admin shell, and unauthenticated requests are blocked.
 
 ### Phase 4: Core Content Management Screens
+
 - [ ] **Site Settings Screen (`/admin/content/settings`):** Edit phone, WhatsApp, email, address, working hours, trade licence, social links, SEO tags.
 - [ ] **Services Manager (`/admin/content/services`):** Reorder, edit titles, descriptions, icon picker, toggle active/inactive.
 - [ ] **Dubai Service Areas (`/admin/content/areas`):** Manage 10 core service areas, map coordinates, and active visibility.
 - [ ] **Area Landing Pages Hub & Editor (`/admin/content/landing-pages` & `[slug]`):** Dedicated manager for the 5 dynamic ad routes (`/business-bay`, `/dubai-marina`, `/jumeirah`, `/downtown-dubai`, `/jvc`). Edit H1 headlines, intros, services headings/bullets, featured blocks (supporting single card & JVC 3-block layouts), near-you paragraphs, accordion FAQs, final CTA titles, and on-page SEO meta tags.
 - [ ] **Why Choose & About Screens:** Edit value proposition cards and company profile equipment list.
 - [ ] **Team & Gallery Screens:** Manage staff members and project before/after entries.
-- *Done when:* Business owner can update any text or list item across the entire website and all 5 area landing pages directly from the browser.
+- _Done when:_ Business owner can update any text or list item across the entire website and all 5 area landing pages directly from the browser.
 
 ### Phase 5: Media Library & Pre-Upload Aspect Ratio Cropper
+
 - [ ] Create public `cms-media` bucket and security policies in Supabase Storage.
 - [ ] Build reusable `ImageUploadField.tsx` with crop modal enforcing section-specific aspect ratios (1:1, 4:3, etc.).
 - [ ] Integrate client-side canvas compression to WebP.
 - [ ] Integrate Supabase Storage direct upload and preview.
 - [ ] Wire image uploader to Hero cutout, Service cards, Gallery, and Team profiles.
-- *Done when:* Admin can upload, crop to exact ratios, and swap any image on the site effortlessly.
+- _Done when:_ Admin can upload, crop to exact ratios, and swap any image on the site effortlessly.
 
 ### Phase 6: Leads Inbox & CRM Pipeline
+
 - [ ] Update `/api/lead` and `QuoteForm` background submission to use `PrismaLeadService`.
 - [ ] Build `/admin/leads` data table with status tabs (`Pending`, `Contacted`, `Closed`), search, and service filters.
 - [ ] Build Lead detail drawer displaying contact details, one-click WhatsApp/Call actions, and campaign UTM metadata.
 - [ ] Add internal admin notes field with auto-save.
-- *Done when:* Every customer inquiry is logged in the admin inbox and can be triaged through its lifecycle.
+- _Done when:_ Every customer inquiry is logged in the admin inbox and can be triaged through its lifecycle.
 
 ### Phase 7: Publish Revalidation, Production Deployment & Handover
+
 - [ ] Implement tag-based cache revalidation on all server actions.
 - [ ] Configure CI/CD build command to execute `npx prisma migrate deploy && next build`.
 - [ ] Set production environment variables in Netlify/Vercel dashboard.
 - [ ] Toggle `CONTENT_SOURCE="prisma"` in production.
 - [ ] Complete end-to-end QA walkthrough on live domain with the business owner.
-- *Done when:* Public site is 100% database-driven and business owner has active dashboard access.
+- _Done when:_ Public site is 100% database-driven and business owner has active dashboard access.
 
 ---
 
@@ -790,9 +801,9 @@ During audit of the current components, two minor hardcoded items were identifie
 
 1. **`Hero.tsx` Avatars Array:**
    - In [`src/components/sections/hero/Hero.tsx`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/components/sections/hero/Hero.tsx#L19-L40), `SOCIAL_PROOF_AVATARS` (4 customer thumbnails) is currently declared as an inline constant inside the component file rather than passed via `HeroContent`.
-   - *Recommendation:* Keep as default fallback in `Hero.tsx` for now, or add an optional `socialProofAvatars` column to `HeroContent` so the owner can swap them later if desired.
+   - _Recommendation:_ Keep as default fallback in `Hero.tsx` for now, or add an optional `socialProofAvatars` column to `HeroContent` so the owner can swap them later if desired.
 2. **`ServiceAreas.tsx` Zone Cards:**
    - In [`src/components/sections/areas/ServiceAreas.tsx`](file:///c:/New%20folder/JUBU-Cleaning-Service/src/components/sections/areas/ServiceAreas.tsx#L63-L87), `AREA_ZONES` (the 4 grouping cards: Central Dubai, Marina & Coastal, etc.) is currently declared locally inside the component.
-   - *Recommendation:* Keep the 4 zone descriptions static in the component while reading the individual 10 service areas from Prisma, or add a `ServiceAreaZone` model in Phase 4.
+   - _Recommendation:_ Keep the 4 zone descriptions static in the component while reading the individual 10 service areas from Prisma, or add a `ServiceAreaZone` model in Phase 4.
 3. **Zero Component Breakage Guarantee:**
    - Every public section component already expects props passed from `src/app/page.tsx` and `src/app/[area]/page.tsx`. Because `PrismaContentRepository` outputs the exact same TypeScript structures, the repository swap in Phase 2 requires **zero changes** to section components.

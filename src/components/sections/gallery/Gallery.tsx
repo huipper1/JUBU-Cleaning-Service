@@ -6,13 +6,25 @@ import Link from "next/link";
 
 import { ArrowLeftRight, ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 
-import { SectionHeading } from "@/ui";
 import type { GalleryItem } from "@/types/content";
-import { getPublicImageUrl } from "@/lib/content/image-url";
+
 import { trackGalleryView } from "@/lib/analytics";
+import { getPublicImageUrl } from "@/lib/content/image-url";
+
+import { SectionHeading } from "@/ui";
 
 interface GalleryProps {
   items: GalleryItem[];
+}
+
+function getGalleryImageAlt(title: string, alt?: string, serviceName?: string): string {
+  if (!alt) {
+    return `${title} - ${serviceName || "JUBU Cleaning Service Dubai"}`;
+  }
+  if (alt.toLowerCase().includes(title.toLowerCase())) {
+    return alt;
+  }
+  return `${title} - ${alt}`;
 }
 
 export function Gallery({ items }: GalleryProps) {
@@ -127,7 +139,7 @@ export function Gallery({ items }: GalleryProps) {
               <figure className="relative m-0 aspect-[4/3] w-full">
                 <Image
                   src={getPublicImageUrl(item.image.src, "/images/placeholder/gallery-home.png")}
-                  alt={item.image.alt || item.title}
+                  alt={getGalleryImageAlt(item.title, item.image.alt, item.serviceName)}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
@@ -224,8 +236,15 @@ export function Gallery({ items }: GalleryProps) {
                 />
               ) : (
                 <Image
-                  src={getPublicImageUrl(selectedItem.image.src, "/images/placeholder/gallery-home.png")}
-                  alt={selectedItem.image.alt}
+                  src={getPublicImageUrl(
+                    selectedItem.image.src,
+                    "/images/placeholder/gallery-home.png"
+                  )}
+                  alt={getGalleryImageAlt(
+                    selectedItem.title,
+                    selectedItem.image.alt,
+                    selectedItem.serviceName
+                  )}
                   fill
                   sizes="100vw"
                   className="object-contain"
@@ -269,10 +288,11 @@ export function Gallery({ items }: GalleryProps) {
                       setActiveTab("before");
                       trackGalleryView(selectedItem.id, selectedItem.title, "before");
                     }}
-                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${activeTab === "before"
-                      ? "bg-amber-500 text-white shadow-xs"
-                      : "text-brand-navy hover:text-brand-blue"
-                      }`}
+                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
+                      activeTab === "before"
+                        ? "bg-amber-500 text-white shadow-xs"
+                        : "text-brand-navy hover:text-brand-blue"
+                    }`}
                   >
                     Before
                   </button>
@@ -282,10 +302,11 @@ export function Gallery({ items }: GalleryProps) {
                       setActiveTab("after");
                       trackGalleryView(selectedItem.id, selectedItem.title, "after");
                     }}
-                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${activeTab === "after"
-                      ? "bg-brand-green text-white shadow-xs"
-                      : "text-brand-navy hover:text-brand-blue"
-                      }`}
+                    className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
+                      activeTab === "after"
+                        ? "bg-brand-green text-white shadow-xs"
+                        : "text-brand-navy hover:text-brand-blue"
+                    }`}
                   >
                     After
                   </button>

@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+
 import "leaflet/dist/leaflet.css";
 
 import { RotateCcw } from "lucide-react";
+
 import type { ServiceArea } from "@/types/content";
 
 interface ServiceAreaMapProps {
@@ -50,17 +53,14 @@ function MapController({
 }
 
 export function ServiceAreaMap({ areas, activeId, onSelect }: ServiceAreaMapProps) {
-  const [mounted, setMounted] = useState(false);
-  const markerRefs = useRef<Record<string, L.Marker>>({});
-  const activeArea = useMemo(
-    () => areas.find((a) => a.id === activeId),
-    [areas, activeId]
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
   );
+  const markerRefs = useRef<Record<string, L.Marker>>({});
+  const activeArea = useMemo(() => areas.find((a) => a.id === activeId), [areas, activeId]);
   const [resetCount, setResetCount] = useState(0);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Auto open popup when activeId changes via chip click
   useEffect(() => {

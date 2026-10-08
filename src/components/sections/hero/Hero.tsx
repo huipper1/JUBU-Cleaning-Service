@@ -5,10 +5,12 @@ import Link from "next/link";
 
 import { ArrowRight, Check, ShieldCheck, Users, Wrench } from "lucide-react";
 
-import { WhatsAppIcon } from "@/components/icons";
 import type { HeroContent } from "@/types/content";
-import { getPublicImageUrl } from "@/lib/content/image-url";
+
 import { trackWhatsAppClick } from "@/lib/analytics";
+import { getPublicImageUrl } from "@/lib/content/image-url";
+
+import { WhatsAppIcon } from "@/components/icons";
 
 interface HeroProps {
   content: HeroContent;
@@ -25,32 +27,26 @@ const SOCIAL_PROOF_AVATARS = [
   {
     id: "1",
     src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
-    alt: "Elena - Homeowner in Dubai Marina"
+    alt: "JUBU Happy Client in Dubai Marina"
   },
   {
     id: "2",
     src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
-    alt: "Marcus - Resident in Downtown Dubai"
+    alt: "JUBU Happy Client in Downtown Dubai"
   },
   {
     id: "3",
     src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80",
-    alt: "Amina - Villa Owner in Arabian Ranches"
+    alt: "JUBU Happy Client in Arabian Ranches"
   },
   {
     id: "4",
     src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80",
-    alt: "Tariq - Resident in Palm Jumeirah"
+    alt: "JUBU Happy Client in Palm Jumeirah"
   }
 ];
 
-export function Hero({
-  content,
-  headline,
-  intro,
-  heroImage,
-  socialProofText
-}: HeroProps) {
+export function Hero({ content, headline, intro, heroImage, socialProofText }: HeroProps) {
   const rawImage = heroImage || content.heroImage;
   const displayImage = {
     src: getPublicImageUrl(rawImage?.src, "/images/placeholder/hero-cleaner.png"),
@@ -73,7 +69,7 @@ export function Hero({
       <div className="pointer-events-none absolute top-1/3 right-0 h-125 w-125 rounded-full bg-brand-blue/20 blur-[150px]" />
       <div className="pointer-events-none absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-emerald-500/10 blur-[130px]" />
 
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-4 xl:gap-6">
           {/* Left Column: Copy, Trust Badges, CTAs, Social Proof (Vertically Centered) */}
           <div className="flex flex-col items-center text-center sm:py-10 lg:col-span-6 lg:items-start lg:self-center lg:py-16 lg:text-left xl:col-span-6">
@@ -95,7 +91,7 @@ export function Hero({
                   <ShieldCheck className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold leading-tight text-white">Licensed in</span>
+                  <span className="text-xs leading-tight font-bold text-white">Licensed in</span>
                   <span className="text-[11px] leading-tight text-slate-300">Dubai</span>
                 </div>
               </div>
@@ -106,7 +102,7 @@ export function Hero({
                   <Wrench className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold leading-tight text-white">Professional</span>
+                  <span className="text-xs leading-tight font-bold text-white">Professional</span>
                   <span className="text-[11px] leading-tight text-slate-300">Equipment</span>
                 </div>
               </div>
@@ -117,7 +113,7 @@ export function Hero({
                   <Users className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold leading-tight text-white">Reliable</span>
+                  <span className="text-xs leading-tight font-bold text-white">Reliable</span>
                   <span className="text-[11px] leading-tight text-slate-300">Service</span>
                 </div>
               </div>
@@ -128,7 +124,10 @@ export function Hero({
               <Link
                 href={content.primaryCta.href}
                 onClick={() => {
-                  if (content.primaryCta.href.includes("wa.me") || content.primaryCta.href.includes("whatsapp")) {
+                  if (
+                    content.primaryCta.href.includes("wa.me") ||
+                    content.primaryCta.href.includes("whatsapp")
+                  ) {
                     trackWhatsAppClick("hero_primary_cta");
                   }
                 }}
@@ -141,9 +140,14 @@ export function Hero({
               <Link
                 href={content.secondaryCta.href}
                 target={content.secondaryCta.href.startsWith("http") ? "_blank" : undefined}
-                rel={content.secondaryCta.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                rel={
+                  content.secondaryCta.href.startsWith("http") ? "noopener noreferrer" : undefined
+                }
                 onClick={() => {
-                  if (content.secondaryCta.href.includes("wa.me") || content.secondaryCta.href.includes("whatsapp")) {
+                  if (
+                    content.secondaryCta.href.includes("wa.me") ||
+                    content.secondaryCta.href.includes("whatsapp")
+                  ) {
                     trackWhatsAppClick("hero_secondary_cta");
                   }
                 }}
@@ -176,27 +180,24 @@ export function Hero({
                 {socialProofText || "Serving 10 major residential & commercial areas in Dubai"}
               </p>
             </div>
-
           </div>
 
           {/* Right/Center Column: Enlaarged Cleaner Cutout & Shifted Floating Badges */}
           <div className="relative flex items-end justify-center self-end lg:col-span-6 lg:-ml-6 lg:justify-start xl:col-span-6 xl:-ml-10">
-
             {/* Cleaner visual wrapper with relative badge positioning */}
             <div className="relative mx-auto flex w-full max-w-105 items-end justify-center sm:max-w-130 lg:mx-0 lg:max-w-155 xl:max-w-170">
-
               {/* Decorative Four-Point Sparkles around cleaner */}
-              <div className="pointer-events-none absolute top-12 -left-2 z-10 text-sky-400 animate-pulse sm:left-2 lg:-left-6">
+              <div className="pointer-events-none absolute top-12 -left-2 z-10 animate-pulse text-sky-400 sm:left-2 lg:-left-6">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                 </svg>
               </div>
-              <div className="pointer-events-none absolute top-32 right-12 z-10 text-sky-400 animate-pulse delay-300 sm:right-24">
+              <div className="pointer-events-none absolute top-32 right-12 z-10 animate-pulse text-sky-400 delay-300 sm:right-24">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                 </svg>
               </div>
-              <div className="pointer-events-none absolute bottom-48 -left-4 z-10 text-sky-400 animate-pulse delay-700">
+              <div className="pointer-events-none absolute bottom-48 -left-4 z-10 animate-pulse text-sky-400 delay-700">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                 </svg>
@@ -213,7 +214,7 @@ export function Hero({
               />
 
               {/* Floating Badge 1: Top Right - Licensed in Dubai */}
-              <div className="absolute top-16 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:flex sm:top-14 sm:right-2 lg:top-16 lg:-right-10 xl:-right-14">
+              <div className="absolute top-16 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:top-14 sm:right-2 sm:flex lg:top-16 lg:-right-10 xl:-right-14">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs">
                   <Check className="h-4 w-4 stroke-3" />
                 </div>
@@ -223,7 +224,7 @@ export function Hero({
               </div>
 
               {/* Floating Badge 2: Mid Right - Free Quotes */}
-              <div className="absolute top-36 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:flex sm:top-36 sm:right-0 lg:top-36 lg:-right-12 xl:-right-18">
+              <div className="absolute top-36 -right-2 z-20 hidden items-center gap-2.5 rounded-full border border-white/80 bg-white px-4 py-2.5 shadow-xl transition-transform hover:scale-105 sm:top-36 sm:right-0 sm:flex lg:top-36 lg:-right-12 xl:-right-18">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue text-white shadow-xs">
                   <Check className="h-4 w-4 stroke-3" />
                 </div>
@@ -233,7 +234,7 @@ export function Hero({
               </div>
 
               {/* Cursive Decorative Slogan (Right Side) */}
-              <div className="pointer-events-none absolute right-4 bottom-44 z-20 hidden select-none text-left sm:block sm:right-6 lg:right-0 xl:-right-4">
+              <div className="pointer-events-none absolute right-4 bottom-44 z-20 hidden text-left select-none sm:right-6 sm:block lg:right-0 xl:-right-4">
                 <div className="relative -rotate-[14deg] font-[family-name:var(--font-handwriting)]">
                   {/* Sunburst / radiating cyan spark rays on top right */}
                   <div className="absolute -top-3.5 right-2 flex flex-col items-center">
@@ -318,11 +319,8 @@ export function Hero({
                   <span className="text-xs font-bold text-white">4.9 out of 5 rating</span>
                 </div>
               </div> */}
-
             </div>
-
           </div>
-
         </div>
       </div>
     </section>

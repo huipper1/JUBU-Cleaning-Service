@@ -1,5 +1,7 @@
 import { cache } from "react";
+
 import { env } from "@/env";
+
 import { mockContentRepository } from "./mock/repository";
 import { prismaContentRepository } from "./prisma/repository";
 import type { ContentRepository } from "./repository";
@@ -53,8 +55,19 @@ export const getAreaLandingPage = cache(async (slug: string) => {
   return contentRepository.getAreaLandingPage(slug);
 });
 
+export const getBlogPosts = cache(async () => {
+  return contentRepository.getBlogPosts();
+});
+
+export const getBlogPostBySlug = cache(async (slug: string) => {
+  return contentRepository.getBlogPostBySlug(slug);
+});
+
+export const getRecentBlogPosts = cache(async (limit = 3) => {
+  return contentRepository.getRecentBlogPosts(limit);
+});
+
 export * from "./image-url";
 export * from "./mock/data/area-landing-pages";
 export * from "./repository";
 export * from "./types";
-

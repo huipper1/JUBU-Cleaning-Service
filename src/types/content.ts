@@ -57,6 +57,7 @@ export interface SiteSettings {
   showQuote?: boolean;
   showAreas?: boolean;
   showContact?: boolean;
+  showBlog?: boolean;
   homepageServiceIds?: string[];
   gtmId?: string;
   gaId?: string;
@@ -214,4 +215,28 @@ export interface AreaLandingPage {
   faqs: FaqItem[];
   isActive: boolean;
   order: number;
+}
+
+export type PostStatus = "DRAFT" | "PUBLISHED";
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  coverImageAlt: string;
+  category: string;
+  tags: string[];
+  author: string;
+  authorRole?: string;
+  status: PostStatus;
+  publishedAt?: string;
+  readTime?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
 }

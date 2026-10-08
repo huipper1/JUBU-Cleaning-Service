@@ -1,5 +1,6 @@
-import { prisma } from "@/lib/db/prisma";
 import { getPublicImageUrl } from "@/lib/content/image-url";
+import { prisma } from "@/lib/db/prisma";
+
 import { AdminLoginForm } from "./AdminLoginForm";
 
 export const dynamic = "force-dynamic";

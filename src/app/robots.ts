@@ -14,36 +14,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: [
-          "/",
-          "/images/",
-          "/uploads/"
-        ],
-        disallow: [
-          "/admin",
-          "/admin/",
-          "/api/",
-          "/_next/",
-          "/private/"
-        ]
+        allow: ["/", "/images/", "/uploads/"],
+        disallow: ["/admin", "/admin/", "/api/", "/_next/", "/private/"]
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: [
-          "/admin",
-          "/admin/",
-          "/api/"
-        ]
+        disallow: ["/admin", "/admin/", "/api/"]
       },
       {
         userAgent: "Bingbot",
         allow: "/",
-        disallow: [
-          "/admin",
-          "/admin/",
-          "/api/"
-        ]
+        disallow: ["/admin", "/admin/", "/api/"]
       },
       // Allow Generative AI / Search Engines for Generative Engine Optimization (GEO)
       {
@@ -56,11 +38,7 @@ export default function robots(): MetadataRoute.Robots {
           "Applebot-Extended"
         ],
         allow: "/",
-        disallow: [
-          "/admin",
-          "/admin/",
-          "/api/"
-        ]
+        disallow: ["/admin", "/admin/", "/api/"]
       }
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

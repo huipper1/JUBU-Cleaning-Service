@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
 import { toast } from "sonner";
+
 import { Switch } from "@/components/ui/switch";
 import {
   toggleSectionVisibilityAction,
-  type SectionKey,
+  type SectionKey
 } from "@/app/admin/(dashboard)/content/section-visibility-action";
 
 interface SectionVisibilityToggleProps {
@@ -17,7 +19,7 @@ interface SectionVisibilityToggleProps {
 export function SectionVisibilityToggle({
   sectionKey,
   label = "Visible on Website",
-  initialVisible = true,
+  initialVisible = true
 }: SectionVisibilityToggleProps) {
   const [isVisible, setIsVisible] = useState(initialVisible);
   const [isPending, setIsPending] = useState(false);
@@ -48,9 +50,7 @@ export function SectionVisibilityToggle({
   return (
     <div className="flex items-center gap-3 rounded-lg border bg-card px-3.5 py-2 shadow-xs">
       <div className="flex flex-col">
-        <span className="text-xs font-semibold text-foreground">
-          {label}
-        </span>
+        <span className="text-xs font-semibold text-foreground">{label}</span>
         <span className="text-[11px] text-muted-foreground">
           {isVisible ? "Active (Shown live)" : "Hidden from landing page"}
         </span>

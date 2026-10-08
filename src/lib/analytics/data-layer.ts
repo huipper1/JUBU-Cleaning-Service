@@ -120,7 +120,9 @@ export function getCountryCodeFromPhone(phone: string): string {
  */
 export function getCookie(name: string): string {
   if (typeof document === "undefined") return "";
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name.replace(/([.$?*|{}()[\]\\/+^])/g, "\\$1")}=([^;]*)`));
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${name.replace(/([.$?*|{}()[\]\\/+^])/g, "\\$1")}=([^;]*)`)
+  );
   return match ? decodeURIComponent(match[1] || "") : "";
 }
 
@@ -178,7 +180,8 @@ export function trackLeadGenerated(payload: {
   const fbp = getCookie("_fbp");
   const fbc = getFacebookClickId();
 
-  const dynamicCity = payload.locationArea && payload.locationArea !== "N/A" ? payload.locationArea.trim() : "Dubai";
+  const dynamicCity =
+    payload.locationArea && payload.locationArea !== "N/A" ? payload.locationArea.trim() : "Dubai";
   const dynamicCountry = getCountryCodeFromPhone(googlePhone || payload.mobile);
   const dynamicRegion = dynamicCountry === "AE" ? "Dubai" : dynamicCity;
 
@@ -240,7 +243,11 @@ export function trackLeadGenerated(payload: {
 /**
  * Track Primary Conversion: WhatsApp Contact Click
  */
-export function trackWhatsAppClick(buttonLocation: string, areaContext?: string, targetPhone?: string): void {
+export function trackWhatsAppClick(
+  buttonLocation: string,
+  areaContext?: string,
+  targetPhone?: string
+): void {
   const fbp = getCookie("_fbp");
   const fbc = getFacebookClickId();
 
@@ -326,7 +333,11 @@ export function trackLocationSelect(areaId: string, areaName: string, zoneGroup?
 /**
  * Track Gallery Interaction: Before/After Lightbox
  */
-export function trackGalleryView(itemId: string, itemTitle: string, activeView: "before" | "after" = "after"): void {
+export function trackGalleryView(
+  itemId: string,
+  itemTitle: string,
+  activeView: "before" | "after" = "after"
+): void {
   const eventPayload: ViewGalleryItemEventData = {
     event: "view_item_details",
     gallery_item_id: itemId,
@@ -378,7 +389,8 @@ export function trackBookingConfirmed(payload: {
   const fbp = getCookie("_fbp");
   const fbc = getFacebookClickId();
 
-  const dynamicCity = payload.locationArea && payload.locationArea !== "N/A" ? payload.locationArea.trim() : "Dubai";
+  const dynamicCity =
+    payload.locationArea && payload.locationArea !== "N/A" ? payload.locationArea.trim() : "Dubai";
   const dynamicCountry = getCountryCodeFromPhone(googlePhone || payload.mobile);
   const dynamicRegion = dynamicCountry === "AE" ? "Dubai" : dynamicCity;
 
@@ -440,7 +452,11 @@ export function trackBookingConfirmed(payload: {
 /**
  * Track General CTA Button Clicks
  */
-export function trackCtaClick(ctaName: string, buttonLocation: string, additionalContext?: Record<string, unknown>): void {
+export function trackCtaClick(
+  ctaName: string,
+  buttonLocation: string,
+  additionalContext?: Record<string, unknown>
+): void {
   const eventPayload = {
     event: "cta_click",
     event_category: "Engagement",
@@ -466,3 +482,16 @@ export function trackFaqExpand(question: string, index: number): void {
   pushDataLayer(eventPayload);
 }
 
+/**
+ * Track Virtual Page View for Next.js App Router client-side navigation
+ */
+export function trackPageView(pagePath: string, pageTitle?: string): void {
+  const eventPayload = {
+    event: "virtual_page_view",
+    page_path: pagePath,
+    page_location: typeof window !== "undefined" ? window.location.href : pagePath,
+    page_title: pageTitle || (typeof document !== "undefined" ? document.title : "")
+  };
+
+  pushDataLayer(eventPayload);
+}

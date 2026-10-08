@@ -3,9 +3,11 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+
 import { MapPin } from "lucide-react";
 
 import type { ServiceArea, SiteSettings } from "@/types/content";
+
 import { trackCtaClick, trackLocationSelect, trackPhoneClick } from "@/lib/analytics";
 
 // Skeleton loader matching the dimensions of the map card
@@ -25,13 +27,10 @@ function MapSkeleton() {
 }
 
 // Dynamically load the Leaflet map with SSR disabled
-const ServiceAreaMap = dynamic(
-  () => import("./ServiceAreaMap"),
-  {
-    ssr: false,
-    loading: () => <MapSkeleton />
-  }
-);
+const ServiceAreaMap = dynamic(() => import("./ServiceAreaMap"), {
+  ssr: false,
+  loading: () => <MapSkeleton />
+});
 
 interface ServiceAreasProps {
   areas: ServiceArea[];
@@ -49,9 +48,7 @@ export function ServiceAreas({
   headline,
   nearYouText
 }: ServiceAreasProps) {
-  const [activeId, setActiveId] = useState<string | null>(
-    initialActiveAreaId ?? null
-  );
+  const [activeId, setActiveId] = useState<string | null>(initialActiveAreaId ?? null);
 
   const handleAreaClick = (id: string, name?: string) => {
     setActiveId((prev) => {
@@ -101,25 +98,19 @@ export function ServiceAreas({
       className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
       aria-label="Dubai Service Areas"
     >
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-14 xl:gap-16">
-          
           {/* Left Column: Rounded-2xl Map Container with no extra padding/whitespace */}
           <div className="w-full lg:col-span-6">
             <div className="overflow-hidden rounded-2xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)]">
               <div className="h-115 w-full sm:h-125 lg:h-135">
-                <ServiceAreaMap
-                  areas={areas}
-                  activeId={activeId}
-                  onSelect={setActiveId}
-                />
+                <ServiceAreaMap areas={areas} activeId={activeId} onSelect={setActiveId} />
               </div>
             </div>
           </div>
 
           {/* Right Column: Title, Intro Description, 2x2 Feature Cards, and Dual Action Buttons */}
           <div className="flex flex-col items-start text-left lg:col-span-6">
-            
             {/* Badge */}
             <span className="mb-2 text-xs font-bold tracking-wider text-[#00a651] uppercase sm:text-sm">
               DUBAI SERVICE AREAS
@@ -170,9 +161,7 @@ export function ServiceAreas({
 
             {/* Bottom Quick Chips for All 10 Areas */}
             <div className="mt-5 flex flex-wrap items-center gap-1.5">
-              <span className="text-[11px] font-semibold text-slate-400">
-                Direct pin:
-              </span>
+              <span className="text-[11px] font-semibold text-slate-400">Direct pin:</span>
               {areas.map((area) => {
                 const isActive = area.id === activeId;
                 return (
@@ -218,9 +207,7 @@ export function ServiceAreas({
                 <span>({phoneDisplay})</span>
               </a>
             </div>
-
           </div>
-
         </div>
       </div>
     </section>

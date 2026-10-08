@@ -1,14 +1,15 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { mockSettingsData } from "../src/lib/content/mock/data/settings";
-import { mockHeroData } from "../src/lib/content/mock/data/hero";
+
 import { mockAboutData } from "../src/lib/content/mock/data/about";
-import { mockServicesData } from "../src/lib/content/mock/data/services";
-import { mockWhyChooseData } from "../src/lib/content/mock/data/why-choose";
-import { mockTeamData } from "../src/lib/content/mock/data/team";
-import { mockGalleryData } from "../src/lib/content/mock/data/gallery";
-import { mockAreasData } from "../src/lib/content/mock/data/areas";
 import { mockAreaLandingPagesData } from "../src/lib/content/mock/data/area-landing-pages";
+import { mockAreasData } from "../src/lib/content/mock/data/areas";
+import { mockGalleryData } from "../src/lib/content/mock/data/gallery";
+import { mockHeroData } from "../src/lib/content/mock/data/hero";
+import { mockServicesData } from "../src/lib/content/mock/data/services";
+import { mockSettingsData } from "../src/lib/content/mock/data/settings";
+import { mockTeamData } from "../src/lib/content/mock/data/team";
 import { mockTestimonialsData } from "../src/lib/content/mock/data/testimonials";
+import { mockWhyChooseData } from "../src/lib/content/mock/data/why-choose";
 
 const prisma = new PrismaClient();
 

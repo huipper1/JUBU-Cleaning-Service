@@ -10,17 +10,18 @@
 
 ## 1. Areas and Routes
 
-| # | Area | Route | Ad focus |
-|---|---|---|---|
-| 1 | Business Bay | `/business-bay` | Office & apartment cleaning, post-construction |
-| 2 | Dubai Marina | `/dubai-marina` | Home cleaning & maid services, move-in/move-out |
-| 3 | Jumeirah | `/jumeirah` | Villa deep cleaning, post-construction & move-in villa cleaning |
-| 4 | Downtown Dubai | `/downtown-dubai` | Luxury apartment & penthouse cleaning, post-construction & move-in |
-| 5 | Jumeirah Village Circle (JVC) | `/jvc` | Home & apartment cleaning, deep cleaning, move-in/out, post-construction |
+| #   | Area                          | Route             | Ad focus                                                                 |
+| --- | ----------------------------- | ----------------- | ------------------------------------------------------------------------ |
+| 1   | Business Bay                  | `/business-bay`   | Office & apartment cleaning, post-construction                           |
+| 2   | Dubai Marina                  | `/dubai-marina`   | Home cleaning & maid services, move-in/move-out                          |
+| 3   | Jumeirah                      | `/jumeirah`       | Villa deep cleaning, post-construction & move-in villa cleaning          |
+| 4   | Downtown Dubai                | `/downtown-dubai` | Luxury apartment & penthouse cleaning, post-construction & move-in       |
+| 5   | Jumeirah Village Circle (JVC) | `/jvc`            | Home & apartment cleaning, deep cleaning, move-in/out, post-construction |
 
 Decision: use **`/[area]`** as a single dynamic route at the root level (not `/areas/[area]`), matching the client's preferred flat URL structure, and not 5 separate page files, so all 5 pages share one template.
 
 **Route-collision rule (important):** Next.js gives statically-defined routes priority over a dynamic `[area]` segment automatically, so existing/future top-level routes such as `/admin`, `/api/*`, `/sitemap.xml`, `/robots.txt`, `/favicon.ico` are never intercepted by `[area]`. Even so:
+
 - Maintain an explicit allow-list of valid area slugs (the 5 in the table above) inside the route handler. Any request to `/[area]` where the slug is not in that list must render Next's standard `not-found` (404), not attempt a partial render.
 - Before adding any new top-level static route in the future (e.g. `/about`, `/pricing`), check it doesn't collide with a current or planned area slug.
 - The main one-page site at `/` is untouched and keeps working exactly as it does today.
@@ -45,6 +46,7 @@ Each area page renders **the exact same sections, in the exact same order, using
 12. Sticky mobile bar
 
 **What changes per area (content only, not layout):**
+
 - Hero headline and intro paragraph
 - The services section's heading/subheading and, where the client's copy lists a different service order/emphasis, its bullet list (still rendered by the same `Services` component)
 - One featured/secondary content block (the second headline from the client's brief, e.g. "Post-Construction Office & Apartment Cleaning") — inserted using the same visual card/band style already used elsewhere on the page for a secondary content block, not a new custom layout
@@ -54,6 +56,7 @@ Each area page renders **the exact same sections, in the exact same order, using
 - Meta title/description, H1, canonical URL, JSON-LD `areaServed`, image `alt` text
 
 **What does NOT change per area** (rendered byte-for-byte identical to `/`):
+
 - Why Choose JUBU content
 - About Us / Company Profile content
 - Our Team content
@@ -64,7 +67,9 @@ Each area page renders **the exact same sections, in the exact same order, using
 - WhatsApp number, phone number, all button behavior
 
 ### 2.1 FAQ section
+
 The root page has no FAQ section today. Since the client's copy includes one per area, add a single new `Faq` component, styled to match the existing design system (same card/accordion look already used elsewhere, e.g. matching the corner radius, spacing and color tokens already defined in the project — do not invent a new visual style for it). This component is:
+
 - Used on all 5 area pages
 - Also safe to reuse on `/` later if desired, but **do not add it to `/` in this stage** unless explicitly asked — keep this stage's change to the area pages only, so the root page's current, approved design is not touched.
 
@@ -76,26 +81,26 @@ Follow the existing content-layer pattern: **no area copy hard-coded inside comp
 
 ### 3.1 New entity: `AreaLandingPage`
 
-| Field | Type | Notes |
-|---|---|---|
-| `id` | string | e.g. `business-bay` |
-| `slug` | string | matches the route segment, e.g. `business-bay` |
-| `areaName` | string | display name, e.g. "Business Bay" |
-| `metaTitle` | string | for `<title>` |
-| `metaDescription` | string | for meta description |
-| `heroHeadline` | string | H1, passed into the existing `Hero` component's headline prop |
-| `heroIntro` | string | short paragraph, passed into the existing `Hero` component's intro/subheadline prop |
-| `heroImage` | ImageRef | optional override; falls back to the root page's default hero image if not set |
-| `servicesSectionTitle` | string | passed into the existing `Services` component's heading prop |
-| `servicesList` | string[] | bullet list of services for this area; if the existing `Services` component renders from the global `Service[]` list rather than a plain string list, keep using that global list and only override the heading — do not fork the services data model per area unless the copy genuinely requires a different service set to display (see implementer note below) |
-| `featuredBlockTitle` | string | secondary headline, e.g. "Post-Construction Office & Apartment Cleaning" |
-| `featuredBlockText` | string \| { title: string; text: string }[] | most areas: one block. JVC: three blocks (see §4.5) |
-| `nearYouTitle` | string | e.g. "Cleaning Services Near You in Business Bay" |
-| `nearYouText` | string | paragraph |
-| `finalCtaTitle` | string | passed into the existing quote-band component's heading prop, e.g. "Need Cleaning Services in Business Bay?" |
-| `faqs` | `{ question: string; answer: string }[]` | 4 items, rendered by the new `Faq` component |
-| `isActive` | boolean | so a page can be turned off without deleting it |
-| `order` | number | for any future listing/index of area pages |
+| Field                  | Type                                        | Notes                                                                                                                                                                                                                                                                                                                                                             |
+| ---------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                   | string                                      | e.g. `business-bay`                                                                                                                                                                                                                                                                                                                                               |
+| `slug`                 | string                                      | matches the route segment, e.g. `business-bay`                                                                                                                                                                                                                                                                                                                    |
+| `areaName`             | string                                      | display name, e.g. "Business Bay"                                                                                                                                                                                                                                                                                                                                 |
+| `metaTitle`            | string                                      | for `<title>`                                                                                                                                                                                                                                                                                                                                                     |
+| `metaDescription`      | string                                      | for meta description                                                                                                                                                                                                                                                                                                                                              |
+| `heroHeadline`         | string                                      | H1, passed into the existing `Hero` component's headline prop                                                                                                                                                                                                                                                                                                     |
+| `heroIntro`            | string                                      | short paragraph, passed into the existing `Hero` component's intro/subheadline prop                                                                                                                                                                                                                                                                               |
+| `heroImage`            | ImageRef                                    | optional override; falls back to the root page's default hero image if not set                                                                                                                                                                                                                                                                                    |
+| `servicesSectionTitle` | string                                      | passed into the existing `Services` component's heading prop                                                                                                                                                                                                                                                                                                      |
+| `servicesList`         | string[]                                    | bullet list of services for this area; if the existing `Services` component renders from the global `Service[]` list rather than a plain string list, keep using that global list and only override the heading — do not fork the services data model per area unless the copy genuinely requires a different service set to display (see implementer note below) |
+| `featuredBlockTitle`   | string                                      | secondary headline, e.g. "Post-Construction Office & Apartment Cleaning"                                                                                                                                                                                                                                                                                          |
+| `featuredBlockText`    | string \| { title: string; text: string }[] | most areas: one block. JVC: three blocks (see §4.5)                                                                                                                                                                                                                                                                                                               |
+| `nearYouTitle`         | string                                      | e.g. "Cleaning Services Near You in Business Bay"                                                                                                                                                                                                                                                                                                                 |
+| `nearYouText`          | string                                      | paragraph                                                                                                                                                                                                                                                                                                                                                         |
+| `finalCtaTitle`        | string                                      | passed into the existing quote-band component's heading prop, e.g. "Need Cleaning Services in Business Bay?"                                                                                                                                                                                                                                                      |
+| `faqs`                 | `{ question: string; answer: string }[]`    | 4 items, rendered by the new `Faq` component                                                                                                                                                                                                                                                                                                                      |
+| `isActive`             | boolean                                     | so a page can be turned off without deleting it                                                                                                                                                                                                                                                                                                                   |
+| `order`                | number                                      | for any future listing/index of area pages                                                                                                                                                                                                                                                                                                                        |
 
 > **Implementer note on `servicesList`:** the client's per-area service bullet lists are largely the same 8 items as the site's existing 6 core services, just phrased slightly differently and reordered per area (e.g. "Apartment Cleaning" vs. "Home Cleaning", "Kitchen & Bathroom Cleaning" and "Floor Cleaning" as extra line items not currently separate services on the root page). Two acceptable approaches — pick whichever requires the smaller, safer change to the existing `Services` component, and note the choice in your summary when this step is done:
 > (a) Keep rendering the existing global `Service[]` list unchanged (same 6 cards, same order) and only swap the section heading/subheading per area, treating the client's bullet lists as descriptive copy rather than a literal 1:1 re-list — the safer, more "no redesign" option; or
@@ -145,6 +150,7 @@ components/
 > This is **real marketing copy**, not placeholder/dummy data. Insert it into `area-landing-pages.ts` largely as-is; only reformat into the fields in §3.1 and keep phrasing intact. Do not shorten or rewrite it.
 
 ### 4.1 Business Bay (`business-bay`)
+
 - **Hero headline:** Professional Office & Apartment Cleaning Services in Business Bay
 - **Hero intro:** Looking for reliable cleaning services in Business Bay? JUBU Cleaning Service provides professional cleaning solutions for apartments, offices and commercial properties in Business Bay, Dubai. Whether you need regular cleaning, deep cleaning or post-construction cleaning, our team is ready to help.
 - **Services section title:** Our Cleaning Services in Business Bay
@@ -161,6 +167,7 @@ components/
 - **Final CTA title:** Need Cleaning Services in Business Bay?
 
 ### 4.2 Dubai Marina (`dubai-marina`)
+
 - **Hero headline:** Top-Rated Home Cleaning & Maid Services in Dubai Marina
 - **Hero intro:** Need reliable home cleaning services in Dubai Marina? JUBU Cleaning Service provides professional home, apartment and deep cleaning services for residents in Dubai Marina. From regular home cleaning to detailed move-in and move-out cleaning, we can help keep your property clean and ready.
 - **Services section title:** Our Cleaning Services in Dubai Marina
@@ -177,6 +184,7 @@ components/
 - **Final CTA title:** Need Home Cleaning in Dubai Marina?
 
 ### 4.3 Jumeirah (`jumeirah`)
+
 - **Hero headline:** Premium Villa Deep Cleaning Services in Jumeirah
 - **Hero intro:** Looking for professional villa cleaning services in Jumeirah? JUBU Cleaning Service provides detailed villa deep cleaning and move-in cleaning services for residential properties in Jumeirah, Dubai. Our team can help prepare villas for move-in, after renovation or construction, or for a detailed one-time clean.
 - **Services section title:** Our Villa Cleaning Services in Jumeirah
@@ -193,6 +201,7 @@ components/
 - **Final CTA title:** Need Villa Cleaning in Jumeirah?
 
 ### 4.4 Downtown Dubai (`downtown-dubai`)
+
 - **Hero headline:** Luxury Apartment & Penthouse Cleaning in Downtown Dubai
 - **Hero intro:** JUBU Cleaning Service provides professional apartment, penthouse and deep cleaning services in Downtown Dubai. Whether you are preparing a property for move-in, moving out or need detailed cleaning after construction or renovation, our team can help.
 - **Services section title:** Our Cleaning Services in Downtown Dubai
@@ -209,6 +218,7 @@ components/
 - **Final CTA title:** Need Apartment or Penthouse Cleaning in Downtown Dubai?
 
 ### 4.5 JVC (`jvc`)
+
 - **Hero headline:** Professional Home & Apartment Cleaning Services in JVC
 - **Hero intro:** Looking for reliable cleaning services in Jumeirah Village Circle (JVC), Dubai? JUBU Cleaning Service provides professional home and apartment cleaning services in JVC, including deep cleaning, move-in and move-out cleaning, and post-construction cleaning. Whether you need a one-time deep clean or cleaning for a newly completed property, our team is ready to help.
 - **Services section title:** Our Cleaning Services in JVC
@@ -241,6 +251,7 @@ components/
 ## 6. SEO and Tracking (per-page requirements)
 
 Each of the 5 pages must have, independently:
+
 - Unique `<title>` and meta description (from `metaTitle`/`metaDescription`)
 - Unique H1 (`heroHeadline`, rendered by the same `Hero` component used on `/`)
 - Unique FAQ content (new `Faq` section, area pages only)
@@ -253,6 +264,7 @@ Each of the 5 pages must have, independently:
 - Meta Pixel / GA4 `PageView` fires per area page, same as the root page; consider adding the area slug as an event parameter so ad performance can be split by area, if the existing analytics helper already supports custom event parameters
 
 Google/Facebook Ads destination URLs (to hand back to the client once deployed):
+
 ```
 https://jebucleaning.netlify.app/business-bay
 https://jebucleaning.netlify.app/dubai-marina
@@ -260,6 +272,7 @@ https://jebucleaning.netlify.app/jumeirah
 https://jebucleaning.netlify.app/downtown-dubai
 https://jebucleaning.netlify.app/jvc
 ```
+
 (Replace with the production domain if one is set up before launch.)
 
 ---
@@ -267,6 +280,7 @@ https://jebucleaning.netlify.app/jvc
 ## 7. Images (optional polish, not blocking)
 
 The client mentioned swapping 1–2 images per area. Treat this as optional and non-blocking for this stage:
+
 - If distinct area photos exist already in the project's gallery/service images, map one relevant image to each area's hero via the optional `heroImage` field (e.g. a villa photo for Jumeirah, an apartment/tower photo for Downtown and Dubai Marina, an office photo for Business Bay).
 - If no distinct images are available, all 5 pages use the same existing hero image as `/` and this is acceptable for launch — copy and headline differentiation matters far more for Quality Score than the photo does.
 - Do not block the whole build on new photography.
@@ -276,6 +290,7 @@ The client mentioned swapping 1–2 images per area. Treat this as optional and 
 ## 8. Build Checklist
 
 ### Step 1: Data and types
+
 - [ ] Add `AreaLandingPage` type + Zod schema to `lib/content/types.ts`
 - [ ] Add `getAreaLandingPages()` and `getAreaLandingPage(slug)` to the `ContentRepository` interface
 - [ ] Implement both in `MockContentRepository`
@@ -283,6 +298,7 @@ The client mentioned swapping 1–2 images per area. Treat this as optional and 
 - [ ] Define and export the allow-list of the 5 valid slugs in one place (used by both the route's `generateStaticParams` and its runtime validity check)
 
 ### Step 2: Route and shared layout
+
 - [ ] Decide and apply the approach from §3.2 for sharing page composition between `app/page.tsx` and `app/[area]/page.tsx` (extract a shared layout/helper, or mirror the JSX with a linking comment)
 - [ ] Create `app/[area]/page.tsx`; validate `params.area` against the allow-list, call `notFound()` if invalid or inactive
 - [ ] Implement `generateStaticParams` returning the 5 slugs
@@ -292,17 +308,20 @@ The client mentioned swapping 1–2 images per area. Treat this as optional and 
 - [ ] Build the new `Faq` component matching the existing design system, used only on the 5 area pages in this stage
 
 ### Step 3: Lead form area tracking
+
 - [ ] Add optional `sourceArea` prop to the lead form, defaulting to `"main-page"` when not provided
 - [ ] Include `Source: {sourceArea}` in the WhatsApp message text (matching the existing message template)
 - [ ] Confirm the background call to the lead service (mock or real) also receives `sourceArea`
 
 ### Step 4: SEO and tracking
+
 - [ ] Add JSON-LD (`LocalBusiness`/`Service` with area-specific `areaServed`) per page
 - [ ] Add FAQPage JSON-LD per page from the `faqs` array
 - [ ] Add all 5 routes to `sitemap.ts`
 - [ ] Confirm Meta Pixel / GA4 `PageView` fires per area page, with the area slug attached as an event parameter if supported
 
 ### Step 5: QA
+
 - [ ] Visit all 5 pages and confirm: correct H1, correct services section heading, correct featured block(s), correct FAQ, working WhatsApp/Call/Quote buttons, working form submission with the correct `source_area`
 - [ ] Side-by-side visual check: every area page matches `/`'s layout, spacing, colors and component styling exactly, aside from the area-specific text and the new FAQ section
 - [ ] Confirm `/` (root page) is completely unaffected — same DOM structure, same content, no FAQ section added to it

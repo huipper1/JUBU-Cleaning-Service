@@ -1,25 +1,22 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db/prisma";
+
 import {
-  Inbox,
-  Globe2,
-  Layers,
-  Clock,
   ArrowRight,
-  ShieldCheck,
   CheckCircle2,
+  Clock,
   ExternalLink,
+  Globe2,
+  Inbox,
+  Layers,
+  ShieldCheck
 } from "lucide-react";
+
+import { prisma } from "@/lib/db/prisma";
+
 import { AdminPageHeader } from "@/components/admin/page-header";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +30,8 @@ export default async function AdminDashboardPage() {
       prisma.lead.findMany({
         where: { deletedAt: null },
         take: 5,
-        orderBy: { createdAt: "desc" },
-      }),
+        orderBy: { createdAt: "desc" }
+      })
     ]);
 
   return (
@@ -143,7 +140,7 @@ export default async function AdminDashboardPage() {
           <CardContent>
             {recentLeads.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center text-sm text-muted-foreground">
-                <Inbox className="size-8 text-muted-foreground/40 mb-2" />
+                <Inbox className="mb-2 size-8 text-muted-foreground/40" />
                 No inquiries received yet. Incoming submissions will appear here.
               </div>
             ) : (
@@ -154,7 +151,7 @@ export default async function AdminDashboardPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">{lead.fullName}</span>
                         {lead.requestType === "booking" ? (
-                          <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/30 text-[10px]">
+                          <Badge className="border-sky-500/30 bg-sky-500/15 text-[10px] text-sky-600">
                             {lead.paymentMethod === "cash"
                               ? "Cash Delivery"
                               : lead.paymentMethod === "bank_transfer"
@@ -178,15 +175,15 @@ export default async function AdminDashboardPage() {
                           lead.status === "new"
                             ? "outline"
                             : lead.status === "completed"
-                            ? "default"
-                            : "secondary"
+                              ? "default"
+                              : "secondary"
                         }
                       >
                         {lead.status === "quotation_sent"
                           ? "Quotation Sent"
                           : lead.status === "lost_cancelled"
-                          ? "Lost/Cancelled"
-                          : lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
+                            ? "Lost/Cancelled"
+                            : lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground">
                         {new Date(lead.createdAt).toLocaleDateString()}
@@ -246,7 +243,8 @@ export default async function AdminDashboardPage() {
                 <span>Direct Publishing Active</span>
               </div>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                Edits made in this admin dashboard revalidate live website routes automatically via Next.js cache tags.
+                Edits made in this admin dashboard revalidate live website routes automatically via
+                Next.js cache tags.
               </p>
             </CardContent>
           </Card>

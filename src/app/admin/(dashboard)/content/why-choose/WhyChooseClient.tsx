@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+
+import { CheckCircle2, Loader2, Pencil, Save, ShieldCheck, X, XCircle } from "lucide-react";
 import { toast } from "sonner";
-import { ShieldCheck, CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
-import { toggleWhyChooseActiveAction, updateWhyChooseAction } from "./actions";
-import { Card, CardContent } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+
+import { toggleWhyChooseActiveAction, updateWhyChooseAction } from "./actions";
 
 interface WhyChooseItem {
   id: string;
@@ -31,18 +34,12 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
 
   const handleToggle = async (item: WhyChooseItem) => {
     const nextVal = !item.isActive;
-    setItems(
-      items.map((i) => (i.id === item.id ? { ...i, isActive: nextVal } : i))
-    );
+    setItems(items.map((i) => (i.id === item.id ? { ...i, isActive: nextVal } : i)));
 
     const res = await toggleWhyChooseActiveAction(item.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
-      setItems(
-        items.map((i) =>
-          i.id === item.id ? { ...i, isActive: !nextVal } : i
-        )
-      );
+      setItems(items.map((i) => (i.id === item.id ? { ...i, isActive: !nextVal } : i)));
     } else {
       toast.success(`${item.title} is now ${nextVal ? "active" : "disabled"}`);
     }
@@ -62,7 +59,7 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
         title: editTitle,
         description: editDesc,
         order: editOrder,
-        isActive: item.isActive,
+        isActive: item.isActive
       });
 
       if (res.success) {
@@ -73,7 +70,7 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
                   ...i,
                   title: editTitle,
                   description: editDesc,
-                  order: editOrder,
+                  order: editOrder
                 }
               : i
           )
@@ -98,28 +95,20 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
             <CardContent className="p-5">
               {isEdit ? (
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between pb-2 border-b">
-                    <span className="font-semibold text-foreground text-xs">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <span className="text-xs font-semibold text-foreground">
                       Editing Pillar #{item.order}
                     </span>
                     <div className="flex items-center gap-1.5">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingId(null)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>
                         <X className="size-4" />
                         Cancel
                       </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleSave(item)}
-                        disabled={isSaving}
-                      >
+                      <Button size="sm" onClick={() => handleSave(item)} disabled={isSaving}>
                         {isSaving ? (
-                          <Loader2 className="size-3.5 animate-spin mr-1" />
+                          <Loader2 className="mr-1 size-3.5 animate-spin" />
                         ) : (
-                          <Save className="size-3.5 mr-1" />
+                          <Save className="mr-1 size-3.5" />
                         )}
                         <span>Save</span>
                       </Button>
@@ -127,24 +116,17 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-foreground">
-                      Title
-                    </label>
-                    <Input
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                    />
+                    <label className="text-xs font-medium text-foreground">Title</label>
+                    <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-foreground">
-                      Description
-                    </label>
+                    <label className="text-xs font-medium text-foreground">Description</label>
                     <textarea
                       rows={3}
                       value={editDesc}
                       onChange={(e) => setEditDesc(e.target.value)}
-                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                      className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                     />
                   </div>
                 </div>
@@ -156,10 +138,8 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
                         <ShieldCheck className="size-4" />
                       </div>
                       <div className="flex flex-col">
-                        <h3 className="text-sm font-semibold text-foreground">
-                          {item.title}
-                        </h3>
-                        <span className="text-[10px] text-muted-foreground font-mono">
+                        <h3 className="text-sm font-semibold text-foreground">{item.title}</h3>
+                        <span className="font-mono text-[10px] text-muted-foreground">
                           Order #{item.order}
                         </span>
                       </div>
@@ -172,29 +152,25 @@ export function WhyChooseClient({ initialItems }: WhyChooseClientProps) {
                     >
                       {item.isActive ? (
                         <>
-                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
+                          <CheckCircle2 className="mr-1 size-3.5 text-emerald-500" />
                           <span>Active</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
+                          <XCircle className="mr-1 size-3.5 text-muted-foreground" />
                           <span>Disabled</span>
                         </>
                       )}
                     </Button>
                   </div>
 
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
 
-                  <div className="pt-2 border-t flex justify-end">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => startEdit(item)}
-                    >
-                      <Pencil className="size-3.5 mr-1" />
+                  <div className="flex justify-end border-t pt-2">
+                    <Button variant="outline" size="sm" onClick={() => startEdit(item)}>
+                      <Pencil className="mr-1 size-3.5" />
                       <span>Edit</span>
                     </Button>
                   </div>

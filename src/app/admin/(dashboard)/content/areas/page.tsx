@@ -1,20 +1,21 @@
 import { prisma } from "@/lib/db/prisma";
-import { AreasClient } from "./AreasClient";
-import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { AdminPageHeader } from "@/components/admin/page-header";
 import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
+import { AreasClient } from "./AreasClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAreasPage() {
   const [dbAreas, settings] = await Promise.all([
     prisma.serviceArea.findMany({
-      orderBy: { order: "asc" },
+      orderBy: { order: "asc" }
     }),
     prisma.siteSettings.findUnique({
       where: { id: "default" },
-      select: { showAreas: true },
-    }),
+      select: { showAreas: true }
+    })
   ]);
 
   const serialized = dbAreas.map((a) => ({
@@ -24,7 +25,7 @@ export default async function AdminAreasPage() {
     lat: a.lat ?? undefined,
     lng: a.lng ?? undefined,
     order: a.order,
-    isActive: a.isActive,
+    isActive: a.isActive
   }));
 
   return (

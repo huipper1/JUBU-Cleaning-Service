@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { prisma } from "@/lib/db/prisma";
 
 export type SectionKey =
@@ -14,16 +15,13 @@ export type SectionKey =
   | "showAreas"
   | "showContact";
 
-export async function toggleSectionVisibilityAction(
-  sectionKey: SectionKey,
-  isVisible: boolean
-) {
+export async function toggleSectionVisibilityAction(sectionKey: SectionKey, isVisible: boolean) {
   try {
     await prisma.siteSettings.update({
       where: { id: "default" },
       data: {
-        [sectionKey]: isVisible,
-      },
+        [sectionKey]: isVisible
+      }
     });
 
     revalidatePath("/");
@@ -32,7 +30,7 @@ export async function toggleSectionVisibilityAction(
   } catch (err: unknown) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : "Failed to toggle section visibility",
+      error: err instanceof Error ? err.message : "Failed to toggle section visibility"
     };
   }
 }

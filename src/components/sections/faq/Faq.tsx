@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+
 import { ChevronDown, HelpCircle } from "lucide-react";
 
 import type { FaqItem } from "@/types/content";
-import { SectionHeading } from "@/ui";
+
 import { trackFaqExpand } from "@/lib/analytics";
+
+import { SectionHeading } from "@/ui";
 
 interface FaqProps {
   faqs: FaqItem[];
@@ -37,9 +40,7 @@ export function Faq({
 
   const sectionTitle =
     title ||
-    (areaName
-      ? `Frequently Asked Questions in ${areaName}`
-      : "Frequently Asked Questions");
+    (areaName ? `Frequently Asked Questions in ${areaName}` : "Frequently Asked Questions");
 
   const sectionDescription =
     description ||
@@ -59,7 +60,7 @@ export function Faq({
           title={sectionTitle}
           description={sectionDescription}
           align="center"
-          className="mb-12 max-w-2xl mx-auto text-center"
+          className="mx-auto mb-12 max-w-2xl text-center"
         />
 
         <div className="mx-auto max-w-3xl space-y-3.5">
@@ -108,7 +109,7 @@ export function Faq({
                     aria-labelledby={questionId}
                     className="border-t border-slate-100 px-5 pt-3 pb-5 sm:px-6 sm:pb-6"
                   >
-                    <p className="text-xs leading-relaxed text-[#4a5f78] sm:text-sm pl-11">
+                    <p className="pl-11 text-xs leading-relaxed text-[#4a5f78] sm:text-sm">
                       {faq.answer}
                     </p>
                   </div>

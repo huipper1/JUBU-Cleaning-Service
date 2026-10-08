@@ -5,7 +5,7 @@ import { env } from "@/env";
 export const siteConfig: SiteConfig = {
   name: "JUBU Cleaning Service | Professional Cleaning Company in Dubai",
   description:
-    "Licensed Dubai cleaning company providing deep cleaning, residential cleaning, office cleaning, sofa & carpet cleaning, and move-in sanitization across 10 Dubai communities. Free custom quotes via WhatsApp or phone.",
+    "Professional cleaning services in Dubai. JUBU Cleaning Service offers home, villa, office, deep cleaning, and sofa cleaning across Dubai. Get a free quote today!",
   url: env.NEXT_PUBLIC_SITE_URL,
   author: "JUBU Cleaning Service LLC",
   locale: "en_AE",

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { prisma } from "@/lib/db/prisma";
 
 export async function toggleAreaActiveAction(id: string, isActive: boolean) {

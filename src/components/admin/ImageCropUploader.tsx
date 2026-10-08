@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 
 export interface ImageCropUploaderProps {
   currentImageUrl?: string;
-  folder: "branding" | "hero" | "services" | "gallery" | "team" | "areas";
+  folder: "branding" | "hero" | "services" | "gallery" | "team" | "areas" | "blog";
   aspectRatio?: number; // e.g. 1 for 1:1, 4/3 for 4:3, undefined for no fixed aspect ratio
   label?: string;
   onUploadComplete: (url: string) => void;

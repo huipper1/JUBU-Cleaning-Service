@@ -10,7 +10,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Home Cleaning",
     image: {
       src: "/images/placeholder/gallery-home.png", // DUMMY
-      alt: "Pristine luxury villa cleaned by JUBU in Dubai",
+      alt: "Villa Cleaning - Pristine luxury villa cleaned by JUBU in Dubai",
       width: 500,
       height: 500
     },
@@ -27,7 +27,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Office Cleaning",
     image: {
       src: "/images/placeholder/gallery-office.png", // DUMMY
-      alt: "Clean modern open plan office in Business Bay",
+      alt: "Office Cleaning - Clean modern open plan office in Business Bay",
       width: 500,
       height: 500
     },
@@ -44,7 +44,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Deep Cleaning",
     image: {
       src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
-      alt: "Deep cleaning for healthier and fresher environment",
+      alt: "Deep Cleaning - Thorough sanitization for healthier and fresher environment",
       width: 500,
       height: 500
     },
@@ -74,7 +74,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Post Construction Cleaning",
     image: {
       src: "/images/placeholder/gallery-construction.png", // DUMMY
-      alt: "Post-construction dust extraction in new Dubai property",
+      alt: "Post Construction Cleaning - Dust extraction in new Dubai property",
       width: 500,
       height: 500
     },
@@ -91,7 +91,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Sofa & Carpet Cleaning",
     image: {
       src: "/images/placeholder/gallery-sofa.png", // DUMMY
-      alt: "Freshly cleaned and sanitized fabric sofa and upholstery",
+      alt: "Sofa & Carpet Cleaning - Sanitized fabric sofa and upholstery",
       width: 500,
       height: 500
     },
@@ -108,7 +108,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Home Cleaning",
     image: {
       src: "/images/placeholder/gallery-home.png", // DUMMY
-      alt: "Spotless modern living space in Dubai",
+      alt: "Home Cleaning - Spotless modern living space in Dubai",
       width: 500,
       height: 500
     },
@@ -125,7 +125,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Move In / Move Out Cleaning",
     image: {
       src: "/images/placeholder/gallery-move.png", // DUMMY
-      alt: "Empty polished apartment ready for tenant move-in",
+      alt: "Move In / Move Out Cleaning - Empty polished apartment ready for tenant move-in",
       width: 500,
       height: 500
     },
@@ -155,7 +155,7 @@ export const mockGalleryData: GalleryItem[] = [
     serviceName: "Office Cleaning",
     image: {
       src: "/images/placeholder/gallery-office.png", // DUMMY
-      alt: "Spotless corporate office workspaces",
+      alt: "Commercial Cleaning - Spotless corporate office workspaces",
       width: 500,
       height: 500
     },

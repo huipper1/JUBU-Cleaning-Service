@@ -2,11 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
 import { Mail, MapPin, Phone } from "lucide-react";
 
-import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
-import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
+
+import {
+  trackCtaClick,
+  trackEmailClick,
+  trackPhoneClick,
+  trackWhatsAppClick
+} from "@/lib/analytics";
+
+import { WhatsAppIcon } from "@/components/icons";
 
 interface ContactProps {
   settings: SiteSettings;
@@ -20,19 +28,17 @@ export function Contact({ settings }: ContactProps) {
   return (
     <section
       id="contact"
-      className="relative z-30 -mb-32 sm:-mb-44 lg:-mb-52 pointer-events-none"
+      className="pointer-events-none relative z-30 -mb-32 sm:-mb-44 lg:-mb-52"
       aria-label="Contact JUBU Cleaning Service"
     >
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
+      <div className="pointer-events-auto relative container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Floating Banner Card matching website theme */}
         <div className="relative overflow-visible rounded-3xl border border-white/15 bg-linear-to-br from-[#061e45] via-[#041530] to-[#020b18] px-6 pt-10 pb-10 shadow-[0_25px_50px_-12px_rgba(2,11,24,0.7)] sm:px-12 sm:pt-14 sm:pb-14 lg:px-16 lg:py-16">
-
           {/* Subtle ambient lighting glows within card */}
           <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-[80px]" />
-          <div className="pointer-events-none absolute bottom-0 right-1/4 h-56 w-56 rounded-full bg-brand-green/15 blur-[90px]" />
+          <div className="pointer-events-none absolute right-1/4 bottom-0 h-56 w-56 rounded-full bg-brand-green/15 blur-[90px]" />
 
           <div className="relative z-10 flex flex-col items-center gap-8 lg:grid lg:grid-cols-12 lg:gap-4">
-
             {/* Content Column */}
             <div className="flex w-full flex-col items-start text-left lg:col-span-7 xl:col-span-7">
               <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-950/50 px-3.5 py-1 text-xs font-bold tracking-wider text-sky-300 uppercase backdrop-blur-xs sm:text-sm">
@@ -42,7 +48,10 @@ export function Contact({ settings }: ContactProps) {
                 Need Cleaning? <br className="hidden sm:inline" />
                 <span className="text-[#34d399]">We’re Ready</span> to Help!
               </h2>
-              <p className="text-slate-300 mb-3 max-w-xl">Tell us your location, property type and cleaning requirements. We’ll provide a free quote based on your needs.</p>
+              <p className="mb-3 max-w-xl text-slate-300">
+                Tell us your location, property type and cleaning requirements. We’ll provide a free
+                quote based on your needs.
+              </p>
 
               {/* Full Contact Details from SiteSettings */}
               <div className="mb-6 flex flex-col gap-2.5 text-xs text-slate-200 sm:text-sm">
@@ -50,16 +59,22 @@ export function Contact({ settings }: ContactProps) {
                   href={settings.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-2 text-slate-300 hover:text-white transition-colors"
+                  onClick={() =>
+                    trackCtaClick("open_google_maps", "contact_section", {
+                      target_url: settings.mapUrl
+                    })
+                  }
+                  className="flex items-start gap-2 text-slate-300 transition-colors hover:text-white"
                 >
-                  <MapPin className="h-4 w-4 shrink-0 text-[#34d399] mt-0.5" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#34d399]" />
                   <span>{settings.address}</span>
                 </a>
 
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                   <a
                     href={`mailto:${settings.email}`}
-                    className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
+                    onClick={() => trackEmailClick("contact_section", settings.email)}
+                    className="flex items-center gap-2 text-slate-300 transition-colors hover:text-white"
                   >
                     <Mail className="h-4 w-4 shrink-0 text-[#38bdf8]" />
                     <span>{settings.email}</span>
@@ -69,8 +84,14 @@ export function Contact({ settings }: ContactProps) {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => trackWhatsAppClick("contact_section_inline", undefined, settings.whatsappNumber)}
-                    className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
+                    onClick={() =>
+                      trackWhatsAppClick(
+                        "contact_section_inline",
+                        undefined,
+                        settings.whatsappNumber
+                      )
+                    }
+                    className="flex items-center gap-2 text-slate-300 transition-colors hover:text-white"
                   >
                     <WhatsAppIcon className="h-4 w-4 shrink-0" />
                     <span>WhatsApp: {settings.phoneDisplay}</span>
@@ -82,7 +103,9 @@ export function Contact({ settings }: ContactProps) {
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
                 <Link
                   href="#quote"
-                  onClick={() => trackWhatsAppClick("contact_section_cta", undefined, settings.whatsappNumber)}
+                  onClick={() =>
+                    trackWhatsAppClick("contact_section_cta", undefined, settings.whatsappNumber)
+                  }
                   className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand-green px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-green/30 transition-all duration-200 hover:bg-brand-green-hover hover:shadow-xl active:scale-98 sm:text-base"
                 >
                   <WhatsAppIcon monochrome className="h-4 w-4" />
@@ -102,7 +125,6 @@ export function Contact({ settings }: ContactProps) {
 
             {/* Spacer for desktop grid to preserve right-side column room */}
             <div className="hidden h-56 lg:col-span-5 lg:block xl:col-span-5" />
-
           </div>
 
           {/* Cleaner Image: Stacks below text on mobile/tablet, anchors to bottom right on desktop */}

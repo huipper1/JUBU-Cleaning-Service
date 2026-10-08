@@ -109,6 +109,7 @@ model SiteSettings {
   showQuote               Boolean  @default(true)
   showAreas               Boolean  @default(true)
   showContact             Boolean  @default(true)
+  showBlog                Boolean  @default(true)
 
   // Homepage Selected Services (in order)
   homepageServiceIds      String[] @default([])
@@ -387,3 +388,40 @@ model Lead {
   @@index([serviceId])
 }
 
+// -------------------------------------------------------------
+// BLOG MANAGEMENT
+// -------------------------------------------------------------
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model BlogPost {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  excerpt         String
+  content         String     @db.Text
+  coverImage      String
+  coverImageAlt   String     @default("JUBU Cleaning Service Blog Post")
+  category        String     @default("Cleaning Tips")
+  tags            String[]   @default([])
+  author          String     @default("JUBU Expert Team")
+  authorRole      String?    @default("Cleaning Specialist")
+  status          PostStatus @default(PUBLISHED)
+  publishedAt     DateTime?  @default(now())
+  readTime        String?    @default("5 min read")
+  
+  // Dedicated SEO Fields
+  metaTitle       String?
+  metaDescription String?
+
+  order           Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([slug])
+  @@index([category])
+}

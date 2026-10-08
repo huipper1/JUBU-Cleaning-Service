@@ -3,16 +3,7 @@
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import {
-  AlertTriangle,
-  ArchiveRestore,
-  Calendar,
-  MessageSquare,
-  Phone,
-  RotateCcw,
-  Trash2,
-  X
-} from "lucide-react";
+import { AlertTriangle, Calendar, MessageSquare, Phone, RotateCcw, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 
 import type { Lead, LeadStatus } from "@/types/lead";
@@ -48,43 +39,43 @@ const STATUS_OPTIONS: {
   badgeClass: string;
   cardClass: string;
 }[] = [
-    {
-      id: "new",
-      label: "New",
-      badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-      cardClass: "text-blue-600 dark:text-blue-400"
-    },
-    {
-      id: "contacted",
-      label: "Contacted",
-      badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-      cardClass: "text-amber-600 dark:text-amber-400"
-    },
-    {
-      id: "quotation_sent",
-      label: "Quotation Sent",
-      badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
-      cardClass: "text-purple-600 dark:text-purple-400"
-    },
-    {
-      id: "confirmed",
-      label: "Confirmed",
-      badgeClass: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
-      cardClass: "text-cyan-600 dark:text-cyan-400"
-    },
-    {
-      id: "completed",
-      label: "Completed",
-      badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-      cardClass: "text-emerald-600 dark:text-emerald-400"
-    },
-    {
-      id: "lost_cancelled",
-      label: "Lost/Cancelled",
-      badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
-      cardClass: "text-rose-600 dark:text-rose-400"
-    }
-  ];
+  {
+    id: "new",
+    label: "New",
+    badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    cardClass: "text-blue-600 dark:text-blue-400"
+  },
+  {
+    id: "contacted",
+    label: "Contacted",
+    badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    cardClass: "text-amber-600 dark:text-amber-400"
+  },
+  {
+    id: "quotation_sent",
+    label: "Quotation Sent",
+    badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+    cardClass: "text-purple-600 dark:text-purple-400"
+  },
+  {
+    id: "confirmed",
+    label: "Confirmed",
+    badgeClass: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+    cardClass: "text-cyan-600 dark:text-cyan-400"
+  },
+  {
+    id: "completed",
+    label: "Completed",
+    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    cardClass: "text-emerald-600 dark:text-emerald-400"
+  },
+  {
+    id: "lost_cancelled",
+    label: "Lost/Cancelled",
+    badgeClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    cardClass: "text-rose-600 dark:text-rose-400"
+  }
+];
 
 interface LeadsClientProps {
   leads: Lead[];
@@ -335,7 +326,7 @@ export function LeadsClient({
             <div className="flex items-center gap-2">
               <span className="font-semibold text-foreground">{lead.fullName}</span>
               {lead.requestType === "booking" ? (
-                <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/30 text-[10px] font-bold">
+                <Badge className="border-sky-500/30 bg-sky-500/15 text-[10px] font-bold text-sky-600">
                   BOOKING
                 </Badge>
               ) : (
@@ -406,7 +397,7 @@ export function LeadsClient({
                   {lead.amount ? `${lead.amount} ${lead.currency || "AED"}` : "Emirates NBD"}
                 </span>
                 {lead.transactionRef && (
-                  <span className="truncate max-w-[140px]" title={lead.transactionRef}>
+                  <span className="max-w-[140px] truncate" title={lead.transactionRef}>
                     Ref: {lead.transactionRef}
                   </span>
                 )}
@@ -441,7 +432,10 @@ export function LeadsClient({
       className: "min-w-[140px]",
       cell: (lead) =>
         isTrashView ? (
-          <Badge variant="outline" className="text-xs text-rose-500 border-rose-500/30 bg-rose-500/10">
+          <Badge
+            variant="outline"
+            className="border-rose-500/30 bg-rose-500/10 text-xs text-rose-500"
+          >
             In Trash
           </Badge>
         ) : (
@@ -489,7 +483,7 @@ export function LeadsClient({
                 variant="outline"
                 size="sm"
                 title="Restore Lead"
-                className="h-8 gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400"
+                className="h-8 gap-1 text-xs font-semibold text-emerald-600 hover:bg-emerald-500/10 hover:text-emerald-700 dark:text-emerald-400"
                 onClick={() => handleRestoreFromTrash(lead)}
               >
                 <RotateCcw className="size-3.5" />
@@ -511,7 +505,7 @@ export function LeadsClient({
               variant="ghost"
               size="sm"
               title="Move to Trash"
-              className="h-8 text-xs font-semibold text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10"
+              className="h-8 text-xs font-semibold text-muted-foreground hover:bg-rose-500/10 hover:text-rose-600"
               onClick={() => handleMoveToTrash(lead)}
             >
               <Trash2 className="size-3.5" />
@@ -557,7 +551,7 @@ export function LeadsClient({
                 variant={isTrashView ? "outline" : "secondary"}
                 className={cn(
                   "ml-1 px-1.5 py-0 text-[10px]",
-                  trashCount > 0 && "bg-rose-500/15 text-rose-600 font-bold"
+                  trashCount > 0 && "bg-rose-500/15 font-bold text-rose-600"
                 )}
               >
                 {trashCount}
@@ -683,7 +677,7 @@ export function LeadsClient({
                 className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
                 title="Reset Date Range"
               >
-                <X className="size-3.5 mr-1" />
+                <X className="mr-1 size-3.5" />
                 Reset
               </Button>
             )}
@@ -692,7 +686,7 @@ export function LeadsClient({
 
         {/* Primary Channel & Payment Section Tabs */}
         {!isTrashView && (
-          <div className="flex flex-col gap-2 pt-2 border-t">
+          <div className="flex flex-col gap-2 border-t pt-2">
             <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
               Inquiry & Payment Channels
             </span>
@@ -792,7 +786,7 @@ export function LeadsClient({
       {/* Pipeline Status Filter Chips */}
       {!isTrashView && (
         <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
-          <span className="text-xs font-medium text-muted-foreground mr-1">Pipeline:</span>
+          <span className="mr-1 text-xs font-medium text-muted-foreground">Pipeline:</span>
           <Button
             variant={statusFilter === "all" ? "default" : "outline"}
             size="sm"
@@ -816,12 +810,12 @@ export function LeadsClient({
       )}
 
       {isTrashView && (
-        <div className="flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-700 dark:text-amber-400">
+        <div className="flex items-center gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-400">
           <AlertTriangle className="size-4 shrink-0" />
           <span>
-            You are currently viewing <strong>Trash ({totalCount} items)</strong>. Items in trash are
-            hidden from your live pipeline and dashboard. You can restore them anytime or delete them
-            permanently from the database.
+            You are currently viewing <strong>Trash ({totalCount} items)</strong>. Items in trash
+            are hidden from your live pipeline and dashboard. You can restore them anytime or delete
+            them permanently from the database.
           </span>
         </div>
       )}
@@ -853,7 +847,7 @@ export function LeadsClient({
             <div className="flex items-center gap-2">
               <DialogTitle className="text-lg font-bold">{selectedLead?.fullName}</DialogTitle>
               {selectedLead?.requestType === "booking" && (
-                <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/30 text-xs">
+                <Badge className="border-sky-500/30 bg-sky-500/15 text-xs text-sky-600">
                   BOOKING ORDER
                 </Badge>
               )}
@@ -874,9 +868,9 @@ export function LeadsClient({
                     <Badge
                       className={
                         selectedLead.paymentMethod === "cash"
-                          ? "bg-emerald-500/15 text-emerald-600 border-emerald-500/30"
+                          ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-600"
                           : selectedLead.paymentMethod === "bank_transfer"
-                            ? "bg-sky-500/15 text-sky-600 border-sky-500/30"
+                            ? "border-sky-500/30 bg-sky-500/15 text-sky-600"
                             : "bg-muted text-muted-foreground"
                       }
                     >
@@ -914,19 +908,19 @@ export function LeadsClient({
                           <span className="font-semibold text-foreground">Bank:</span> Emirates NBD
                         </div>
                         <div>
-                          <span className="font-semibold text-foreground">Title:</span> JUBU CLEANING
-                          SERVICES L.L.C
+                          <span className="font-semibold text-foreground">Title:</span> JUBU
+                          CLEANING SERVICES L.L.C
                         </div>
                         <div className="col-span-2">
-                          <span className="font-semibold text-foreground">IBAN:</span>{" "}
-                          AE56 0260 0001 2595 4738 201
+                          <span className="font-semibold text-foreground">IBAN:</span> AE56 0260
+                          0001 2595 4738 201
                         </div>
                         <div className="col-span-2">
                           <span className="font-semibold text-foreground">Account:</span>{" "}
                           0125954738201
                         </div>
                         {selectedLead.transactionRef && (
-                          <div className="col-span-2 mt-1 rounded bg-muted/60 p-1.5 font-mono text-foreground font-semibold">
+                          <div className="col-span-2 mt-1 rounded bg-muted/60 p-1.5 font-mono font-semibold text-foreground">
                             Customer Ref / Note: {selectedLead.transactionRef}
                           </div>
                         )}
@@ -956,7 +950,10 @@ export function LeadsClient({
                   </div>
                   <div>
                     <span className="font-semibold text-foreground">Mobile Phone:</span>{" "}
-                    <a href={`tel:${selectedLead.mobile}`} className="text-foreground hover:underline">
+                    <a
+                      href={`tel:${selectedLead.mobile}`}
+                      className="text-foreground hover:underline"
+                    >
                       {selectedLead.mobile}
                     </a>
                   </div>
@@ -976,7 +973,8 @@ export function LeadsClient({
                   </div>
                   <div>
                     <span className="font-semibold text-foreground">Preferred Appointment:</span>{" "}
-                    {selectedLead.preferredDate ?? "Flexible"} ({selectedLead.preferredTime ?? "Anytime"})
+                    {selectedLead.preferredDate ?? "Flexible"} (
+                    {selectedLead.preferredTime ?? "Anytime"})
                   </div>
                   <div>
                     <span className="font-semibold text-foreground">Source / Campaign:</span>{" "}
@@ -1010,11 +1008,12 @@ export function LeadsClient({
               <span>Delete Permanently</span>
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to permanently delete lead &ldquo;{leadToDelete?.fullName}&rdquo;?
+              Are you sure you want to permanently delete lead &ldquo;{leadToDelete?.fullName}
+              &rdquo;?
               <br />
               <strong className="text-rose-600 dark:text-rose-400">
-                This action cannot be undone. This record will be permanently deleted from the database
-                and website.
+                This action cannot be undone. This record will be permanently deleted from the
+                database and website.
               </strong>
             </DialogDescription>
           </DialogHeader>
@@ -1053,17 +1052,18 @@ export function LeadsClient({
           {clearDataModalStep === 1 && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-2 text-rose-600 text-lg">
+                <DialogTitle className="flex items-center gap-2 text-lg text-rose-600">
                   <AlertTriangle className="size-5" />
                   <span>
                     Step 1 of 2: {isTrashView ? "Empty Trash" : "Clear Lead Data"} Warning
                   </span>
                 </DialogTitle>
-                <DialogDescription className="space-y-2 text-sm pt-2">
+                <DialogDescription className="space-y-2 pt-2 text-sm">
                   {isTrashView ? (
                     <p>
-                      You are about to permanently purge <strong>all items currently in the Trash</strong>.
-                      Once purged, these leads cannot be recovered by anyone.
+                      You are about to permanently purge{" "}
+                      <strong>all items currently in the Trash</strong>. Once purged, these leads
+                      cannot be recovered by anyone.
                     </p>
                   ) : (
                     <p>
@@ -1081,7 +1081,7 @@ export function LeadsClient({
                       )}
                     </p>
                   )}
-                  <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-700 dark:text-rose-300">
+                  <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-xs text-rose-700 dark:text-rose-300">
                     <strong>Critical Warning:</strong> This will execute a permanent hard-delete
                     from PostgreSQL database. All customer data, booking history, and references
                     will be irrecoverably wiped.
@@ -1089,18 +1089,10 @@ export function LeadsClient({
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="mt-4 flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setClearDataModalStep(0)}
-                >
+                <Button variant="outline" size="sm" onClick={() => setClearDataModalStep(0)}>
                   Cancel
                 </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setClearDataModalStep(2)}
-                >
+                <Button variant="destructive" size="sm" onClick={() => setClearDataModalStep(2)}>
                   Proceed to Step 2 &rarr;
                 </Button>
               </DialogFooter>
@@ -1110,14 +1102,14 @@ export function LeadsClient({
           {clearDataModalStep === 2 && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-2 text-rose-600 text-lg">
+                <DialogTitle className="flex items-center gap-2 text-lg text-rose-600">
                   <AlertTriangle className="size-5" />
                   <span>Step 2 of 2: Confirm Destruction</span>
                 </DialogTitle>
-                <DialogDescription className="space-y-3 text-sm pt-2">
+                <DialogDescription className="space-y-3 pt-2 text-sm">
                   <p>
                     To prevent accidental deletion, please type{" "}
-                    <span className="font-mono font-bold text-foreground bg-muted px-1.5 py-0.5 rounded border">
+                    <span className="rounded border bg-muted px-1.5 py-0.5 font-mono font-bold text-foreground">
                       DELETE
                     </span>{" "}
                     below to confirm:
@@ -1159,4 +1151,3 @@ export function LeadsClient({
     </div>
   );
 }
-

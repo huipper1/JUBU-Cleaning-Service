@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useActionState } from "react";
-import { Lock, Mail, ShieldAlert, Loader2, Eye, EyeOff } from "lucide-react";
-import { loginAction } from "./actions";
+import { useActionState, useState } from "react";
+
+import { Eye, EyeOff, Loader2, Lock, Mail, ShieldAlert } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+
+import { loginAction } from "./actions";
 
 interface AdminLoginFormProps {
   branding: {
@@ -23,8 +26,8 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
     <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 text-slate-100 selection:bg-emerald-500 selection:text-white">
       <div className="w-full max-w-md">
         <Card className="border-slate-800 bg-slate-900/80 shadow-2xl backdrop-blur-xl">
-          <CardHeader className="text-center pb-4">
-            <div className="mx-auto mb-3 flex h-16 w-36 items-center justify-center ">
+          <CardHeader className="pb-4 text-center">
+            <div className="mx-auto mb-3 flex h-16 w-36 items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={branding.logoSrc}
@@ -55,12 +58,12 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="email"
-                  className="text-xs font-semibold uppercase tracking-wider text-slate-300"
+                  className="text-xs font-semibold tracking-wider text-slate-300 uppercase"
                 >
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                  <Mail className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-500" />
                   <Input
                     id="email"
                     name="email"
@@ -68,7 +71,7 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
                     autoComplete="email"
                     required
                     placeholder="admin@jubucleaning.ae"
-                    className="pl-10 bg-slate-950/60 border-slate-800 text-white"
+                    className="border-slate-800 bg-slate-950/60 pl-10 text-white"
                   />
                 </div>
               </div>
@@ -76,12 +79,12 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="password"
-                  className="text-xs font-semibold uppercase tracking-wider text-slate-300"
+                  className="text-xs font-semibold tracking-wider text-slate-300 uppercase"
                 >
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                  <Lock className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-500" />
                   <Input
                     id="password"
                     name="password"
@@ -89,31 +92,23 @@ export function AdminLoginForm({ branding }: AdminLoginFormProps) {
                     autoComplete="current-password"
                     required
                     placeholder="••••••••••••"
-                    className="pl-10 pr-10 bg-slate-950/60 border-slate-800 text-white"
+                    className="border-slate-800 bg-slate-950/60 pr-10 pl-10 text-white"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-slate-500 transition-colors hover:text-slate-300 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? (
-                      <EyeOff className="size-4" />
-                    ) : (
-                      <Eye className="size-4" />
-                    )}
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="mt-2 w-full"
-              >
+              <Button type="submit" disabled={isPending} className="mt-2 w-full">
                 {isPending ? (
                   <>
-                    <Loader2 className="size-4 animate-spin mr-2" />
+                    <Loader2 className="mr-2 size-4 animate-spin" />
                     <span>Signing In...</span>
                   </>
                 ) : (

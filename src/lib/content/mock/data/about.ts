@@ -28,7 +28,8 @@ export const mockAboutData: AboutContent = {
     {
       id: "coverage",
       title: "10 Dubai Service Areas",
-      description: "Serving Downtown Dubai, Business Bay, Marina, JLT, JBR, Palm Jumeirah and more.",
+      description:
+        "Serving Downtown Dubai, Business Bay, Marina, JLT, JBR, Palm Jumeirah and more.",
       icon: "map-pin"
     }
   ],

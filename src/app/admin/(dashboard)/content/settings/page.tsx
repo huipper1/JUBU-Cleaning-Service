@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+
 import { SettingsClient } from "./SettingsClient";
 
 export const dynamic = "force-dynamic";
@@ -24,15 +25,13 @@ export default async function AdminSettingsPage() {
       "Hello JUBU Cleaning Service, I would like to inquire about a free quote for your cleaning services in Dubai.",
     email: settings?.email ?? "sajibulislam679@gmail.com",
     address:
-      settings?.address ??
-      "Setadel Building, Office # 201, Al Quoz-4, Dubai, United Arab Emirates",
+      settings?.address ?? "Setadel Building, Office # 201, Al Quoz-4, Dubai, United Arab Emirates",
     mapUrl:
       settings?.mapUrl ??
       "https://www.google.com/maps/search/?api=1&query=Setadel+Building+Al+Quoz+4+Dubai",
     workingHours: settings?.workingHours ?? "Sat to Thu, 8:00 AM - 8:00 PM",
     seoTitle:
-      settings?.seoTitle ??
-      "JUBU Cleaning Service | Professional Cleaning Company in Dubai",
+      settings?.seoTitle ?? "JUBU Cleaning Service | Professional Cleaning Company in Dubai",
     seoDescription:
       settings?.seoDescription ??
       "Licensed Dubai cleaning company providing deep cleaning, residential cleaning, office cleaning, and move-in sanitization across Dubai.",
@@ -40,8 +39,7 @@ export default async function AdminSettingsPage() {
       settings?.copyrightText ?? "© 2026 JUBU Cleaning Service LLC. All rights reserved.",
     licenceNumber: settings?.licenceNumber ?? "1026183",
     licenceStructure: settings?.licenceStructure ?? "Limited Liability Company (LLC)",
-    licenceAuthority:
-      settings?.licenceAuthority ?? "Dubai Department of Economy and Tourism (DET)",
+    licenceAuthority: settings?.licenceAuthority ?? "Dubai Department of Economy and Tourism (DET)",
     licenceIssueDate: settings?.licenceIssueDate ?? "25 January 2022",
     bankName: settings?.bankName ?? "Dubai Islamic Bank (DIB)",
     bankIban: settings?.bankIban ?? "AE070240001026183001",
@@ -57,7 +55,7 @@ export default async function AdminSettingsPage() {
     showGallery: settings?.showGallery ?? true,
     showQuote: settings?.showQuote ?? true,
     showAreas: settings?.showAreas ?? true,
-    showContact: settings?.showContact ?? true,
+    showContact: settings?.showContact ?? true
   };
 
   return <SettingsClient initialSettings={initialSettings} />;

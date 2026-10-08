@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import type { TeamMember } from "@/types/content";
+
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { SectionHeading } from "@/ui";
@@ -11,7 +12,7 @@ interface TeamProps {
 
 export function Team({ members }: TeamProps) {
   return (
-    <section id="team" className=" bg-[#eafaf5] py-16 sm:py-20 lg:py-24 " aria-label="Our Team">
+    <section id="team" className="bg-[#eafaf5] py-16 sm:py-20 lg:py-24" aria-label="Our Team">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           badge="OUR TEAM"
@@ -28,7 +29,7 @@ export function Team({ members }: TeamProps) {
               <figure className="relative m-0 aspect-square w-full overflow-hidden bg-brand-pale-blue">
                 <Image
                   src={getPublicImageUrl(member.photo.src, "/images/placeholder/team-ahmed.png")}
-                  alt={member.photo.alt || member.name}
+                  alt={`${member.name} - ${member.role} at JUBU Cleaning Service`}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
@@ -40,7 +41,7 @@ export function Team({ members }: TeamProps) {
                 <h3 className="mb-1 text-xl font-bold text-brand-navy transition-colors group-hover:text-brand-blue">
                   {member.name}
                 </h3>
-                <p className=" text-brand-blue sm:text-md">{member.role}</p>
+                <p className="sm:text-md text-brand-blue">{member.role}</p>
 
                 {member.bio && (
                   <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed font-normal text-brand-muted">

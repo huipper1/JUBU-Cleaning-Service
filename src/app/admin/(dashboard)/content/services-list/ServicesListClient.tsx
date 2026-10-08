@@ -365,7 +365,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                       <Badge variant="outline" className="font-mono text-[10px]">
                         Order #{s.order}
                       </Badge>
-                      <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20 font-bold text-xs">
+                      <Badge className="border-emerald-500/20 bg-emerald-500/10 text-xs font-bold text-emerald-700 dark:text-emerald-300">
                         From {s.basePrice ?? 199} AED
                       </Badge>
                     </div>
@@ -463,7 +463,10 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="service-price" className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                <Label
+                  htmlFor="service-price"
+                  className="text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+                >
                   Base Price (AED) *
                 </Label>
                 <Input
@@ -475,7 +478,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                   value={formBasePrice}
                   onChange={(e) => setFormBasePrice(Number(e.target.value))}
                   required
-                  className="font-bold border-emerald-500/40"
+                  className="border-emerald-500/40 font-bold"
                 />
               </div>
 

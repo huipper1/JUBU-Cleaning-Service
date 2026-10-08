@@ -11,6 +11,7 @@ export const mockServicesData: Service[] = [
     longDescription:
       "Comprehensive residential cleaning services customized for Dubai apartments and luxury villas. We vacuum, sanitize, mop, and polish every room to pristine standards.", // DUMMY
     icon: "home",
+    basePrice: 199,
     image: {
       src: "/images/placeholder/gallery-home.png", // DUMMY
       alt: "Home Cleaning in Dubai living room with sofa and plants",
@@ -30,6 +31,7 @@ export const mockServicesData: Service[] = [
     longDescription:
       "Keep your workplace hygienic and welcoming for staff and clients. Flexible daily, weekly, or after-hours commercial office cleaning schedules across Dubai.", // DUMMY
     icon: "building",
+    basePrice: 299,
     image: {
       src: "/images/placeholder/gallery-office.png", // DUMMY
       alt: "Clean modern corporate office workspace in Dubai",
@@ -49,6 +51,7 @@ export const mockServicesData: Service[] = [
     longDescription:
       "Intensive sanitization reaching behind heavy furniture, kitchen appliances, grouting, ventilation ducts, and hard-to-reach areas.", // DUMMY
     icon: "sparkles",
+    basePrice: 349,
     image: {
       src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
       alt: "Deep steam extraction cleaning on living room carpet",
@@ -68,6 +71,7 @@ export const mockServicesData: Service[] = [
     longDescription:
       "Specialized upholstery shampooing and stain extraction for sofas, mattresses, rugs, and curtains using fabric-safe eco detergents.", // DUMMY
     icon: "sofa",
+    basePrice: 249,
     image: {
       src: "/images/placeholder/gallery-sofa.png", // DUMMY
       alt: "High-power upholstery cleaning on fabric sofa",
@@ -86,6 +90,7 @@ export const mockServicesData: Service[] = [
     shortDescription: "Remove dust, debris and make your space move-in ready.", // DUMMY
     // Edge case: optional longDescription omitted
     icon: "hard-hat",
+    basePrice: 499,
     image: {
       src: "/images/placeholder/gallery-construction.png", // DUMMY
       alt: "Post-renovation dust extraction and clean-up in Dubai villa",
@@ -105,6 +110,7 @@ export const mockServicesData: Service[] = [
     longDescription:
       "Make your property pristine for landlord inspections or fresh move-ins. Complete tenancy handover cleaning ensuring full deposit returns.", // DUMMY
     icon: "truck",
+    basePrice: 399,
     image: {
       src: "/images/placeholder/gallery-move.png", // DUMMY
       alt: "Move-in ready apartment cleaning with packed boxes",

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+
 import { HeroClient } from "./HeroClient";
 
 export const dynamic = "force-dynamic";
@@ -30,10 +31,5 @@ export default async function AdminHeroPage() {
     floatingBadge: hero?.floatingBadge ?? "Cleaner Spaces Brighter Lives"
   };
 
-  return (
-    <HeroClient
-      initialHero={initialHero}
-      initialShowHero={settings?.showHero ?? true}
-    />
-  );
+  return <HeroClient initialHero={initialHero} initialShowHero={settings?.showHero ?? true} />;
 }

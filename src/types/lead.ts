@@ -36,7 +36,7 @@ export interface Lead {
   message?: string;
   whatsappOptIn: boolean;
   sourceArea?: string;
-  
+
   // Booking & Payment Information
   requestType: RequestType;
   paymentMethod?: PaymentMethod;
@@ -95,4 +95,3 @@ export interface LeadServiceResult {
   id?: string;
   errors?: Record<string, string[]>;
 }
-

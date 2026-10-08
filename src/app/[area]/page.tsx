@@ -15,6 +15,7 @@ import {
   getServices,
   getSettings,
   getTeam,
+  getTestimonials,
   getWhyChoose
 } from "@/lib/content";
 
@@ -30,6 +31,7 @@ import {
   ServiceAreas,
   Services,
   Team,
+  Testimonials,
   WhyChooseUs
 } from "@/components/sections";
 
@@ -89,16 +91,18 @@ export default async function AreaPage({ params }: AreaPageProps) {
   }
 
   // Fetch shared site content exactly like the root page
-  const [settings, hero, allServices, whyChoose, about, team, gallery, areas] = await Promise.all([
-    getSettings(),
-    getHero(),
-    getServices(),
-    getWhyChoose(),
-    getAbout(),
-    getTeam(),
-    getGallery(),
-    getAreas()
-  ]);
+  const [settings, hero, allServices, whyChoose, about, team, gallery, areas, testimonials] =
+    await Promise.all([
+      getSettings(),
+      getHero(),
+      getServices(),
+      getWhyChoose(),
+      getAbout(),
+      getTeam(),
+      getGallery(),
+      getAreas(),
+      getTestimonials()
+    ]);
 
   const selectedServices =
     areaData.serviceIds && areaData.serviceIds.length > 0
@@ -170,7 +174,9 @@ export default async function AreaPage({ params }: AreaPageProps) {
       alternateName: `${settings.businessName} LLC`,
       url: pageCanonicalUrl,
       logo: dynamicLogoUrl.startsWith("http") ? dynamicLogoUrl : `${baseUrl}${dynamicLogoUrl}`,
-      image: dynamicOgImageUrl.startsWith("http") ? dynamicOgImageUrl : `${baseUrl}${dynamicOgImageUrl}`,
+      image: dynamicOgImageUrl.startsWith("http")
+        ? dynamicOgImageUrl
+        : `${baseUrl}${dynamicOgImageUrl}`,
       telephone: settings.phoneTel,
       email: settings.email,
       priceRange: "$$",
@@ -267,6 +273,9 @@ export default async function AreaPage({ params }: AreaPageProps) {
 
       {/* 7. Projects / Gallery (with accessible lightbox) */}
       {(settings.showGallery ?? true) && <Gallery items={galleryItems} />}
+
+      {/* 7.1 Customer Reviews / Testimonials */}
+      <Testimonials testimonials={testimonials} />
 
       {/* 8. Frequently Asked Questions (Area-specific FAQ section) */}
       <Faq faqs={areaData.faqs} areaName={areaData.areaName} />

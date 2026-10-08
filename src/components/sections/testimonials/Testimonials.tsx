@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+
 import { Star } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { TestimonialItem } from "@/types/testimonial";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface TestimonialsProps {
   testimonials: TestimonialItem[];
@@ -24,8 +26,15 @@ const AVATAR_POSITIONS = [
 ];
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
-  // Default to index 6 (Carol Schmitz focal anchor in mockup)
-  const [selectedIndex, setSelectedIndex] = useState(6);
+  const count = testimonials?.length ?? 0;
+  // Default to index 6 or last available item if fewer than 7
+  const defaultIndex = count > 0 ? Math.min(6, count - 1) : 0;
+  const [selectedIndex, setSelectedIndex] = useState(defaultIndex);
+
+  if (!testimonials || count === 0) {
+    return null;
+  }
+
   const activeTestimonial = testimonials[selectedIndex] ?? testimonials[0];
 
   return (
@@ -36,7 +45,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
     >
       {/* Background Soft Ambient Light in Brand Tones */}
       <div className="pointer-events-none absolute -top-32 left-1/4 h-[500px] w-[500px] rounded-full bg-brand-green-light/40 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-1/4 h-[420px] w-[420px] rounded-full bg-brand-sky-light/50 blur-3xl" />
+      <div className="pointer-events-none absolute right-1/4 bottom-0 h-[420px] w-[420px] rounded-full bg-brand-sky-light/50 blur-3xl" />
 
       {/* SVG Sinuous Wavy Ribbon Pathway matching theme */}
       <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
@@ -66,18 +75,17 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
         </svg>
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop & Tablet Curved Layout */}
         <div className="relative mx-auto hidden min-h-[640px] w-full max-w-7xl sm:block lg:min-h-[720px]">
-
           {/* Center Heading matching Brand Navy theme */}
-          <div className="absolute top-[38%] left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 max-w-lg text-center">
+          <div className="absolute top-[38%] left-1/2 z-10 max-w-lg -translate-x-1/2 -translate-y-1/2 text-center">
             <h2 className="mb-3 text-3xl font-black tracking-tight text-brand-navy sm:text-4xl lg:text-[2.85rem]">
               Testimonials
             </h2>
             <p className="text-xs leading-relaxed text-slate-600 sm:text-sm lg:text-base">
-              Our reputation speaks for itself through the countless glowing reviews from satisfied customers across Dubai. Find out what people are saying about us!
+              Our reputation speaks for itself through the countless glowing reviews from satisfied
+              customers across Dubai. Find out what people are saying about us!
             </p>
           </div>
 
@@ -113,15 +121,11 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 <Avatar
                   className={`${pos.size} border-3 bg-white shadow-xl transition-all duration-300 ${
                     isSelected
-                      ? "border-brand-green ring-4 ring-brand-green/30 shadow-2xl"
+                      ? "border-brand-green shadow-2xl ring-4 ring-brand-green/30"
                       : "border-white hover:border-brand-green/60 hover:shadow-lg"
                   }`}
                 >
-                  <AvatarImage
-                    src={item.avatar}
-                    alt={item.name}
-                    className="object-cover"
-                  />
+                  <AvatarImage src={item.avatar} alt={item.name} className="object-cover" />
                   <AvatarFallback className="bg-brand-pale-blue text-xs font-bold text-brand-navy md:text-sm">
                     {initials}
                   </AvatarFallback>
@@ -140,9 +144,8 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             }}
           >
             <div className="relative w-80 rounded-3xl bg-[#07241c] p-6 text-white shadow-2xl transition-all sm:w-96 lg:w-[410px]">
-
               {/* Pointer triangle connecting avatar to speech bubble */}
-              <div className="absolute -top-3 left-10 h-0 w-0 border-x-8 border-x-transparent border-b-12 border-b-[#07241c]" />
+              <div className="absolute -top-3 left-10 h-0 w-0 border-x-8 border-b-12 border-x-transparent border-b-[#07241c]" />
 
               {/* Google Review Header */}
               <div className="mb-4 flex items-center justify-between">
@@ -174,16 +177,14 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               </div>
 
               {/* Review Text */}
-              <p className="mb-4 text-xs italic leading-relaxed text-slate-100 sm:text-sm">
+              <p className="mb-4 text-xs leading-relaxed text-slate-100 italic sm:text-sm">
                 &ldquo;{activeTestimonial.review}&rdquo;
               </p>
 
               {/* Author and Rating */}
               <div className="flex items-center justify-between border-t border-white/10 pt-3">
                 <div>
-                  <h4 className="text-sm font-extrabold text-white">
-                    {activeTestimonial.name}
-                  </h4>
+                  <h4 className="text-sm font-extrabold text-white">{activeTestimonial.name}</h4>
                   {activeTestimonial.service && (
                     <span className="text-[11px] text-emerald-400">
                       {activeTestimonial.service}
@@ -194,10 +195,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 <div className="flex items-center gap-1.5">
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-3.5 w-3.5 fill-amber-400 text-amber-400"
-                      />
+                      <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
                   <span className="text-xs font-bold text-white">5.0</span>
@@ -205,21 +203,19 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               </div>
 
               {/* Background decorative quotation mark */}
-              <span className="pointer-events-none absolute right-5 bottom-4 select-none font-serif text-5xl font-black text-white/10">
+              <span className="pointer-events-none absolute right-5 bottom-4 font-serif text-5xl font-black text-white/10 select-none">
                 ”
               </span>
             </div>
           </div>
-
         </div>
 
         {/* Mobile View: Dedicated clean vertical layout */}
         <div className="flex flex-col items-center text-center sm:hidden">
-          <h2 className="mb-2 text-2xl font-black text-brand-navy">
-            Testimonials
-          </h2>
+          <h2 className="mb-2 text-2xl font-black text-brand-navy">Testimonials</h2>
           <p className="mb-6 text-xs leading-relaxed text-slate-600">
-            Our reputation speaks for itself through countless glowing reviews from satisfied customers across Dubai.
+            Our reputation speaks for itself through countless glowing reviews from satisfied
+            customers across Dubai.
           </p>
 
           {/* Avatar Selector Strip on Mobile using shadcn Avatar */}
@@ -243,7 +239,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                   <Avatar
                     className={`size-14 border-2 transition-all ${
                       isSelected
-                        ? "border-brand-green ring-3 ring-brand-green/40 scale-105 shadow-md"
+                        ? "scale-105 border-brand-green shadow-md ring-3 ring-brand-green/40"
                         : "border-slate-200 opacity-70 hover:opacity-100"
                     }`}
                   >
@@ -285,32 +281,24 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               </span>
             </div>
 
-            <p className="mb-4 text-xs italic leading-relaxed text-slate-100">
+            <p className="mb-4 text-xs leading-relaxed text-slate-100 italic">
               &ldquo;{activeTestimonial.review}&rdquo;
             </p>
 
             <div className="flex items-center justify-between border-t border-white/10 pt-3">
               <div>
-                <h4 className="text-xs font-bold text-white">
-                  {activeTestimonial.name}
-                </h4>
-                <span className="text-[10px] text-emerald-400">
-                  {activeTestimonial.service}
-                </span>
+                <h4 className="text-xs font-bold text-white">{activeTestimonial.name}</h4>
+                <span className="text-[10px] text-emerald-400">{activeTestimonial.service}</span>
               </div>
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-3 w-3 fill-amber-400 text-amber-400"
-                  />
+                  <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
                 ))}
                 <span className="text-xs font-bold text-white">5.0</span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );

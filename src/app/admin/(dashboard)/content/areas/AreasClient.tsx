@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
+
+import { CheckCircle2, Loader2, MapPin, Pencil, Save, X, XCircle } from "lucide-react";
 import { toast } from "sonner";
-import { MapPin, CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
-import { toggleAreaActiveAction, updateAreaAction } from "./actions";
-import { Card, CardContent } from "@/components/ui/card";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+
+import { toggleAreaActiveAction, updateAreaAction } from "./actions";
 
 interface AreaItem {
   id: string;
@@ -34,16 +37,12 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
 
   const handleToggle = async (area: AreaItem) => {
     const nextVal = !area.isActive;
-    setAreas(
-      areas.map((a) => (a.id === area.id ? { ...a, isActive: nextVal } : a))
-    );
+    setAreas(areas.map((a) => (a.id === area.id ? { ...a, isActive: nextVal } : a)));
 
     const res = await toggleAreaActiveAction(area.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
-      setAreas(
-        areas.map((a) => (a.id === area.id ? { ...a, isActive: !nextVal } : a))
-      );
+      setAreas(areas.map((a) => (a.id === area.id ? { ...a, isActive: !nextVal } : a)));
     } else {
       toast.success(`${area.name} is now ${nextVal ? "active" : "disabled"}`);
     }
@@ -65,7 +64,7 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
         lat: editLat,
         lng: editLng,
         order: editOrder,
-        isActive: area.isActive,
+        isActive: area.isActive
       });
 
       if (res.success) {
@@ -77,7 +76,7 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
                   name: editName,
                   lat: editLat,
                   lng: editLng,
-                  order: editOrder,
+                  order: editOrder
                 }
               : a
           )
@@ -102,28 +101,18 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
             <CardContent className="p-4 sm:p-5">
               {isEdit ? (
                 <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between pb-2 border-b">
-                    <span className="font-semibold text-foreground">
-                      Editing: {area.name}
-                    </span>
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <span className="font-semibold text-foreground">Editing: {area.name}</span>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingId(null)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>
                         <X className="size-4" />
                         Cancel
                       </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleSave(area)}
-                        disabled={isSaving}
-                      >
+                      <Button size="sm" onClick={() => handleSave(area)} disabled={isSaving}>
                         {isSaving ? (
-                          <Loader2 className="size-3.5 animate-spin mr-1" />
+                          <Loader2 className="mr-1 size-3.5 animate-spin" />
                         ) : (
-                          <Save className="size-3.5 mr-1" />
+                          <Save className="mr-1 size-3.5" />
                         )}
                         <span>Save</span>
                       </Button>
@@ -131,44 +120,31 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-                    <div className="sm:col-span-2 flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-foreground">
-                        Area Name
-                      </label>
-                      <Input
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                      />
+                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                      <label className="text-xs font-medium text-foreground">Area Name</label>
+                      <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-foreground">
-                        Latitude
-                      </label>
+                      <label className="text-xs font-medium text-foreground">Latitude</label>
                       <Input
                         type="number"
                         step="any"
                         value={editLat ?? ""}
                         onChange={(e) =>
-                          setEditLat(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
+                          setEditLat(e.target.value ? Number(e.target.value) : undefined)
                         }
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-foreground">
-                        Longitude
-                      </label>
+                      <label className="text-xs font-medium text-foreground">Longitude</label>
                       <Input
                         type="number"
                         step="any"
                         value={editLng ?? ""}
                         onChange={(e) =>
-                          setEditLng(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
+                          setEditLng(e.target.value ? Number(e.target.value) : undefined)
                         }
                       />
                     </div>
@@ -182,9 +158,7 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
                     </div>
                     <div className="flex flex-col gap-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-foreground text-sm">
-                          {area.name}
-                        </span>
+                        <span className="text-sm font-semibold text-foreground">{area.name}</span>
                         <span className="font-mono text-xs text-muted-foreground">
                           /{area.slug}
                         </span>
@@ -206,23 +180,19 @@ export function AreasClient({ initialAreas }: AreasClientProps) {
                     >
                       {area.isActive ? (
                         <>
-                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
+                          <CheckCircle2 className="mr-1 size-3.5 text-emerald-500" />
                           <span>Active</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
+                          <XCircle className="mr-1 size-3.5 text-muted-foreground" />
                           <span>Disabled</span>
                         </>
                       )}
                     </Button>
 
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => startEdit(area)}
-                    >
-                      <Pencil className="size-3.5 mr-1" />
+                    <Button variant="outline" size="sm" onClick={() => startEdit(area)}>
+                      <Pencil className="mr-1 size-3.5" />
                       <span>Edit</span>
                     </Button>
                   </div>

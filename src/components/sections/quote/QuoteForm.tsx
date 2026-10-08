@@ -12,35 +12,34 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock,
+  CreditCard,
   ExternalLink,
   Home,
   Loader2,
   Lock,
   MapPin,
   MessageSquare,
-  Phone,
   RotateCcw,
   Settings,
   ShieldCheck,
   Sparkles,
   Store,
-  User,
-  CreditCard
+  User
 } from "lucide-react";
 import { format } from "date-fns";
 
-import { WhatsAppIcon } from "@/components/icons";
-
 import type { Service, SiteSettings } from "@/types/content";
 import type { CreateLeadInput } from "@/types/lead";
+import { SERVICE_BASE_PRICES } from "@/constants/payment";
 import { env } from "@/env";
 
-import { createLeadInputSchema } from "@/lib/content/types";
 import { trackFormStart, trackLeadGenerated, trackWhatsAppClick } from "@/lib/analytics";
-import { SERVICE_BASE_PRICES } from "@/constants/payment";
-import { BookingPaymentModal } from "./BookingPaymentModal";
+import { createLeadInputSchema } from "@/lib/content/types";
 
+import { WhatsAppIcon } from "@/components/icons";
 import { Calendar as CalendarPicker, Icon, Popover, PopoverContent, PopoverTrigger } from "@/ui";
+
+import { BookingPaymentModal } from "./BookingPaymentModal";
 
 const PROPERTY_TYPES = [
   {
@@ -642,10 +641,11 @@ export function QuoteForm({
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="e.g. John Doe"
-                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.fullName
-                          ? "border-red-400 bg-red-950/30"
-                          : "border-white/15 hover:border-white/30"
-                          }`}
+                        className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          fieldErrors.fullName
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                        }`}
                       />
                     </div>
                     {fieldErrors.fullName && (
@@ -698,7 +698,9 @@ export function QuoteForm({
                       {fieldErrors.mobile ? (
                         <p className="mt-1 text-[11px] text-red-300">{fieldErrors.mobile[0]}</p>
                       ) : (
-                        <p className="mt-1 text-[10px] text-slate-400">e.g. 054 299 5191 or 50 123 4567</p>
+                        <p className="mt-1 text-[10px] text-slate-400">
+                          e.g. 054 299 5191 or 50 123 4567
+                        </p>
                       )}
                     </div>
 
@@ -735,7 +737,9 @@ export function QuoteForm({
                           {fieldErrors.whatsappNumber[0]}
                         </p>
                       ) : (
-                        <p className="mt-1 text-[10px] text-slate-400">Include country code if outside UAE</p>
+                        <p className="mt-1 text-[10px] text-slate-400">
+                          Include country code if outside UAE
+                        </p>
                       )}
                     </div>
                   </div>
@@ -764,10 +768,11 @@ export function QuoteForm({
                         setIsDropdownOpen((prev) => !prev);
                         setIsPropertyDropdownOpen(false);
                       }}
-                      className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${isDropdownOpen
-                        ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
-                        : "border-white/15"
-                        }`}
+                      className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                        isDropdownOpen
+                          ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
+                          : "border-white/15"
+                      }`}
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-sky transition-colors group-hover:bg-brand-sky/20">
@@ -793,8 +798,9 @@ export function QuoteForm({
 
                       <div className="flex items-center pl-2 text-slate-400 transition-colors group-hover:text-white">
                         <ChevronDown
-                          className={`h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180 text-brand-sky" : ""
-                            }`}
+                          className={`h-4 w-4 transition-transform duration-200 ${
+                            isDropdownOpen ? "rotate-180 text-brand-sky" : ""
+                          }`}
                         />
                       </div>
                     </button>
@@ -836,17 +842,19 @@ export function QuoteForm({
                                   setIsDropdownOpen(false);
                                 }
                               }}
-                              className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${isSelected
-                                ? "bg-brand-sky/20 text-white"
-                                : "text-slate-200 hover:bg-white/10 hover:text-white"
-                                }`}
+                              className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
+                                isSelected
+                                  ? "bg-brand-sky/20 text-white"
+                                  : "text-slate-200 hover:bg-white/10 hover:text-white"
+                              }`}
                             >
                               <div className="flex min-w-0 items-center gap-3">
                                 <div
-                                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${isSelected
-                                    ? "bg-brand-sky text-white shadow-sm"
-                                    : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
-                                    }`}
+                                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                                    isSelected
+                                      ? "bg-brand-sky text-white shadow-sm"
+                                      : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
+                                  }`}
                                 >
                                   <Icon name={svc.icon} className="h-4 w-4" />
                                 </div>
@@ -892,17 +900,19 @@ export function QuoteForm({
                               setIsDropdownOpen(false);
                             }
                           }}
-                          className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${formData.serviceId === "other"
-                            ? "bg-brand-sky/20 text-white"
-                            : "text-slate-200 hover:bg-white/10 hover:text-white"
-                            }`}
+                          className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
+                            formData.serviceId === "other"
+                              ? "bg-brand-sky/20 text-white"
+                              : "text-slate-200 hover:bg-white/10 hover:text-white"
+                          }`}
                         >
                           <div className="flex min-w-0 items-center gap-3">
                             <div
-                              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${formData.serviceId === "other"
-                                ? "bg-brand-sky text-white shadow-sm"
-                                : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
-                                }`}
+                              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                                formData.serviceId === "other"
+                                  ? "bg-brand-sky text-white shadow-sm"
+                                  : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
+                              }`}
                             >
                               <Sparkles className="h-4 w-4" />
                             </div>
@@ -945,10 +955,11 @@ export function QuoteForm({
                           value={formData.location}
                           onChange={handleChange}
                           placeholder={areaName ? `e.g. ${areaName}` : "e.g. Dubai Marina, JBR"}
-                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.location
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15 hover:border-white/30"
-                            }`}
+                          className={`w-full rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                            fieldErrors.location
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15 hover:border-white/30"
+                          }`}
                         />
                       </div>
                       {fieldErrors.location && (
@@ -981,12 +992,13 @@ export function QuoteForm({
                           setIsDatePickerOpen(false);
                           setIsTimePickerOpen(false);
                         }}
-                        className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${isPropertyDropdownOpen
-                          ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
-                          : fieldErrors.propertyType
-                            ? "border-red-400 bg-red-950/30"
-                            : "border-white/15"
-                          }`}
+                        className={`group relative flex w-full items-center justify-between rounded-xl border bg-[#0b2447]/90 px-3.5 py-3 text-left text-sm text-white shadow-sm backdrop-blur-md transition-all duration-200 hover:border-white/30 focus:border-brand-sky focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          isPropertyDropdownOpen
+                            ? "border-brand-sky shadow-lg ring-2 shadow-sky-950/40 ring-brand-sky/30"
+                            : fieldErrors.propertyType
+                              ? "border-red-400 bg-red-950/30"
+                              : "border-white/15"
+                        }`}
                       >
                         <div className="flex min-w-0 items-center gap-3">
                           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-sky transition-colors group-hover:bg-brand-sky/20">
@@ -999,8 +1011,9 @@ export function QuoteForm({
                             })()}
                           </div>
                           <span
-                            className={`truncate font-medium ${formData.propertyType ? "text-white" : "text-slate-400"
-                              }`}
+                            className={`truncate font-medium ${
+                              formData.propertyType ? "text-white" : "text-slate-400"
+                            }`}
                           >
                             {PROPERTY_TYPES.find((p) => p.id === formData.propertyType)?.title ??
                               "Select property type"}
@@ -1009,8 +1022,9 @@ export function QuoteForm({
 
                         <div className="flex items-center pl-2 text-slate-400 transition-colors group-hover:text-white">
                           <ChevronDown
-                            className={`h-4 w-4 transition-transform duration-200 ${isPropertyDropdownOpen ? "rotate-180 text-brand-sky" : ""
-                              }`}
+                            className={`h-4 w-4 transition-transform duration-200 ${
+                              isPropertyDropdownOpen ? "rotate-180 text-brand-sky" : ""
+                            }`}
                           />
                         </div>
                       </button>
@@ -1053,17 +1067,19 @@ export function QuoteForm({
                                     setIsPropertyDropdownOpen(false);
                                   }
                                 }}
-                                className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${isSelected
-                                  ? "bg-brand-sky/20 text-white"
-                                  : "text-slate-200 hover:bg-white/10 hover:text-white"
-                                  }`}
+                                className={`group/item flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 ${
+                                  isSelected
+                                    ? "bg-brand-sky/20 text-white"
+                                    : "text-slate-200 hover:bg-white/10 hover:text-white"
+                                }`}
                               >
                                 <div className="flex min-w-0 items-center gap-3">
                                   <div
-                                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${isSelected
-                                      ? "bg-brand-sky text-white shadow-sm"
-                                      : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
-                                      }`}
+                                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                                      isSelected
+                                        ? "bg-brand-sky text-white shadow-sm"
+                                        : "bg-white/10 text-brand-sky group-hover/item:bg-white/15"
+                                    }`}
                                   >
                                     <IconComponent className="h-4 w-4" />
                                   </div>
@@ -1114,11 +1130,13 @@ export function QuoteForm({
                             type="button"
                             id="preferredDate"
                             disabled={status === "submitting"}
-                            className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${selectedDate ? "text-white" : "text-slate-400"
-                              } ${fieldErrors.preferredDate
+                            className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                              selectedDate ? "text-white" : "text-slate-400"
+                            } ${
+                              fieldErrors.preferredDate
                                 ? "border-red-400 bg-red-950/30"
                                 : "border-white/15 hover:border-white/30"
-                              }`}
+                            }`}
                           >
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                               <CalendarIcon className="h-4 w-4" />
@@ -1190,11 +1208,13 @@ export function QuoteForm({
                             type="button"
                             id="preferredTime"
                             disabled={status === "submitting"}
-                            className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${formData.preferredTime ? "text-white" : "text-slate-400"
-                              } ${fieldErrors.preferredTime
+                            className={`group relative flex w-full items-center justify-between rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-left text-sm transition-all hover:border-white/30 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                              formData.preferredTime ? "text-white" : "text-slate-400"
+                            } ${
+                              fieldErrors.preferredTime
                                 ? "border-red-400 bg-red-950/30"
                                 : "border-white/15 hover:border-white/30"
-                              }`}
+                            }`}
                           >
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                               <Clock className="h-4 w-4" />
@@ -1248,10 +1268,11 @@ export function QuoteForm({
                                             });
                                           }
                                         }}
-                                        className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-all ${isSelected
-                                          ? "bg-brand-sky font-semibold text-white shadow-xs"
-                                          : "bg-white/5 text-slate-200 hover:bg-white/15 hover:text-white"
-                                          }`}
+                                        className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-all ${
+                                          isSelected
+                                            ? "bg-brand-sky font-semibold text-white shadow-xs"
+                                            : "bg-white/5 text-slate-200 hover:bg-white/15 hover:text-white"
+                                        }`}
                                       >
                                         <span>{slot}</span>
                                         {isSelected && <Check className="h-3 w-3 shrink-0" />}
@@ -1293,10 +1314,11 @@ export function QuoteForm({
                         value={formData.message}
                         onChange={handleChange}
                         placeholder="Please describe your cleaning requirements (e.g. number of bedrooms/bathrooms, balcony washing, specific focus areas...)"
-                        className={`w-full resize-none rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${fieldErrors.message
-                          ? "border-red-400 bg-red-950/30"
-                          : "border-white/15 hover:border-white/30"
-                          }`}
+                        className={`w-full resize-none rounded-xl border bg-white/10 py-3 pr-4 pl-10 text-sm text-white transition-all placeholder:text-slate-400 focus:border-brand-sky focus:bg-white/15 focus:ring-2 focus:ring-brand-sky/30 focus:outline-none ${
+                          fieldErrors.message
+                            ? "border-red-400 bg-red-950/30"
+                            : "border-white/15 hover:border-white/30"
+                        }`}
                       />
                     </div>
                     {fieldErrors.message && (
@@ -1359,9 +1381,13 @@ export function QuoteForm({
                       </div>
                       <div className="flex items-center gap-2.5">
                         <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/50 bg-emerald-500/90 px-3.5 py-1 text-xs font-black tracking-wide text-white shadow-md shadow-emerald-950/30 sm:text-sm">
-                          <span className="text-[10px] uppercase font-bold text-emerald-100">From</span>
+                          <span className="text-[10px] font-bold text-emerald-100 uppercase">
+                            From
+                          </span>
                           {(() => {
-                            const matchedService = services.find((s) => s.id === formData.serviceId);
+                            const matchedService = services.find(
+                              (s) => s.id === formData.serviceId
+                            );
                             return (
                               matchedService?.basePrice ??
                               SERVICE_BASE_PRICES[formData.serviceId]?.basePrice ??

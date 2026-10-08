@@ -1,20 +1,21 @@
 import { prisma } from "@/lib/db/prisma";
-import { WhyChooseClient } from "./WhyChooseClient";
-import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { AdminPageHeader } from "@/components/admin/page-header";
 import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
+import { WhyChooseClient } from "./WhyChooseClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminWhyChoosePage() {
   const [dbItems, settings] = await Promise.all([
     prisma.whyChooseItem.findMany({
-      orderBy: { order: "asc" },
+      orderBy: { order: "asc" }
     }),
     prisma.siteSettings.findUnique({
       where: { id: "default" },
-      select: { showWhyChoose: true },
-    }),
+      select: { showWhyChoose: true }
+    })
   ]);
 
   const serialized = dbItems.map((item) => ({
@@ -23,7 +24,7 @@ export default async function AdminWhyChoosePage() {
     description: item.description,
     icon: item.icon,
     order: item.order,
-    isActive: item.isActive,
+    isActive: item.isActive
   }));
 
   return (

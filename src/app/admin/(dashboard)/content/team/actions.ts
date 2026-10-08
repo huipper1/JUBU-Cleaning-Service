@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+
 import { prisma } from "@/lib/db/prisma";
 
 export async function toggleTeamMemberActiveAction(id: string, isActive: boolean) {
@@ -39,6 +40,7 @@ export async function updateTeamMemberAction(
         role: data.role,
         bio: data.bio ?? null,
         photoSrc: data.photoSrc,
+        photoAlt: `${data.name} - ${data.role} at JUBU Cleaning Service`,
         order: data.order,
         isActive: data.isActive
       }

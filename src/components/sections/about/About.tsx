@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
 import { ArrowRight, Check } from "lucide-react";
+
 import type { AboutContent, SiteSettings } from "@/types/content";
-import { getPublicImageUrl } from "@/lib/content/image-url";
+
 import { trackCtaClick } from "@/lib/analytics";
+import { getPublicImageUrl } from "@/lib/content/image-url";
 
 interface AboutProps {
   content: AboutContent;
@@ -14,9 +17,10 @@ interface AboutProps {
 
 export function About({ content, settings }: AboutProps) {
   // Use the 12 equipment items in the checklist grid
-  const checklistItems = content.equipment && content.equipment.length > 0
-    ? content.equipment
-    : content.highlights.map((h) => h.title);
+  const checklistItems =
+    content.equipment && content.equipment.length > 0
+      ? content.equipment
+      : content.highlights.map((h) => h.title);
 
   return (
     <section
@@ -52,10 +56,7 @@ export function About({ content, settings }: AboutProps) {
           {/* Top Right: Paragraphs & Equipment Checklist */}
           <div className="flex flex-col items-start text-left lg:col-span-7">
             {content.paragraphs.map((p, idx) => (
-              <p
-                key={idx}
-                className="mb-3 text-xs leading-relaxed text-[#4a5f78] sm:text-sm"
-              >
+              <p key={idx} className="mb-3 text-xs leading-relaxed text-[#4a5f78] sm:text-sm">
                 {p}
               </p>
             ))}
@@ -67,9 +68,7 @@ export function About({ content, settings }: AboutProps) {
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#e6f7ed] text-[#00a651]">
                     <Check className="h-3.5 w-3.5 stroke-[3]" />
                   </span>
-                  <span className="text-xs font-bold text-[#0a1e3b] sm:text-[13px]">
-                    {item}
-                  </span>
+                  <span className="text-xs font-bold text-[#0a1e3b] sm:text-[13px]">{item}</span>
                 </div>
               ))}
             </div>
@@ -81,7 +80,10 @@ export function About({ content, settings }: AboutProps) {
           {/* Left Large Photo: Cleaners in action */}
           <div className="relative h-[340px] w-full overflow-hidden rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)] sm:h-[420px] lg:col-span-7 lg:h-[480px]">
             <Image
-              src={getPublicImageUrl(content.images?.[0]?.src, "/images/placeholder/about-cleaner.png")}
+              src={getPublicImageUrl(
+                content.images?.[0]?.src,
+                "/images/placeholder/about-cleaner.png"
+              )}
               alt={content.images?.[0]?.alt || "Professional JUBU cleaning team"}
               fill
               sizes="(max-width: 1024px) 100vw, 60vw"
@@ -95,7 +97,10 @@ export function About({ content, settings }: AboutProps) {
             {/* Top Team Duo Photo */}
             <div className="relative h-[200px] w-full overflow-hidden rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_rgba(8,24,57,0.06)] sm:h-[240px] lg:h-[250px]">
               <Image
-                src={getPublicImageUrl(content.images?.[1]?.src, "/images/placeholder/about-team.png")}
+                src={getPublicImageUrl(
+                  content.images?.[1]?.src,
+                  "/images/placeholder/about-team.png"
+                )}
                 alt={content.images?.[1]?.alt || "Professional JUBU cleaners smiling"}
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -106,9 +111,7 @@ export function About({ content, settings }: AboutProps) {
             {/* Bottom Dark Card: Factual Business Info (JUBU Brand Navy) */}
             <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#152c4f] bg-linear-to-br from-[#0a1e3b] via-[#07152b] to-[#040e1e] p-6 text-white shadow-lg sm:p-7">
               <div className="flex items-start justify-between">
-                <span className="text-sm font-bold text-slate-200">
-                  Licensed in Dubai
-                </span>
+                <span className="text-sm font-bold text-slate-200">Licensed in Dubai</span>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-xs">
                   <Check className="h-5 w-5 stroke-[2.5] text-[#00a651]" />
                 </div>
@@ -119,8 +122,8 @@ export function About({ content, settings }: AboutProps) {
                   {settings?.licence?.legalStructure ? "DET Licensed" : "Licensed Cleaner"}
                 </div>
                 <p className="mt-1.5 text-xs font-medium text-slate-300 sm:text-sm">
-                  {settings?.licence?.issuingAuthority || "Dubai Department of Economy and Tourism"} · Licence No.{" "}
-                  {settings?.licence?.number || "1026183"}
+                  {settings?.licence?.issuingAuthority || "Dubai Department of Economy and Tourism"}{" "}
+                  · Licence No. {settings?.licence?.number || "1026183"}
                 </p>
               </div>
 
@@ -136,4 +139,3 @@ export function About({ content, settings }: AboutProps) {
     </section>
   );
 }
-

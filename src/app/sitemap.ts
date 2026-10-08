@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 
-import { getAreas, VALID_AREA_SLUGS } from "@/lib/content";
 import { env } from "@/env";
+
+import { getAreas, VALID_AREA_SLUGS } from "@/lib/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
@@ -33,4 +34,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...areaEntries
   ];
 }
-

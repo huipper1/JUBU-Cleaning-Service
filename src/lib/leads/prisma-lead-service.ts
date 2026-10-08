@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+
 import type { CreateLeadInput, LeadServiceResult } from "@/types/lead";
 
 import { createLeadInputSchema } from "@/lib/content/types";

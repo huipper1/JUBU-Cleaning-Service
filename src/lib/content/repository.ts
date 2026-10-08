@@ -1,6 +1,7 @@
 import type {
   AboutContent,
   AreaLandingPage,
+  BlogPost,
   GalleryItem,
   HeroContent,
   Service,
@@ -22,5 +23,7 @@ export interface ContentRepository {
   getTestimonials(): Promise<import("@/types/testimonial").TestimonialItem[]>;
   getAreaLandingPages(): Promise<AreaLandingPage[]>;
   getAreaLandingPage(slug: string): Promise<AreaLandingPage | null>;
+  getBlogPosts(): Promise<BlogPost[]>;
+  getBlogPostBySlug(slug: string): Promise<BlogPost | null>;
+  getRecentBlogPosts(limit?: number): Promise<BlogPost[]>;
 }
-

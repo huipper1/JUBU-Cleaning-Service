@@ -3,23 +3,28 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import {
-  LayoutDashboard,
-  Inbox,
-  Globe2,
-  Settings,
-  Sparkles,
-  Layers,
-  MapPin,
-  ExternalLink,
+  BarChart3,
   ChevronRight,
-  BarChart3
+  ExternalLink,
+  Globe2,
+  Inbox,
+  Layers,
+  LayoutDashboard,
+  MapPin,
+  Settings,
+  Sparkles
 } from "lucide-react";
+
 import { NavUser } from "@/components/nav-user";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -27,15 +32,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarRail,
+  SidebarRail
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: {
@@ -160,11 +158,7 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>Site Content</SidebarGroupLabel>
           <SidebarMenu>
-            <Collapsible
-              asChild
-              defaultOpen={isContentActive}
-              className="group/collapsible"
-            >
+            <Collapsible asChild defaultOpen={isContentActive} className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton tooltip="Page Sections">
@@ -183,16 +177,29 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild isActive={pathname === "/admin/content/services"}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === "/admin/content/services"}
+                      >
                         <Link href="/admin/content/services">
                           <span>Services</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild isActive={pathname === "/admin/content/why-choose"}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === "/admin/content/why-choose"}
+                      >
                         <Link href="/admin/content/why-choose">
                           <span>Why Choose Us</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild isActive={pathname === "/admin/content/about"}>
+                        <Link href="/admin/content/about">
+                          <span>About Us</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -204,9 +211,35 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild isActive={pathname === "/admin/content/gallery"}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === "/admin/content/gallery"}
+                      >
                         <Link href="/admin/content/gallery">
                           <span>Project Gallery</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === "/admin/content/testimonials"}
+                      >
+                        <Link href="/admin/content/testimonials">
+                          <span>Customer Reviews</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={
+                          pathname === "/admin/content/blog" ||
+                          pathname.startsWith("/admin/content/blog/")
+                        }
+                      >
+                        <Link href="/admin/content/blog">
+                          <span>Blog Articles</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

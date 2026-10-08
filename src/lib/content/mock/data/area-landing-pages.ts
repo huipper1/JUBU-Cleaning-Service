@@ -260,7 +260,8 @@ export const mockAreaLandingPagesData: AreaLandingPage[] = [
       },
       {
         question: "Do you provide one-time deep cleaning?",
-        answer: "Yes. One-time deep cleaning can be arranged according to your property's requirements."
+        answer:
+          "Yes. One-time deep cleaning can be arranged according to your property's requirements."
       },
       {
         question: "Do you provide move-in and move-out cleaning?",
@@ -268,7 +269,8 @@ export const mockAreaLandingPagesData: AreaLandingPage[] = [
       },
       {
         question: "Do you provide post-construction cleaning?",
-        answer: "Yes. We provide post-construction cleaning for newly completed or renovated properties."
+        answer:
+          "Yes. We provide post-construction cleaning for newly completed or renovated properties."
       }
     ],
     isActive: true,

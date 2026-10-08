@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
+
 import { Check, Copy, ExternalLink, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { AdminPageHeader } from "@/components/admin/page-header";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +17,7 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+
 import { updateTrackingAction, type UpdateTrackingData } from "./actions";
 
 interface TrackingClientProps {
@@ -88,11 +90,12 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg">Google Tag Manager (GTM)</CardTitle>
-                  <CardDescription>
-                    Enables GTM container on all pages.
-                  </CardDescription>
+                  <CardDescription>Enables GTM container on all pages.</CardDescription>
                 </div>
-                <Badge variant={hasGtm ? "default" : "outline"} className={hasGtm ? "bg-emerald-600 hover:bg-emerald-700" : ""}>
+                <Badge
+                  variant={hasGtm ? "default" : "outline"}
+                  className={hasGtm ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                >
                   {hasGtm ? "Active" : "Not Set"}
                 </Badge>
               </div>
@@ -100,7 +103,10 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
 
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="gtmId" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <label
+                  htmlFor="gtmId"
+                  className="text-xs font-bold tracking-wider text-muted-foreground uppercase"
+                >
                   GTM Container ID
                 </label>
                 <div className="relative">
@@ -114,7 +120,7 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
                         gtmId: e.target.value.toUpperCase().trim()
                       }))
                     }
-                    className="font-mono uppercase tracking-wider"
+                    className="font-mono tracking-wider uppercase"
                   />
                   {formData.gtmId && (
                     <Button
@@ -122,9 +128,13 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleCopy(formData.gtmId || "", "gtm")}
-                      className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+                      className="absolute top-1 right-1 h-7 w-7 text-muted-foreground hover:text-foreground"
                     >
-                      {copiedKey === "gtm" ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copiedKey === "gtm" ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
                     </Button>
                   )}
                 </div>
@@ -153,11 +163,12 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg">Google Analytics 4 (GA4)</CardTitle>
-                  <CardDescription>
-                    Direct GA4 measurement integration.
-                  </CardDescription>
+                  <CardDescription>Direct GA4 measurement integration.</CardDescription>
                 </div>
-                <Badge variant={hasGa ? "default" : "outline"} className={hasGa ? "bg-emerald-600 hover:bg-emerald-700" : ""}>
+                <Badge
+                  variant={hasGa ? "default" : "outline"}
+                  className={hasGa ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                >
                   {hasGa ? "Active" : "Not Set"}
                 </Badge>
               </div>
@@ -165,7 +176,10 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
 
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="gaId" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <label
+                  htmlFor="gaId"
+                  className="text-xs font-bold tracking-wider text-muted-foreground uppercase"
+                >
                   GA4 Measurement ID
                 </label>
                 <div className="relative">
@@ -179,7 +193,7 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
                         gaId: e.target.value.toUpperCase().trim()
                       }))
                     }
-                    className="font-mono uppercase tracking-wider"
+                    className="font-mono tracking-wider uppercase"
                   />
                   {formData.gaId && (
                     <Button
@@ -187,9 +201,13 @@ export function TrackingClient({ initialTracking }: TrackingClientProps) {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleCopy(formData.gaId || "", "ga")}
-                      className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+                      className="absolute top-1 right-1 h-7 w-7 text-muted-foreground hover:text-foreground"
                     >
-                      {copiedKey === "ga" ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copiedKey === "ga" ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
                     </Button>
                   )}
                 </div>

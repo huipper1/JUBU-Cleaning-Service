@@ -1,19 +1,26 @@
+import type { Metadata } from "next";
+
+import { siteConfig } from "@/config/site";
+import { env } from "@/env";
+
 import {
   getAbout,
   getAreas,
   getGallery,
   getHero,
   getPublicImageUrl,
+  getRecentBlogPosts,
   getServices,
   getSettings,
   getTeam,
+  getTestimonials,
   getWhyChoose
 } from "@/lib/content";
-import { env } from "@/env";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
 import {
   About,
+  BlogSection,
   Contact,
   Gallery,
   Hero,
@@ -21,11 +28,70 @@ import {
   ServiceAreas,
   Services,
   Team,
+  Testimonials,
   WhyChooseUs
 } from "@/components/sections";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const title = settings?.defaultSeo?.title || siteConfig.name;
+  const description =
+    settings?.defaultSeo?.description ||
+    "Professional cleaning services in Dubai. JUBU Cleaning Service offers home, villa, office, deep cleaning, and sofa cleaning across Dubai. Get a free quote today!";
+  const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
+  const dynamicOgImageUrl = getPublicImageUrl(
+    settings?.defaultSeo?.ogImage || settings?.logo?.src,
+    "/images/logo.png"
+  );
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: baseUrl
+    },
+    openGraph: {
+      title,
+      description,
+      url: baseUrl,
+      siteName: settings?.businessName || "JUBU Cleaning Service",
+      locale: "en_AE",
+      type: "website",
+      images: [
+        {
+          url: dynamicOgImageUrl.startsWith("http")
+            ? dynamicOgImageUrl
+            : `${baseUrl}${dynamicOgImageUrl}`,
+          width: 1200,
+          height: 630,
+          alt: settings?.businessName || "JUBU Cleaning Service Dubai"
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        dynamicOgImageUrl.startsWith("http") ? dynamicOgImageUrl : `${baseUrl}${dynamicOgImageUrl}`
+      ]
+    }
+  };
+}
+
 export default async function Home() {
-  const [settings, hero, allServices, whyChoose, about, team, gallery, areas] = await Promise.all([
+  const [
+    settings,
+    hero,
+    allServices,
+    whyChoose,
+    about,
+    team,
+    gallery,
+    areas,
+    testimonials,
+    recentBlogPosts
+  ] = await Promise.all([
     getSettings(),
     getHero(),
     getServices(),
@@ -33,7 +99,9 @@ export default async function Home() {
     getAbout(),
     getTeam(),
     getGallery(),
-    getAreas()
+    getAreas(),
+    getTestimonials(),
+    getRecentBlogPosts(3)
   ]);
 
   const selectedServices =
@@ -66,13 +134,17 @@ export default async function Home() {
       alternateName: `${settings.businessName} LLC`,
       url: baseUrl,
       logo: dynamicLogoUrl.startsWith("http") ? dynamicLogoUrl : `${baseUrl}${dynamicLogoUrl}`,
-      image: dynamicOgImageUrl.startsWith("http") ? dynamicOgImageUrl : `${baseUrl}${dynamicOgImageUrl}`,
+      image: dynamicOgImageUrl.startsWith("http")
+        ? dynamicOgImageUrl
+        : `${baseUrl}${dynamicOgImageUrl}`,
       telephone: settings.phoneTel,
       email: settings.email,
       priceRange: "$$",
       paymentAccepted: "Cash, Card, Bank Transfer",
       currenciesAccepted: "AED",
-      description: settings.defaultSeo?.description || settings.tagline,
+      description:
+        settings.defaultSeo?.description ||
+        "Professional cleaning services in Dubai. JUBU Cleaning Service offers home, villa, office, deep cleaning, and sofa cleaning across Dubai. Get a free quote today!",
       address: {
         "@type": "PostalAddress",
         streetAddress: "Setadel Building, Office # 201, Al Quoz-4",
@@ -183,8 +255,14 @@ export default async function Home() {
       {/* 7. Projects / Gallery (with accessible lightbox) */}
       {(settings.showGallery ?? true) && <Gallery items={gallery} />}
 
+      {/* 7.1 Customer Reviews / Testimonials */}
+      <Testimonials testimonials={testimonials} />
+
       {/* 8. Get a Free Quote (Lead Form) */}
       {(settings.showQuote ?? true) && <QuoteForm services={services} settings={settings} />}
+
+      {/* 8.1 Cleaning Guides & Blog Section */}
+      {(settings.showBlog ?? true) && <BlogSection posts={recentBlogPosts} />}
 
       {/* 9. Dubai Service Areas */}
       {(settings.showAreas ?? true) && (

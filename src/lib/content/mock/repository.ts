@@ -1,6 +1,7 @@
 import type {
   AboutContent,
   AreaLandingPage,
+  BlogPost,
   GalleryItem,
   HeroContent,
   Service,
@@ -15,6 +16,7 @@ import type { ContentRepository } from "@/lib/content/repository";
 import { mockAboutData } from "./data/about";
 import { mockAreaLandingPagesData } from "./data/area-landing-pages";
 import { mockAreasData } from "./data/areas";
+import { mockBlogPostsData } from "./data/blog";
 import { mockGalleryData } from "./data/gallery";
 import { mockHeroData } from "./data/hero";
 import { mockServicesData } from "./data/services";
@@ -72,19 +74,44 @@ export class MockContentRepository implements ContentRepository {
 
   async getAreaLandingPages(): Promise<AreaLandingPage[]> {
     return Promise.resolve(
-      mockAreaLandingPagesData
-        .filter((page) => page.isActive)
-        .sort((a, b) => a.order - b.order)
+      mockAreaLandingPagesData.filter((page) => page.isActive).sort((a, b) => a.order - b.order)
     );
   }
 
   async getAreaLandingPage(slug: string): Promise<AreaLandingPage | null> {
-    const page = mockAreaLandingPagesData.find(
-      (p) => p.slug === slug && p.isActive
-    );
+    const page = mockAreaLandingPagesData.find((p) => p.slug === slug && p.isActive);
     return Promise.resolve(page ?? null);
+  }
+
+  async getBlogPosts(): Promise<BlogPost[]> {
+    return Promise.resolve(
+      mockBlogPostsData
+        .filter((post) => post.status === "PUBLISHED")
+        .sort(
+          (a, b) =>
+            new Date(b.publishedAt || b.createdAt).getTime() -
+            new Date(a.publishedAt || a.createdAt).getTime()
+        )
+    );
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+    const post = mockBlogPostsData.find((p) => p.slug === slug && p.status === "PUBLISHED");
+    return Promise.resolve(post ?? null);
+  }
+
+  async getRecentBlogPosts(limit = 3): Promise<BlogPost[]> {
+    return Promise.resolve(
+      mockBlogPostsData
+        .filter((post) => post.status === "PUBLISHED")
+        .sort(
+          (a, b) =>
+            new Date(b.publishedAt || b.createdAt).getTime() -
+            new Date(a.publishedAt || a.createdAt).getTime()
+        )
+        .slice(0, limit)
+    );
   }
 }
 
 export const mockContentRepository = new MockContentRepository();
-

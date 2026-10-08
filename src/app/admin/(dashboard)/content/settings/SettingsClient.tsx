@@ -1,22 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
+
 import { Check, Loader2 } from "lucide-react";
-import { updateSettingsAction, type UpdateSettingsData } from "./actions";
-import { AdminPageHeader } from "@/components/admin/page-header";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
+import { AdminPageHeader } from "@/components/admin/page-header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { updateSettingsAction, type UpdateSettingsData } from "./actions";
 
 interface SettingsClientProps {
   initialSettings: UpdateSettingsData;
@@ -66,48 +63,48 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     {
       key: "showHero",
       title: "Hero Section",
-      description: "Top headline, call-to-actions, and main cleaner banner.",
+      description: "Top headline, call-to-actions, and main cleaner banner."
     },
     {
       key: "showServices",
       title: "Services Catalog",
-      description: "Grid displaying all residential, commercial & deep cleaning services.",
+      description: "Grid displaying all residential, commercial & deep cleaning services."
     },
     {
       key: "showWhyChoose",
       title: "Why Choose JUBU Highlights",
-      description: "Trust pillars, trained staff badges, and quality assurance cards.",
+      description: "Trust pillars, trained staff badges, and quality assurance cards."
     },
     {
       key: "showAbout",
       title: "About Us / Company Profile",
-      description: "Company mission statement, equipment checklist, and profile story.",
+      description: "Company mission statement, equipment checklist, and profile story."
     },
     {
       key: "showTeam",
       title: "Our Team",
-      description: "Staff portraits, leadership cards, and supervisor bios.",
+      description: "Staff portraits, leadership cards, and supervisor bios."
     },
     {
       key: "showGallery",
       title: "Projects & Before/After Gallery",
-      description: "Visual portfolio of completed deep cleaning and sanitization projects.",
+      description: "Visual portfolio of completed deep cleaning and sanitization projects."
     },
     {
       key: "showQuote",
       title: "Free Quote & Lead Form",
-      description: "Instant booking and contact inquiry form for prospective clients.",
+      description: "Instant booking and contact inquiry form for prospective clients."
     },
     {
       key: "showAreas",
       title: "Dubai Service Areas",
-      description: "Interactive coverage map and list of covered Dubai neighborhoods.",
+      description: "Interactive coverage map and list of covered Dubai neighborhoods."
     },
     {
       key: "showContact",
       title: "Contact & Location",
-      description: "Registered office address, phone numbers, and working hours.",
-    },
+      description: "Registered office address, phone numbers, and working hours."
+    }
   ];
 
   return (
@@ -132,38 +129,54 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       </AdminPageHeader>
 
       <Tabs defaultValue="branding" className="w-full">
-        <TabsList className="inline-flex md:grid md:grid-cols-6 w-auto min-w-full justify-start md:justify-center p-1">
-          <TabsTrigger value="branding" className="px-3.5 py-1.5 whitespace-nowrap">Branding & Logo</TabsTrigger>
-          <TabsTrigger value="bank" className="px-3.5 py-1.5 whitespace-nowrap text-blue-600 dark:text-blue-400 font-semibold">Bank Details</TabsTrigger>
-          <TabsTrigger value="sections" className="px-3.5 py-1.5 whitespace-nowrap">Page Sections</TabsTrigger>
-          <TabsTrigger value="contact" className="px-3.5 py-1.5 whitespace-nowrap">Contact & Address</TabsTrigger>
-          <TabsTrigger value="licence" className="px-3.5 py-1.5 whitespace-nowrap">Trade Licence</TabsTrigger>
-          <TabsTrigger value="seo" className="px-3.5 py-1.5 whitespace-nowrap">SEO & Metadata</TabsTrigger>
+        <TabsList className="inline-flex w-auto min-w-full justify-start p-1 md:grid md:grid-cols-6 md:justify-center">
+          <TabsTrigger value="branding" className="px-3.5 py-1.5 whitespace-nowrap">
+            Branding & Logo
+          </TabsTrigger>
+          <TabsTrigger
+            value="bank"
+            className="px-3.5 py-1.5 font-semibold whitespace-nowrap text-blue-600 dark:text-blue-400"
+          >
+            Bank Details
+          </TabsTrigger>
+          <TabsTrigger value="sections" className="px-3.5 py-1.5 whitespace-nowrap">
+            Page Sections
+          </TabsTrigger>
+          <TabsTrigger value="contact" className="px-3.5 py-1.5 whitespace-nowrap">
+            Contact & Address
+          </TabsTrigger>
+          <TabsTrigger value="licence" className="px-3.5 py-1.5 whitespace-nowrap">
+            Trade Licence
+          </TabsTrigger>
+          <TabsTrigger value="seo" className="px-3.5 py-1.5 whitespace-nowrap">
+            SEO & Metadata
+          </TabsTrigger>
         </TabsList>
 
         {/* Bank Information Tab */}
         <TabsContent value="bank" className="mt-4">
           <Card className="border-blue-200 dark:border-blue-900/50">
-            <CardHeader className="bg-blue-50/50 dark:bg-blue-950/20 rounded-t-lg">
-              <CardTitle className="text-blue-950 dark:text-blue-100 flex items-center gap-2">
+            <CardHeader className="rounded-t-lg bg-blue-50/50 dark:bg-blue-950/20">
+              <CardTitle className="flex items-center gap-2 text-blue-950 dark:text-blue-100">
                 <span>Official Bank Account Details</span>
               </CardTitle>
               <CardDescription>
-                Configure the company bank transfer details displayed to customers during the checkout & booking process. Customers will send their payments to this account.
+                Configure the company bank transfer details displayed to customers during the
+                checkout & booking process. Customers will send their payments to this account.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-foreground">
-                    Bank Name
-                  </label>
+                  <label className="text-xs font-semibold text-foreground">Bank Name</label>
                   <Input
                     value={formData.bankName ?? ""}
                     onChange={(e) => handleChange("bankName", e.target.value)}
                     placeholder="e.g. Dubai Islamic Bank (DIB)"
                   />
-                  <p className="text-[11px] text-muted-foreground">Full legal name of the financial institution.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Full legal name of the financial institution.
+                  </p>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -176,33 +189,35 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     placeholder="e.g. AE070240001026183001"
                     className="font-mono"
                   />
-                  <p className="text-[11px] text-muted-foreground">Standard UAE 23-character IBAN starting with AE.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Standard UAE 23-character IBAN starting with AE.
+                  </p>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-foreground">
-                    Account Number
-                  </label>
+                  <label className="text-xs font-semibold text-foreground">Account Number</label>
                   <Input
                     value={formData.bankAccountNumber ?? ""}
                     onChange={(e) => handleChange("bankAccountNumber", e.target.value)}
                     placeholder="e.g. 1026183001"
                     className="font-mono"
                   />
-                  <p className="text-[11px] text-muted-foreground">Local domestic account number.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Local domestic account number.
+                  </p>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-foreground">
-                    SWIFT / BIC Code
-                  </label>
+                  <label className="text-xs font-semibold text-foreground">SWIFT / BIC Code</label>
                   <Input
                     value={formData.bankSwiftCode ?? ""}
                     onChange={(e) => handleChange("bankSwiftCode", e.target.value)}
                     placeholder="e.g. DIBKAEAD"
                     className="font-mono uppercase"
                   />
-                  <p className="text-[11px] text-muted-foreground">Required for international wire transfers.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Required for international wire transfers.
+                  </p>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -215,7 +230,9 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     placeholder="e.g. 024"
                     className="font-mono"
                   />
-                  <p className="text-[11px] text-muted-foreground">Branch identifier or central clearing code.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Branch identifier or central clearing code.
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -228,7 +245,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
             <CardHeader>
               <CardTitle>Company Logo & Identity</CardTitle>
               <CardDescription>
-                Upload the official company logo used across the website, admin login, and sidebar header.
+                Upload the official company logo used across the website, admin login, and sidebar
+                header.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-5">
@@ -272,10 +290,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                       className="flex items-center justify-between gap-3 rounded-lg border p-4 shadow-xs"
                     >
                       <div className="flex flex-col gap-0.5 pr-2">
-                        <span className="text-sm font-semibold text-foreground">
-                          {sec.title}
-                        </span>
-                        <span className="text-xs text-muted-foreground line-clamp-2">
+                        <span className="text-sm font-semibold text-foreground">{sec.title}</span>
+                        <span className="line-clamp-2 text-xs text-muted-foreground">
                           {sec.description}
                         </span>
                       </div>
@@ -304,9 +320,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
             <CardContent className="flex flex-col gap-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Business Name
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Business Name</label>
                   <Input
                     value={formData.businessName}
                     onChange={(e) => handleChange("businessName", e.target.value)}
@@ -314,9 +328,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Tagline
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Tagline</label>
                   <Input
                     value={formData.tagline}
                     onChange={(e) => handleChange("tagline", e.target.value)}
@@ -324,9 +336,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Phone Display
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Phone Display</label>
                   <Input
                     value={formData.phoneDisplay}
                     onChange={(e) => handleChange("phoneDisplay", e.target.value)}
@@ -334,9 +344,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    WhatsApp Display
-                  </label>
+                  <label className="text-xs font-medium text-foreground">WhatsApp Display</label>
                   <Input
                     value={formData.whatsapp}
                     onChange={(e) => handleChange("whatsapp", e.target.value)}
@@ -344,9 +352,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Official Email
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Official Email</label>
                   <Input
                     type="email"
                     value={formData.email}
@@ -355,16 +361,14 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Working Hours
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Working Hours</label>
                   <Input
                     value={formData.workingHours}
                     onChange={(e) => handleChange("workingHours", e.target.value)}
                   />
                 </div>
 
-                <div className="sm:col-span-2 flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
                   <label className="text-xs font-medium text-foreground">
                     Registered Office Address
                   </label>
@@ -390,9 +394,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
             <CardContent>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Licence Number
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Licence Number</label>
                   <Input
                     value={formData.licenceNumber}
                     onChange={(e) => handleChange("licenceNumber", e.target.value)}
@@ -400,9 +402,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Legal Structure
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Legal Structure</label>
                   <Input
                     value={formData.licenceStructure}
                     onChange={(e) => handleChange("licenceStructure", e.target.value)}
@@ -410,9 +410,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Issuing Authority
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Issuing Authority</label>
                   <Input
                     value={formData.licenceAuthority}
                     onChange={(e) => handleChange("licenceAuthority", e.target.value)}
@@ -420,9 +418,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-foreground">
-                    Issue Date
-                  </label>
+                  <label className="text-xs font-medium text-foreground">Issue Date</label>
                   <Input
                     value={formData.licenceIssueDate}
                     onChange={(e) => handleChange("licenceIssueDate", e.target.value)}
@@ -444,9 +440,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-foreground">
-                  Default Meta Title
-                </label>
+                <label className="text-xs font-medium text-foreground">Default Meta Title</label>
                 <Input
                   value={formData.seoTitle}
                   onChange={(e) => handleChange("seoTitle", e.target.value)}
@@ -461,7 +455,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   rows={3}
                   value={formData.seoDescription}
                   onChange={(e) => handleChange("seoDescription", e.target.value)}
-                  className="w-full rounded-md border bg-background p-2.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                  className="w-full rounded-md border bg-background p-2.5 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 />
               </div>
             </CardContent>

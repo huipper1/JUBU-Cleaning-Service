@@ -6,11 +6,17 @@ import { usePathname } from "next/navigation";
 
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 
-import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
-import { getPublicImageUrl } from "@/lib/content/image-url";
-import { trackCtaClick, trackEmailClick, trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
 
+import {
+  trackCtaClick,
+  trackEmailClick,
+  trackPhoneClick,
+  trackWhatsAppClick
+} from "@/lib/analytics";
+import { getPublicImageUrl } from "@/lib/content/image-url";
+
+import { WhatsAppIcon } from "@/components/icons";
 import { Icon } from "@/ui";
 
 interface FooterProps {
@@ -18,15 +24,13 @@ interface FooterProps {
 }
 
 const QUICK_LINKS = [
-  { label: "Home", href: "#top" },
-  { label: "Services", href: "#services" },
-  { label: "Why Us", href: "#why-choose" },
-  { label: "About", href: "#about" },
-  { label: "Our Team", href: "#team" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Service Areas", href: "#areas" },
-  { label: "Free Quote", href: "#quote" },
-  { label: "Contact", href: "#contact" }
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "About Us", href: "/about" },
+  { label: "Cleaning Guides & Blog", href: "/blog" },
+  { label: "Service Areas", href: "/#areas" },
+  { label: "Get a Quote", href: "/services#quote" },
+  { label: "Contact Us", href: "/contact" }
 ] as const;
 
 export function Footer({ settings }: FooterProps) {

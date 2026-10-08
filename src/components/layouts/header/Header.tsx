@@ -7,11 +7,13 @@ import { usePathname } from "next/navigation";
 
 import { ChevronDown, MapPin, Menu, Phone, X } from "lucide-react";
 
-import { WhatsAppIcon } from "@/components/icons";
 import type { ServiceArea, SiteSettings } from "@/types/content";
 import { AREA_NAV_ITEMS, MAIN_NAV_ITEMS } from "@/constants/navigation";
-import { getPublicImageUrl } from "@/lib/content/image-url";
+
 import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
+import { getPublicImageUrl } from "@/lib/content/image-url";
+
+import { WhatsAppIcon } from "@/components/icons";
 
 interface HeaderProps {
   settings: SiteSettings;
@@ -36,10 +38,10 @@ export function Header({ settings, areas }: HeaderProps) {
   const navAreas =
     areas && areas.length > 0
       ? areas.map((a) => ({
-        name: a.name,
-        href: `/${a.slug}`,
-        subtitle: "Cleaning Services"
-      }))
+          name: a.name,
+          href: `/${a.slug}`,
+          subtitle: "Cleaning Services"
+        }))
       : AREA_NAV_ITEMS;
 
   return (
@@ -65,7 +67,7 @@ export function Header({ settings, areas }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main Navigation">
-          {MAIN_NAV_ITEMS.map((link, idx) => {
+          {MAIN_NAV_ITEMS.map((link) => {
             const isHome = link.label === "Home";
             const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
 
@@ -117,14 +119,20 @@ export function Header({ settings, areas }: HeaderProps) {
               );
             }
 
+            const isActive =
+              link.href === "/"
+                ? isRoot
+                : pathname === link.href || pathname.startsWith(`${link.href}/`);
+
             return (
               <Link
                 key={link.label}
                 href={linkHref}
-                className={`relative py-1 text-sm font-medium transition-colors hover:text-white ${idx === 0 && isRoot
-                  ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-brand-sky"
-                  : "text-slate-300 hover:text-white"
-                  }`}
+                className={`relative py-1 text-sm font-medium transition-colors hover:text-white ${
+                  isActive
+                    ? "font-semibold text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-brand-sky"
+                    : "text-slate-300 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>
@@ -201,8 +209,9 @@ export function Header({ settings, areas }: HeaderProps) {
                           className="p-1 text-slate-400 hover:text-white"
                         >
                           <ChevronDown
-                            className={`h-4 w-4 transition-transform duration-200 ${isMobileAreasOpen ? "rotate-180 text-brand-sky" : ""
-                              }`}
+                            className={`h-4 w-4 transition-transform duration-200 ${
+                              isMobileAreasOpen ? "rotate-180 text-brand-sky" : ""
+                            }`}
                           />
                         </button>
                       </div>

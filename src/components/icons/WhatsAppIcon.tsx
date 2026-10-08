@@ -1,10 +1,6 @@
 import type { WhatsAppIconProps } from "@/types";
 
-export const WhatsAppIcon = ({
-  className,
-  monochrome = false,
-  ...props
-}: WhatsAppIconProps) => {
+export const WhatsAppIcon = ({ className, monochrome = false, ...props }: WhatsAppIconProps) => {
   if (monochrome) {
     return (
       <svg

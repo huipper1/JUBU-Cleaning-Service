@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+
 import { TrackingClient } from "./TrackingClient";
 
 export const dynamic = "force-dynamic";

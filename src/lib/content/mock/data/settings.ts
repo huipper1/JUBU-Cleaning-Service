@@ -37,7 +37,7 @@ export const mockSettingsData: SiteSettings = {
   defaultSeo: {
     title: "JUBU Cleaning Service | Dubai Cleaning Services",
     description:
-      "JUBU Cleaning Service provides reliable and professional cleaning solutions for homes, offices, villas and commercial spaces in Dubai. Request your free quote today.",
+      "Professional cleaning services in Dubai. JUBU Cleaning Service offers home, villa, office, deep cleaning, and sofa cleaning across Dubai. Get a free quote today!",
     ogImage: "/images/placeholder/og-image.svg" // DUMMY
   },
   copyrightText: "© 2026 JUBU Cleaning Service. All rights reserved.",

@@ -15,7 +15,8 @@ export const mockWhyChooseData: WhyChooseItem[] = [
   {
     id: "professional-equipment",
     title: "Professional Equipment",
-    description: "Equipped with industrial scrubbers, steam cleaners, extractors and vacuum systems.",
+    description:
+      "Equipped with industrial scrubbers, steam cleaners, extractors and vacuum systems.",
     icon: "settings",
     order: 2,
     isActive: true,
@@ -25,7 +26,8 @@ export const mockWhyChooseData: WhyChooseItem[] = [
   {
     id: "free-quotes",
     title: "Free Quotes",
-    description: "Clear and straightforward custom quotes via WhatsApp, phone call or online inquiry.",
+    description:
+      "Clear and straightforward custom quotes via WhatsApp, phone call or online inquiry.",
     icon: "clock",
     order: 3,
     isActive: true,

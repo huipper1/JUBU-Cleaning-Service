@@ -1,5 +1,6 @@
 export * from "./about";
 export * from "./areas";
+export * from "./blog";
 export * from "./contact";
 export * from "./faq";
 export * from "./featured";

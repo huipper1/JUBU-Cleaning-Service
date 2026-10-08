@@ -19,10 +19,7 @@ export const seoConfig: Metadata = {
     address: true
   },
   icons: {
-    icon: [
-      { url: "/images/logo.png", type: "image/png" },
-      { url: "/favicon.ico" }
-    ],
+    icon: [{ url: "/images/logo.png", type: "image/png" }, { url: "/favicon.ico" }],
     shortcut: "/images/logo.png",
     apple: "/images/logo.png"
   },

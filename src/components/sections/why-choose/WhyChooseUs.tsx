@@ -1,7 +1,10 @@
 import Image from "next/image";
-import { SectionHeading } from "@/ui";
+
 import type { ImageItem, WhyChooseItem } from "@/types/content";
+
 import { getPublicImageUrl } from "@/lib/content/image-url";
+
+import { SectionHeading } from "@/ui";
 
 interface WhyChooseUsProps {
   items: WhyChooseItem[];
@@ -137,7 +140,7 @@ export function WhyChooseUs({
           </div>
 
           {/* Right Column: Content and 4 Horizontal Feature Badges */}
-          <div className="flex flex-col justify-center py-12 lg:col-span-7 lg:py-16 lg:pl-10 lg:pr-2 xl:pl-14">
+          <div className="flex flex-col justify-center py-12 lg:col-span-7 lg:py-16 lg:pr-2 lg:pl-10 xl:pl-14">
             <SectionHeading
               badge={badge}
               title={title}
@@ -149,14 +152,11 @@ export function WhyChooseUs({
             {/* 4 Feature Items Matching Screenshot */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-3 lg:gap-4">
               {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-2.5 text-left sm:gap-3"
-                >
+                <div key={item.id} className="flex items-center gap-2.5 text-left sm:gap-3">
                   <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.06)] sm:h-14 sm:w-14">
                     <FeatureIcon id={item.id} />
                   </div>
-                  <h3 className="flex flex-col text-[11px] font-bold leading-tight text-[#081839] sm:text-xs xl:text-[13px]">
+                  <h3 className="flex flex-col text-[11px] leading-tight font-bold text-[#081839] sm:text-xs xl:text-[13px]">
                     {renderFormattedTitle(item.title)}
                   </h3>
                 </div>
@@ -168,4 +168,3 @@ export function WhyChooseUs({
     </section>
   );
 }
-

@@ -4,9 +4,11 @@ import Link from "next/link";
 
 import { FileText, Phone } from "lucide-react";
 
-import { WhatsAppIcon } from "@/components/icons";
 import type { SiteSettings } from "@/types/content";
-import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
+
+import { trackCtaClick, trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
+
+import { WhatsAppIcon } from "@/components/icons";
 
 interface StickyBottomBarProps {
   settings: SiteSettings;
@@ -39,7 +41,9 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackWhatsAppClick("sticky_bottom_bar", undefined, settings.whatsappNumber)}
+          onClick={() =>
+            trackWhatsAppClick("sticky_bottom_bar", undefined, settings.whatsappNumber)
+          }
           className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-green px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-green-hover active:scale-95"
           aria-label="Chat with JUBU on WhatsApp"
         >
@@ -50,6 +54,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
         {/* Lead Quote Button */}
         <Link
           href="#quote"
+          onClick={() => trackCtaClick("request_free_quote", "sticky_bottom_bar")}
           className="flex items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-brand-navy-light px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#1E3B68] active:scale-95"
           aria-label="Request a free cleaning quote"
         >

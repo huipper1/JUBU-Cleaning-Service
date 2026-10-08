@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+
+import { CheckCircle2, Loader2, Pencil, Save, X, XCircle } from "lucide-react";
 import { toast } from "sonner";
-import { CheckCircle2, XCircle, Pencil, Save, X, Loader2 } from "lucide-react";
+
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
-import { toggleTeamMemberActiveAction, updateTeamMemberAction } from "./actions";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+import { toggleTeamMemberActiveAction, updateTeamMemberAction } from "./actions";
 
 interface TeamMemberItem {
   id: string;
@@ -37,19 +40,13 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
 
   const handleToggle = async (m: TeamMemberItem) => {
     const nextVal = !m.isActive;
-    setMembers(
-      members.map((item) =>
-        item.id === m.id ? { ...item, isActive: nextVal } : item
-      )
-    );
+    setMembers(members.map((item) => (item.id === m.id ? { ...item, isActive: nextVal } : item)));
 
     const res = await toggleTeamMemberActiveAction(m.id, nextVal);
     if (!res.success) {
       toast.error("Failed to update status");
       setMembers(
-        members.map((item) =>
-          item.id === m.id ? { ...item, isActive: !nextVal } : item
-        )
+        members.map((item) => (item.id === m.id ? { ...item, isActive: !nextVal } : item))
       );
     } else {
       toast.success(`${m.name} is now ${nextVal ? "active" : "disabled"}`);
@@ -74,7 +71,7 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
         bio: editBio || undefined,
         photoSrc: editPhotoSrc,
         order: editOrder,
-        isActive: m.isActive,
+        isActive: m.isActive
       });
 
       if (res.success) {
@@ -87,7 +84,7 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
                   role: editRole,
                   bio: editBio || undefined,
                   photoSrc: editPhotoSrc,
-                  order: editOrder,
+                  order: editOrder
                 }
               : item
           )
@@ -113,28 +110,18 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
             <CardContent className="p-5">
               {isEdit ? (
                 <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between pb-2 border-b">
-                    <span className="font-semibold text-foreground text-xs">
-                      Editing: {m.name}
-                    </span>
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <span className="text-xs font-semibold text-foreground">Editing: {m.name}</span>
                     <div className="flex items-center gap-1.5">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingId(null)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>
                         <X className="size-4" />
                         Cancel
                       </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleSave(m)}
-                        disabled={isSaving}
-                      >
+                      <Button size="sm" onClick={() => handleSave(m)} disabled={isSaving}>
                         {isSaving ? (
-                          <Loader2 className="size-3.5 animate-spin mr-1" />
+                          <Loader2 className="mr-1 size-3.5 animate-spin" />
                         ) : (
-                          <Save className="size-3.5 mr-1" />
+                          <Save className="mr-1 size-3.5" />
                         )}
                         <span>Save</span>
                       </Button>
@@ -151,35 +138,23 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs font-medium text-foreground">
-                        Name
-                      </label>
-                      <Input
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                      />
+                      <label className="text-xs font-medium text-foreground">Name</label>
+                      <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs font-medium text-foreground">
-                        Role
-                      </label>
-                      <Input
-                        value={editRole}
-                        onChange={(e) => setEditRole(e.target.value)}
-                      />
+                      <label className="text-xs font-medium text-foreground">Role</label>
+                      <Input value={editRole} onChange={(e) => setEditRole(e.target.value)} />
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-foreground">
-                      Bio
-                    </label>
+                    <label className="text-xs font-medium text-foreground">Bio</label>
                     <textarea
                       rows={2}
                       value={editBio}
                       onChange={(e) => setEditBio(e.target.value)}
-                      className="w-full rounded-md border bg-background p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring leading-relaxed"
+                      className="w-full rounded-md border bg-background p-2 text-xs leading-relaxed text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                     />
                   </div>
                 </div>
@@ -192,12 +167,8 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
                         <AvatarFallback>{initials}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <h3 className="text-sm font-semibold text-foreground">
-                          {m.name}
-                        </h3>
-                        <span className="text-xs text-primary font-medium">
-                          {m.role}
-                        </span>
+                        <h3 className="text-sm font-semibold text-foreground">{m.name}</h3>
+                        <span className="text-xs font-medium text-primary">{m.role}</span>
                       </div>
                     </div>
 
@@ -208,12 +179,12 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
                     >
                       {m.isActive ? (
                         <>
-                          <CheckCircle2 className="size-3.5 text-emerald-500 mr-1" />
+                          <CheckCircle2 className="mr-1 size-3.5 text-emerald-500" />
                           <span>Active</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="size-3.5 text-muted-foreground mr-1" />
+                          <XCircle className="mr-1 size-3.5 text-muted-foreground" />
                           <span>Disabled</span>
                         </>
                       )}
@@ -221,18 +192,14 @@ export function TeamClient({ initialMembers }: TeamClientProps) {
                   </div>
 
                   {m.bio && (
-                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                    <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                       {m.bio}
                     </p>
                   )}
 
-                  <div className="pt-2 border-t flex justify-end">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => startEdit(m)}
-                    >
-                      <Pencil className="size-3.5 mr-1" />
+                  <div className="flex justify-end border-t pt-2">
+                    <Button variant="outline" size="sm" onClick={() => startEdit(m)}>
+                      <Pencil className="mr-1 size-3.5" />
                       <span>Edit</span>
                     </Button>
                   </div>

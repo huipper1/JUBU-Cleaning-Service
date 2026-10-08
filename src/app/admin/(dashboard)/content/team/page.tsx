@@ -1,20 +1,21 @@
 import { prisma } from "@/lib/db/prisma";
-import { TeamClient } from "./TeamClient";
-import { AdminPageHeader } from "@/components/admin/page-header";
 
+import { AdminPageHeader } from "@/components/admin/page-header";
 import { SectionVisibilityToggle } from "@/components/admin/SectionVisibilityToggle";
+
+import { TeamClient } from "./TeamClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTeamPage() {
   const [dbMembers, settings] = await Promise.all([
     prisma.teamMember.findMany({
-      orderBy: { order: "asc" },
+      orderBy: { order: "asc" }
     }),
     prisma.siteSettings.findUnique({
       where: { id: "default" },
-      select: { showTeam: true },
-    }),
+      select: { showTeam: true }
+    })
   ]);
 
   const serialized = dbMembers.map((m) => ({
@@ -25,7 +26,7 @@ export default async function AdminTeamPage() {
     photoSrc: m.photoSrc,
     photoAlt: m.photoAlt,
     order: m.order,
-    isActive: m.isActive,
+    isActive: m.isActive
   }));
 
   return (
