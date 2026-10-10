@@ -222,7 +222,13 @@ export default async function AboutPage() {
                             member.photo.src,
                             "/images/placeholder/team-1.png"
                           )}
-                          alt={member.photo.alt || member.name}
+                          alt={
+                            member.photo.alt
+                              ? member.photo.alt.toLowerCase().includes("dubai")
+                                ? member.photo.alt
+                                : `${member.photo.alt} - JUBU Cleaning Service Dubai`
+                              : `${member.name} - ${member.role} at JUBU Cleaning Service Dubai`
+                          }
                           fill
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />

@@ -46,7 +46,7 @@ export function Footer({ settings }: FooterProps) {
       <div className="pointer-events-none absolute inset-0 z-0">
         <Image
           src="/images/placeholder/city-background.png"
-          alt="Dubai skyline illuminated at night"
+          alt="Dubai skyline illuminated at night - JUBU Cleaning Service coverage across Dubai communities"
           fill
           sizes="100vw"
           className="object-cover object-center"
@@ -68,7 +68,13 @@ export function Footer({ settings }: FooterProps) {
             >
               <Image
                 src={getPublicImageUrl(settings.logo?.src, "/images/logo-white-transparent.png")}
-                alt={settings.logo?.alt || `${settings.businessName} Logo`}
+                alt={
+                  settings.logo?.alt
+                    ? settings.logo.alt.toLowerCase().includes("dubai")
+                      ? settings.logo.alt
+                      : `${settings.logo.alt} - Licensed Cleaning Company in Dubai`
+                    : `${settings.businessName} - Licensed Cleaning Company in Dubai`
+                }
                 width={settings.logo?.width || 180}
                 height={settings.logo?.height || 180}
                 className="h-28 w-auto object-contain drop-shadow-md sm:h-32"

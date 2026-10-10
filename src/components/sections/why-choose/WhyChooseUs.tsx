@@ -131,7 +131,13 @@ export function WhyChooseUs({
           <div className="relative min-h-[320px] w-full overflow-hidden sm:min-h-[420px] lg:col-span-5 lg:min-h-[500px]">
             <Image
               src={getPublicImageUrl(image.src, "/images/placeholder/why-choose-us.png")}
-              alt={image.alt || "JUBU Cleaning Service"}
+              alt={
+                image.alt
+                  ? image.alt.toLowerCase().includes("dubai")
+                    ? image.alt
+                    : `${image.alt} in Dubai - JUBU Cleaning Service`
+                  : "Why Choose JUBU Cleaning Service - Licensed and Trusted Cleaners in Dubai"
+              }
               fill
               sizes="(max-width: 1024px) 100vw, 45vw"
               className="object-cover object-center"

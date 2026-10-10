@@ -35,3 +35,34 @@ export function getPublicImageUrl(
 
   return `/${trimmed}`;
 }
+
+/**
+ * SEO helper to format a keyword-rich alt text for service images.
+ * Guarantees service identity, location (Dubai), and brand awareness for Google Images SEO.
+ */
+export function getServiceImageAlt(title: string, customAlt?: string | null): string {
+  if (customAlt && customAlt.trim().length > 0) {
+    const trimmed = customAlt.trim();
+    if (trimmed.toLowerCase().includes("dubai") && trimmed.toLowerCase().includes("jubu")) {
+      return trimmed;
+    }
+    if (trimmed.toLowerCase().includes("dubai")) {
+      return `${trimmed} - JUBU Cleaning Service`;
+    }
+    return `${trimmed} in Dubai - JUBU Cleaning Service`;
+  }
+  return `Professional ${title} in Dubai - JUBU Cleaning Service`;
+}
+
+/**
+ * General SEO helper for image alt fallback formatting.
+ */
+export function getImageSeoAlt(
+  customAlt: string | null | undefined,
+  defaultDescription: string
+): string {
+  if (customAlt && customAlt.trim().length > 0) {
+    return customAlt.trim();
+  }
+  return defaultDescription;
+}

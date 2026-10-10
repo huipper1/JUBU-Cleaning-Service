@@ -33,7 +33,7 @@ export const mockHeroData: HeroContent = {
   ],
   heroImage: {
     src: "/images/placeholder/hero-cleaner.png", // DUMMY
-    alt: "JUBU Professional Cleaner in uniform with spray bottle and cloth",
+    alt: "Professional JUBU Cleaning Service specialist in uniform equipped with cleaning supplies in Dubai",
     width: 900,
     height: 1000
   },

@@ -29,7 +29,13 @@ export function Team({ members }: TeamProps) {
               <figure className="relative m-0 aspect-square w-full overflow-hidden bg-brand-pale-blue">
                 <Image
                   src={getPublicImageUrl(member.photo.src, "/images/placeholder/team-ahmed.png")}
-                  alt={`${member.name} - ${member.role} at JUBU Cleaning Service`}
+                  alt={
+                    member.photo.alt
+                      ? member.photo.alt.toLowerCase().includes("dubai")
+                        ? member.photo.alt
+                        : `${member.photo.alt} - JUBU Cleaning Service Dubai`
+                      : `${member.name} - ${member.role} at JUBU Cleaning Service Dubai`
+                  }
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"

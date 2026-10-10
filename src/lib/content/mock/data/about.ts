@@ -38,19 +38,19 @@ export const mockAboutData: AboutContent = {
   images: [
     {
       src: "/images/placeholder/about-cleaner.png", // DUMMY
-      alt: "JUBU Cleaning Service team at work in Dubai",
+      alt: "JUBU Cleaning Service professional team in uniform providing cleaning services across Dubai",
       width: 800,
       height: 600
     },
     {
       src: "/images/placeholder/about-detail.png", // DUMMY
-      alt: "Professional surface sanitization",
+      alt: "Detailed surface sanitization and disinfection by JUBU Cleaning Service Dubai",
       width: 600,
       height: 600
     },
     {
       src: "/images/placeholder/about-team.png", // DUMMY
-      alt: "JUBU Cleaning Service staff",
+      alt: "Certified JUBU Cleaning Service specialists in uniform equipped for deep cleaning in Dubai",
       width: 600,
       height: 600
     }

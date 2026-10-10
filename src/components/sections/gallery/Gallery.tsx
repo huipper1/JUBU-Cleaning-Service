@@ -18,13 +18,22 @@ interface GalleryProps {
 }
 
 function getGalleryImageAlt(title: string, alt?: string, serviceName?: string): string {
-  if (!alt) {
-    return `${title} - ${serviceName || "JUBU Cleaning Service Dubai"}`;
+  let baseAlt: string;
+  if (!alt || alt.trim().length === 0) {
+    baseAlt = `${title} ${serviceName ? `(${serviceName})` : ""}`.trim();
+  } else if (alt.toLowerCase().includes(title.toLowerCase())) {
+    baseAlt = alt.trim();
+  } else {
+    baseAlt = `${title} - ${alt.trim()}`;
   }
-  if (alt.toLowerCase().includes(title.toLowerCase())) {
-    return alt;
+
+  if (baseAlt.toLowerCase().includes("dubai") && baseAlt.toLowerCase().includes("jubu")) {
+    return baseAlt;
   }
-  return `${title} - ${alt}`;
+  if (baseAlt.toLowerCase().includes("dubai")) {
+    return `${baseAlt} - JUBU Cleaning Service`;
+  }
+  return `${baseAlt} in Dubai - JUBU Cleaning Service`;
 }
 
 export function Gallery({ items }: GalleryProps) {
@@ -227,8 +236,16 @@ export function Gallery({ items }: GalleryProps) {
                   )}
                   alt={
                     activeTab === "before"
-                      ? selectedItem.beforeImage.alt
-                      : selectedItem.afterImage.alt
+                      ? getGalleryImageAlt(
+                          selectedItem.title,
+                          selectedItem.beforeImage.alt,
+                          "Before Deep Cleaning"
+                        )
+                      : getGalleryImageAlt(
+                          selectedItem.title,
+                          selectedItem.afterImage.alt,
+                          "After Deep Cleaning"
+                        )
                   }
                   fill
                   sizes="100vw"

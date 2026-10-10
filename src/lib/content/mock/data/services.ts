@@ -14,7 +14,7 @@ export const mockServicesData: Service[] = [
     basePrice: 199,
     image: {
       src: "/images/placeholder/gallery-home.png", // DUMMY
-      alt: "Home Cleaning in Dubai living room with sofa and plants",
+      alt: "Professional Home Cleaning in Dubai - Apartment living room sanitization and vacuuming by JUBU Cleaning",
       width: 500,
       height: 500
     },
@@ -34,7 +34,7 @@ export const mockServicesData: Service[] = [
     basePrice: 299,
     image: {
       src: "/images/placeholder/gallery-office.png", // DUMMY
-      alt: "Clean modern corporate office workspace in Dubai",
+      alt: "Commercial Office Cleaning in Dubai - Modern corporate workspace and desk sanitization by JUBU Cleaning",
       width: 500,
       height: 500
     },
@@ -54,7 +54,7 @@ export const mockServicesData: Service[] = [
     basePrice: 349,
     image: {
       src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
-      alt: "Deep steam extraction cleaning on living room carpet",
+      alt: "Deep Cleaning and Intensive Steam Sanitization in Dubai - Carpet extraction by JUBU Cleaning",
       width: 500,
       height: 500
     },
@@ -74,7 +74,7 @@ export const mockServicesData: Service[] = [
     basePrice: 249,
     image: {
       src: "/images/placeholder/gallery-sofa.png", // DUMMY
-      alt: "High-power upholstery cleaning on fabric sofa",
+      alt: "Sofa and Carpet Steam Cleaning in Dubai - Upholstery stain extraction by JUBU Cleaning",
       width: 500,
       height: 500
     },
@@ -93,7 +93,7 @@ export const mockServicesData: Service[] = [
     basePrice: 499,
     image: {
       src: "/images/placeholder/gallery-construction.png", // DUMMY
-      alt: "Post-renovation dust extraction and clean-up in Dubai villa",
+      alt: "Post Construction Dust Extraction and Handover Cleaning in Dubai Villas - JUBU Cleaning",
       width: 500,
       height: 500
     },
@@ -113,7 +113,7 @@ export const mockServicesData: Service[] = [
     basePrice: 399,
     image: {
       src: "/images/placeholder/gallery-move.png", // DUMMY
-      alt: "Move-in ready apartment cleaning with packed boxes",
+      alt: "Move In and Move Out Tenancy Handover Cleaning in Dubai - Inspection-ready apartment cleaning by JUBU Cleaning",
       width: 500,
       height: 500
     },

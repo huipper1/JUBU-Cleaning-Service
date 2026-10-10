@@ -89,7 +89,13 @@ export function BlogIndexClient({ initialPosts }: BlogIndexClientProps) {
                     featuredPost.coverImage,
                     "/images/placeholder/gallery-home.png"
                   )}
-                  alt={featuredPost.coverImageAlt || featuredPost.title}
+                  alt={
+                    featuredPost.coverImageAlt
+                      ? featuredPost.coverImageAlt.toLowerCase().includes("dubai")
+                        ? featuredPost.coverImageAlt
+                        : `${featuredPost.coverImageAlt} - JUBU Cleaning Service Dubai`
+                      : `${featuredPost.title} - JUBU Cleaning Service Dubai Guide`
+                  }
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   priority
@@ -170,7 +176,13 @@ export function BlogIndexClient({ initialPosts }: BlogIndexClientProps) {
                 >
                   <Image
                     src={getPublicImageUrl(post.coverImage, "/images/placeholder/gallery-home.png")}
-                    alt={post.coverImageAlt || post.title}
+                    alt={
+                      post.coverImageAlt
+                        ? post.coverImageAlt.toLowerCase().includes("dubai")
+                          ? post.coverImageAlt
+                          : `${post.coverImageAlt} - JUBU Cleaning Service Dubai`
+                        : `${post.title} - JUBU Cleaning Service Dubai Guide`
+                    }
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

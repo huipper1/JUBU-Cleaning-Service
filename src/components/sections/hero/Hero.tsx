@@ -48,15 +48,22 @@ const SOCIAL_PROOF_AVATARS = [
 
 export function Hero({ content, headline, intro, heroImage, socialProofText }: HeroProps) {
   const rawImage = heroImage || content.heroImage;
+  const activeHeadline = headline || content.headline || "Professional Cleaning Services in Dubai";
+  const heroAltText =
+    rawImage?.alt && rawImage.alt.trim().length > 0
+      ? rawImage.alt.toLowerCase().includes("dubai")
+        ? rawImage.alt
+        : `${rawImage.alt} in Dubai - JUBU Cleaning Service`
+      : `${activeHeadline} - JUBU Cleaning Service Professional Team`;
+
   const displayImage = {
     src: getPublicImageUrl(rawImage?.src, "/images/placeholder/hero-cleaner.png"),
-    alt: rawImage?.alt || content.headline || "JUBU Professional Cleaner",
+    alt: heroAltText,
     width: rawImage?.width || 800,
     height: rawImage?.height || 950
   };
 
   const displayIntro = intro || content.subheadline;
-  const activeHeadline = headline || content.headline || "Professional Cleaning Services in Dubai";
 
   return (
     <section

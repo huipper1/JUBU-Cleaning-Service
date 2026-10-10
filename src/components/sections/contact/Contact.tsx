@@ -131,7 +131,7 @@ export function Contact({ settings }: ContactProps) {
           <div className="pointer-events-none -mb-10 flex w-full max-w-70 items-end justify-center self-center sm:-mb-14 sm:max-w-85 md:max-w-95 lg:pointer-events-none lg:absolute lg:right-6 lg:bottom-0 lg:mb-0 lg:w-115 lg:max-w-none xl:right-12 xl:w-125">
             <Image
               src="/images/placeholder/contact-cleaner.png"
-              alt="Friendly professional JUBU cleaner giving OK gesture with spray and microfibre cloth"
+              alt="Friendly professional JUBU Cleaning Service specialist in uniform ready to assist clients in Dubai"
               width={700}
               height={700}
               priority

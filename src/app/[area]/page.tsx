@@ -123,14 +123,14 @@ export default async function AreaPage({ params }: AreaPageProps) {
           serviceName: areaData.areaName,
           image: {
             src: item.imageSrc,
-            alt: item.title,
+            alt: `${item.title} in ${areaData.areaName} - JUBU Cleaning Service Dubai`,
             width: 800,
             height: 600
           },
           beforeImage: item.beforeImageSrc
             ? {
                 src: item.beforeImageSrc,
-                alt: `${item.title} Before`,
+                alt: `${item.title} Before Deep Cleaning in ${areaData.areaName} - JUBU Cleaning Service Dubai`,
                 width: 800,
                 height: 600
               }
@@ -138,7 +138,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
           afterImage: item.afterImageSrc
             ? {
                 src: item.afterImageSrc,
-                alt: `${item.title} After`,
+                alt: `${item.title} After Deep Cleaning in ${areaData.areaName} - JUBU Cleaning Service Dubai`,
                 width: 800,
                 height: 600
               }

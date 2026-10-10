@@ -56,7 +56,13 @@ export function Header({ settings, areas }: HeaderProps) {
           <figure className="relative m-0 flex items-center">
             <Image
               src={getPublicImageUrl(settings.logo?.src, "/images/logo-white-transparent.png")}
-              alt={settings.logo?.alt || `${settings.businessName} Logo`}
+              alt={
+                settings.logo?.alt
+                  ? settings.logo.alt.toLowerCase().includes("dubai")
+                    ? settings.logo.alt
+                    : `${settings.logo.alt} - Professional Cleaning Company in Dubai`
+                  : `${settings.businessName} - Professional Cleaning Services in Dubai`
+              }
               width={settings.logo?.width || 160}
               height={settings.logo?.height || 56}
               priority

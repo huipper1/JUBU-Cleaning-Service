@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 import type { Service } from "@/types/content";
 
 import { trackCtaClick, trackServiceSelect, trackWhatsAppClick } from "@/lib/analytics";
-import { getPublicImageUrl } from "@/lib/content/image-url";
+import { getPublicImageUrl, getServiceImageAlt } from "@/lib/content/image-url";
 
 import { WhatsAppIcon } from "@/components/icons";
 
@@ -55,7 +55,7 @@ export function ServicesCatalogClient({ services, whatsappNumber }: ServicesCata
             <div className="relative mb-6 h-52 w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900">
               <Image
                 src={getPublicImageUrl(service.image.src, "/images/placeholder/gallery-home.png")}
-                alt={service.image.alt || service.title}
+                alt={getServiceImageAlt(service.title, service.image.alt)}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

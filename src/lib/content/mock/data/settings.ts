@@ -6,7 +6,7 @@ export const mockSettingsData: SiteSettings = {
   badgeText: "Professional Cleaning Services in Dubai",
   logo: {
     src: "/images/logo.png",
-    alt: "JUBU Cleaning Services Logo",
+    alt: "JUBU Cleaning Service Logo - Licensed Cleaning Company in Dubai",
     width: 240,
     height: 80
   },

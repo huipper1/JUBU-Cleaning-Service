@@ -416,7 +416,7 @@ export function QuoteForm({
       <div className="pointer-events-none absolute inset-0 z-0">
         <Image
           src="/images/placeholder/city-background.png"
-          alt="Dubai city skyline illuminated at night"
+          alt="Dubai city skyline illuminated at night - JUBU Cleaning Service coverage across residential and commercial communities in Dubai"
           fill
           priority
           sizes="100vw"

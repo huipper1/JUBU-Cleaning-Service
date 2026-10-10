@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 import type { Service } from "@/types/content";
 
 import { trackServiceSelect } from "@/lib/analytics";
-import { getPublicImageUrl } from "@/lib/content/image-url";
+import { getPublicImageUrl, getServiceImageAlt } from "@/lib/content/image-url";
 
 import { Icon, SectionHeading } from "@/ui";
 
@@ -97,7 +97,7 @@ export function Services({
                       service.image.src,
                       "/images/placeholder/gallery-home.png"
                     )}
-                    alt={service.image.alt || service.title}
+                    alt={getServiceImageAlt(service.title, service.image.alt)}
                     fill
                     sizes="(max-width: 768px) 50vw, 33vw"
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"

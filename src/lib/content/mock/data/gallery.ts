@@ -50,13 +50,13 @@ export const mockGalleryData: GalleryItem[] = [
     },
     beforeImage: {
       src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
-      alt: "Surfaces before deep cleaning",
+      alt: "Dubai property surfaces before deep cleaning by JUBU Cleaning",
       width: 500,
       height: 500
     },
     afterImage: {
       src: "/images/placeholder/gallery-deep-cleaning.png", // DUMMY
-      alt: "Restored pristine surfaces after deep cleaning",
+      alt: "Restored pristine surfaces after deep steam cleaning by JUBU Cleaning Dubai",
       width: 500,
       height: 500
     },
@@ -131,13 +131,13 @@ export const mockGalleryData: GalleryItem[] = [
     },
     beforeImage: {
       src: "/images/placeholder/gallery-move.png", // DUMMY
-      alt: "Apartment before move-out cleaning",
+      alt: "Dubai rental apartment before move-out tenancy cleaning by JUBU Cleaning",
       width: 500,
       height: 500
     },
     afterImage: {
       src: "/images/placeholder/gallery-move.png", // DUMMY
-      alt: "Apartment gleaming after move-out cleaning",
+      alt: "Spotless Dubai apartment after move-out tenancy inspection cleaning by JUBU Cleaning",
       width: 500,
       height: 500
     },

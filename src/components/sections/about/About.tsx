@@ -84,7 +84,13 @@ export function About({ content, settings }: AboutProps) {
                 content.images?.[0]?.src,
                 "/images/placeholder/about-cleaner.png"
               )}
-              alt={content.images?.[0]?.alt || "Professional JUBU cleaning team"}
+              alt={
+                content.images?.[0]?.alt
+                  ? content.images[0].alt.toLowerCase().includes("dubai")
+                    ? content.images[0].alt
+                    : `${content.images[0].alt} in Dubai - JUBU Cleaning Service`
+                  : "JUBU Cleaning Service professional team providing commercial and residential cleaning across Dubai"
+              }
               fill
               sizes="(max-width: 1024px) 100vw, 60vw"
               className="object-cover object-center"
@@ -101,7 +107,13 @@ export function About({ content, settings }: AboutProps) {
                   content.images?.[1]?.src,
                   "/images/placeholder/about-team.png"
                 )}
-                alt={content.images?.[1]?.alt || "Professional JUBU cleaners smiling"}
+                alt={
+                  content.images?.[1]?.alt
+                    ? content.images[1].alt.toLowerCase().includes("dubai")
+                      ? content.images[1].alt
+                      : `${content.images[1].alt} in Dubai - JUBU Cleaning Service`
+                    : "Certified JUBU Cleaning Service specialists in uniform equipped for deep sanitization in Dubai"
+                }
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
                 className="object-cover object-center"

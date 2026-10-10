@@ -198,7 +198,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <figure className="relative mb-12 h-72 w-full overflow-hidden rounded-3xl border border-white/15 bg-slate-900 shadow-2xl sm:h-96 lg:h-[460px]">
                 <Image
                   src={getPublicImageUrl(post.coverImage, "/images/placeholder/gallery-home.png")}
-                  alt={post.coverImageAlt || post.title}
+                  alt={
+                    post.coverImageAlt
+                      ? post.coverImageAlt.toLowerCase().includes("dubai")
+                        ? post.coverImageAlt
+                        : `${post.coverImageAlt} - JUBU Cleaning Service Dubai`
+                      : `${post.title} - JUBU Cleaning Service Dubai`
+                  }
                   fill
                   priority
                   className="object-cover"
@@ -287,7 +293,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                             rPost.coverImage,
                             "/images/placeholder/gallery-home.png"
                           )}
-                          alt={rPost.coverImageAlt || rPost.title}
+                          alt={
+                            rPost.coverImageAlt
+                              ? rPost.coverImageAlt.toLowerCase().includes("dubai")
+                                ? rPost.coverImageAlt
+                                : `${rPost.coverImageAlt} - JUBU Cleaning Service Dubai`
+                              : `${rPost.title} - JUBU Cleaning Service Dubai`
+                          }
                           fill
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
                           sizes="(max-width: 768px) 100vw, 33vw"
