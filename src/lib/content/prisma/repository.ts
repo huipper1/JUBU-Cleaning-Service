@@ -10,6 +10,7 @@ import type {
   HeroContent,
   ImageItem,
   Service,
+  ServiceAddon,
   ServiceArea,
   SiteSettings,
   SocialLinkItem,
@@ -142,6 +143,7 @@ export class PrismaContentRepository implements ContentRepository {
         height: s.imageHeight
       },
       basePrice: s.basePrice ?? 199,
+      addons: (s.addons as unknown as ServiceAddon[]) ?? [],
       order: s.order,
       isActive: s.isActive,
       createdAt: s.createdAt.toISOString(),

@@ -29,6 +29,24 @@ export class PrismaLeadService implements LeadService {
       };
     }
 
+    // Format add-ons summary if customer personalized the service
+    let finalMessage = validData.message ?? null;
+    if (validData.addonsBreakdown && validData.addonsBreakdown.length > 0) {
+      const addonsSummary = validData.addonsBreakdown
+        .map((a) => `${a.name} x${a.quantity} (+${a.total} AED)`)
+        .join(", ");
+      finalMessage = validData.message
+        ? `[Customized: ${addonsSummary}] - ${validData.message}`
+        : `[Customized: ${addonsSummary}]`;
+    }
+
+    const mergedDetails = {
+      ...((validData.bankDetails as Record<string, unknown>) ?? {}),
+      ...(validData.addonsBreakdown && validData.addonsBreakdown.length > 0
+        ? { addonsBreakdown: validData.addonsBreakdown }
+        : {})
+    };
+
     try {
       const created = await prisma.lead.create({
         data: {
@@ -40,7 +58,7 @@ export class PrismaLeadService implements LeadService {
           propertyType: validData.propertyType ?? null,
           preferredDate: validData.preferredDate ?? null,
           preferredTime: validData.preferredTime ?? null,
-          message: validData.message ?? null,
+          message: finalMessage,
           whatsappOptIn: validData.whatsappOptIn ?? true,
           sourceArea: validData.sourceArea ?? "main-page",
           requestType: validData.requestType ?? "quote",
@@ -55,7 +73,10 @@ export class PrismaLeadService implements LeadService {
           amount: validData.amount ?? null,
           currency: validData.currency ?? "AED",
           transactionRef: validData.transactionRef ?? null,
-          bankDetails: (validData.bankDetails as Prisma.InputJsonValue) ?? null,
+          bankDetails:
+            Object.keys(mergedDetails).length > 0
+              ? (mergedDetails as Prisma.InputJsonValue)
+              : undefined,
           utmSource: validData.utmSource ?? null,
           utmMedium: validData.utmMedium ?? null,
           utmCampaign: validData.utmCampaign ?? null,

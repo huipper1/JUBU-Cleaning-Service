@@ -314,6 +314,17 @@ export const createLeadInputSchema = z.object({
   currency: z.string().default("AED").optional(),
   transactionRef: z.string().max(120).optional(),
   bankDetails: z.record(z.string(), z.unknown()).optional(),
+  addonsBreakdown: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string(),
+        quantity: z.number().int().nonnegative(),
+        unitPrice: z.number().nonnegative(),
+        total: z.number().nonnegative()
+      })
+    )
+    .optional(),
 
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),

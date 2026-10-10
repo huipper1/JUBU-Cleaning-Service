@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 import type { Service } from "@/types/content";
 
@@ -83,11 +83,12 @@ export function ServicesCatalogClient({ services, whatsappNumber }: ServicesCata
           {/* Bottom CTA */}
           <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
             <Link
-              href="#quote"
+              href={`#quote?service=${service.id}`}
               onClick={() => handleSelectService(service.id, service.title, service.basePrice)}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-sky transition-colors hover:text-white sm:text-sm"
             >
-              <span>Book This Service</span>
+              <Sparkles className="size-3.5" />
+              <span>Personalize & Book</span>
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a

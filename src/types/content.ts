@@ -88,6 +88,17 @@ export interface HeroContent {
   floatingBadge: string;
 }
 
+export interface ServiceAddon {
+  id: string;
+  name: string;
+  icon: string;
+  price: number;
+  unitLabel?: string;
+  min?: number;
+  max?: number;
+  defaultQty?: number;
+}
+
 export interface Service {
   id: string;
   slug: string;
@@ -96,6 +107,7 @@ export interface Service {
   longDescription?: string;
   icon: string;
   basePrice?: number;
+  addons?: ServiceAddon[];
   image: ImageItem;
   order: number;
   isActive: boolean;

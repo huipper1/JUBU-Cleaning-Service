@@ -179,6 +179,10 @@ model Service {
   // Dynamic Pricing in AED (Configurable via Admin Panel)
   basePrice        Float?        @default(199)
 
+  // Configurable Sub Add-ons with quantity & pricing in AED
+  // JSON array of ServiceAddon: { id, name, icon, price, unitLabel, min, max, defaultQty }
+  addons           Json?         @default("[]")
+
   imageSrc         String
   imageAlt         String
   imageWidth       Int           @default(800)

@@ -45,6 +45,7 @@ export interface Lead {
   currency?: string;
   transactionRef?: string;
   bankDetails?: BankTransferDetails | Record<string, unknown>;
+  addonsBreakdown?: LeadAddonItem[];
 
   utmSource?: string;
   utmMedium?: string;
@@ -56,6 +57,14 @@ export interface Lead {
   adminNotes?: string;
   deletedAt?: string;
   createdAt: string;
+}
+
+export interface LeadAddonItem {
+  id?: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
 }
 
 export interface CreateLeadInput {
@@ -80,6 +89,7 @@ export interface CreateLeadInput {
   currency?: string;
   transactionRef?: string;
   bankDetails?: BankTransferDetails | Record<string, unknown>;
+  addonsBreakdown?: LeadAddonItem[];
 
   utmSource?: string;
   utmMedium?: string;

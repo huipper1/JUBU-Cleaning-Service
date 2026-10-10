@@ -10,11 +10,14 @@ import {
   Pencil,
   Plus,
   Search,
+  Sparkles,
   Trash2,
   XCircle
 } from "lucide-react";
 import slugify from "@sindresorhus/slugify";
 import { toast } from "sonner";
+
+import type { ServiceAddon } from "@/types/content";
 
 import { ImageCropUploader } from "@/components/admin/ImageCropUploader";
 import { JubuIcon } from "@/components/icons";
@@ -51,6 +54,7 @@ export interface ServiceItem {
   imageSrc: string;
   imageAlt: string;
   basePrice?: number;
+  addons?: ServiceAddon[];
   order: number;
   isActive: boolean;
 }
@@ -72,6 +76,30 @@ const COMMON_ICONS = [
   "gem",
   "star",
   "users"
+];
+
+const ADDON_ICONS = [
+  "bed",
+  "bath",
+  "armchair",
+  "sofa",
+  "monitor",
+  "crown",
+  "users",
+  "coffee",
+  "sun",
+  "flame",
+  "disc",
+  "brush",
+  "droplets",
+  "wind",
+  "snowflake",
+  "archive",
+  "door-closed",
+  "wrench",
+  "sparkles",
+  "home",
+  "building"
 ];
 
 export function ServicesListClient({ initialServices }: ServicesListClientProps) {
@@ -96,6 +124,15 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
   const [formOrder, setFormOrder] = useState(0);
   const [formIsActive, setFormIsActive] = useState(true);
 
+  // Add-ons State
+  const [formAddons, setFormAddons] = useState<ServiceAddon[]>([]);
+  const [newAddonName, setNewAddonName] = useState("");
+  const [newAddonPrice, setNewAddonPrice] = useState<number>(50);
+  const [newAddonUnit, setNewAddonUnit] = useState("per unit");
+  const [newAddonIcon, setNewAddonIcon] = useState("sparkles");
+  const [newAddonMax, setNewAddonMax] = useState<number>(10);
+  const [isAddingAddon, setIsAddingAddon] = useState(false);
+
   // Delete Confirmation State
   const [deleteTarget, setDeleteTarget] = useState<ServiceItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -112,6 +149,8 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
     setFormBasePrice(199);
     setFormOrder(services.length + 1);
     setFormIsActive(true);
+    setFormAddons([]);
+    setIsAddingAddon(false);
   };
 
   const openCreateDialog = () => {
@@ -131,7 +170,185 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
     setFormBasePrice(service.basePrice ?? 199);
     setFormOrder(service.order);
     setFormIsActive(service.isActive);
+    setFormAddons(service.addons ? [...service.addons] : []);
+    setIsAddingAddon(false);
     setIsDialogOpen(true);
+  };
+
+  const handleAddAddon = () => {
+    if (!newAddonName.trim()) {
+      toast.error("Please enter an option name");
+      return;
+    }
+    const newAddon: ServiceAddon = {
+      id: slugify(newAddonName) + "-" + Date.now().toString(36),
+      name: newAddonName.trim(),
+      icon: newAddonIcon,
+      price: Number(newAddonPrice) || 0,
+      unitLabel: newAddonUnit.trim() || undefined,
+      min: 0,
+      max: Number(newAddonMax) || 10,
+      defaultQty: 0
+    };
+    setFormAddons((prev) => [...prev, newAddon]);
+    setNewAddonName("");
+    setNewAddonPrice(50);
+    setNewAddonUnit("per unit");
+    setNewAddonIcon("sparkles");
+    setIsAddingAddon(false);
+    toast.success(`Added option: ${newAddon.name}`);
+  };
+
+  const handleRemoveAddon = (addonId: string) => {
+    setFormAddons((prev) => prev.filter((a) => a.id !== addonId));
+  };
+
+  const loadResidentialPresets = () => {
+    setFormAddons([
+      {
+        id: "bedroom",
+        name: "Bedroom",
+        icon: "bed",
+        price: 50,
+        unitLabel: "per room",
+        min: 0,
+        max: 10,
+        defaultQty: 0
+      },
+      {
+        id: "washroom",
+        name: "Washroom",
+        icon: "bath",
+        price: 40,
+        unitLabel: "per washroom",
+        min: 0,
+        max: 8,
+        defaultQty: 0
+      },
+      {
+        id: "balcony",
+        name: "Balcony / Terrace",
+        icon: "sun",
+        price: 45,
+        unitLabel: "per balcony",
+        min: 0,
+        max: 4,
+        defaultQty: 0
+      },
+      {
+        id: "kitchen-deep",
+        name: "Kitchen Deep Scrub",
+        icon: "flame",
+        price: 85,
+        unitLabel: "per kitchen",
+        min: 0,
+        max: 2,
+        defaultQty: 0
+      },
+      {
+        id: "oven-cleaning",
+        name: "Oven Sanitization",
+        icon: "disc",
+        price: 60,
+        unitLabel: "per appliance",
+        min: 0,
+        max: 3,
+        defaultQty: 0
+      }
+    ]);
+    toast.success("Loaded residential add-on presets");
+  };
+
+  const loadCommercialPresets = () => {
+    setFormAddons([
+      {
+        id: "workstation",
+        name: "Workstation Desk",
+        icon: "monitor",
+        price: 35,
+        unitLabel: "per desk",
+        min: 0,
+        max: 50,
+        defaultQty: 0
+      },
+      {
+        id: "cabin",
+        name: "Executive Cabin",
+        icon: "crown",
+        price: 75,
+        unitLabel: "per cabin",
+        min: 0,
+        max: 15,
+        defaultQty: 0
+      },
+      {
+        id: "conference-room",
+        name: "Meeting / Boardroom",
+        icon: "users",
+        price: 120,
+        unitLabel: "per room",
+        min: 0,
+        max: 5,
+        defaultQty: 0
+      },
+      {
+        id: "pantry",
+        name: "Office Pantry",
+        icon: "coffee",
+        price: 60,
+        unitLabel: "per pantry",
+        min: 0,
+        max: 3,
+        defaultQty: 0
+      }
+    ]);
+    toast.success("Loaded commercial add-on presets");
+  };
+
+  const loadSofaPresets = () => {
+    setFormAddons([
+      {
+        id: "single-sofa",
+        name: "Single Armchair",
+        icon: "armchair",
+        price: 45,
+        unitLabel: "per seat",
+        min: 0,
+        max: 8,
+        defaultQty: 0
+      },
+      {
+        id: "three-seater",
+        name: "3-Seater Sofa",
+        icon: "sofa",
+        price: 120,
+        unitLabel: "per sofa",
+        min: 0,
+        max: 5,
+        defaultQty: 0
+      },
+      {
+        id: "l-shape",
+        name: "L-Shape Sectional",
+        icon: "layers",
+        price: 180,
+        unitLabel: "per sofa",
+        min: 0,
+        max: 3,
+        defaultQty: 0
+      },
+      {
+        id: "medium-rug",
+        name: "Area Rug (Medium)",
+        icon: "brush",
+        price: 70,
+        unitLabel: "per rug",
+        min: 0,
+        max: 6,
+        defaultQty: 0
+      }
+    ]);
+    toast.success("Loaded upholstery & carpet presets");
   };
 
   const handleTitleChange = (val: string) => {
@@ -166,6 +383,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
       imageSrc: formImageSrc,
       imageAlt: formImageAlt || formTitle,
       basePrice: Number(formBasePrice) || 199,
+      addons: formAddons,
       order: formOrder,
       isActive: formIsActive
     };
@@ -180,6 +398,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                 ? {
                     ...s,
                     ...payload,
+                    addons: formAddons,
                     slug: payload.slug ?? s.slug
                   }
                 : s
@@ -204,6 +423,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
             imageSrc: res.service.imageSrc,
             imageAlt: res.service.imageAlt,
             basePrice: res.service.basePrice ?? payload.basePrice ?? 199,
+            addons: formAddons,
             order: res.service.order,
             isActive: res.service.isActive
           };
@@ -368,6 +588,14 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                       <Badge className="border-emerald-500/20 bg-emerald-500/10 text-xs font-bold text-emerald-700 dark:text-emerald-300">
                         From {s.basePrice ?? 199} AED
                       </Badge>
+                      {s.addons && s.addons.length > 0 && (
+                        <Badge
+                          variant="outline"
+                          className="border-sky-500/30 bg-sky-500/10 text-[10px] font-semibold text-sky-700 dark:text-sky-300"
+                        >
+                          {s.addons.length} Add-on Options
+                        </Badge>
+                      )}
                     </div>
                     <p className="line-clamp-2 max-w-2xl text-xs text-muted-foreground">
                       {s.shortDescription}
@@ -423,7 +651,7 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
 
       {/* Add / Edit Service Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-3xl">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <DialogHeader>
               <DialogTitle>
@@ -585,8 +813,222 @@ export function ServicesListClient({ initialServices }: ServicesListClientProps)
                 )}
               </div>
 
+              {/* Customizable Add-ons & Options Section */}
+              <div className="flex flex-col gap-3 rounded-xl border border-sky-500/30 bg-sky-50/50 p-4 sm:col-span-3 dark:bg-sky-950/20">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="size-4 text-sky-600 dark:text-sky-400" />
+                    <span className="text-sm font-bold text-foreground">
+                      Service Personalization & Sub Add-ons
+                    </span>
+                    <Badge variant="secondary" className="text-[11px] font-semibold">
+                      {formAddons.length} {formAddons.length === 1 ? "Option" : "Options"}
+                    </Badge>
+                  </div>
+                  <span className="text-[11px] text-muted-foreground">
+                    Customers can configure quantities (rooms, sofas, desks)
+                  </span>
+                </div>
+
+                {/* Preset quick buttons if empty */}
+                {formAddons.length === 0 && (
+                  <div className="flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-sky-300/60 bg-white/60 p-3 dark:bg-black/20">
+                    <span className="text-xs font-semibold text-muted-foreground">
+                      Quick Start Presets:
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={loadResidentialPresets}
+                      className="h-7 text-xs"
+                    >
+                      + Residential Presets
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={loadCommercialPresets}
+                      className="h-7 text-xs"
+                    >
+                      + Commercial Presets
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={loadSofaPresets}
+                      className="h-7 text-xs"
+                    >
+                      + Upholstery Presets
+                    </Button>
+                  </div>
+                )}
+
+                {/* List of current configured add-ons */}
+                {formAddons.length > 0 && (
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {formAddons.map((addon) => (
+                      <div
+                        key={addon.id}
+                        className="flex items-center justify-between gap-3 rounded-lg border bg-background p-2.5 shadow-2xs"
+                      >
+                        <div className="flex min-w-0 items-center gap-2.5">
+                          <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300">
+                            <JubuIcon name={addon.icon} className="size-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-xs font-bold text-foreground">
+                              {addon.name}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">
+                              +{addon.price} AED {addon.unitLabel ? `(${addon.unitLabel})` : ""} •
+                              Max {addon.max ?? 10}
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveAddon(addon.id)}
+                          className="h-7 w-7 p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                          title="Remove option"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Add new option toggle or inline form */}
+                {!isAddingAddon ? (
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsAddingAddon(true)}
+                      className="gap-1.5 border-sky-400/40 text-xs text-sky-700 hover:bg-sky-100/50 dark:text-sky-300"
+                    >
+                      <Plus className="size-3.5" />
+                      <span>Add Custom Option</span>
+                    </Button>
+                    {formAddons.length > 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setFormAddons([])}
+                        className="text-xs text-muted-foreground hover:text-destructive"
+                      >
+                        Clear All Options
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3 rounded-lg border border-sky-300/80 bg-background p-3 shadow-sm dark:border-sky-800">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-foreground">
+                        New Personalization Option
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsAddingAddon(false)}
+                        className="h-6 text-xs text-muted-foreground"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-4">
+                      <div className="sm:col-span-2">
+                        <Label className="text-[11px]">Option Name *</Label>
+                        <Input
+                          placeholder="e.g. Master Bedroom, Sofa 3-Seater"
+                          value={newAddonName}
+                          onChange={(e) => setNewAddonName(e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+
+                      <div>
+                        <Label className="text-[11px]">Price (AED) *</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          value={newAddonPrice}
+                          onChange={(e) => setNewAddonPrice(Number(e.target.value))}
+                          className="h-8 text-xs font-bold text-emerald-600 dark:text-emerald-400"
+                        />
+                      </div>
+
+                      <div>
+                        <Label className="text-[11px]">Unit Label</Label>
+                        <Input
+                          placeholder="e.g. per room"
+                          value={newAddonUnit}
+                          onChange={(e) => setNewAddonUnit(e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-[11px]">Icon</Label>
+                      <div className="flex flex-wrap gap-1">
+                        {ADDON_ICONS.map((ic) => (
+                          <button
+                            key={ic}
+                            type="button"
+                            onClick={() => setNewAddonIcon(ic)}
+                            className={`flex items-center gap-1 rounded-md border p-1 text-[11px] transition-colors ${
+                              newAddonIcon === ic
+                                ? "border-sky-500 bg-sky-500 text-white"
+                                : "bg-muted/40 hover:bg-muted"
+                            }`}
+                            title={ic}
+                          >
+                            <JubuIcon name={ic} className="size-3.5" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex items-center gap-2">
+                        <Label className="text-[11px]">Max Limit:</Label>
+                        <Input
+                          type="number"
+                          min="1"
+                          max="100"
+                          value={newAddonMax}
+                          onChange={(e) => setNewAddonMax(Number(e.target.value))}
+                          className="h-7 w-16 text-center text-xs"
+                        />
+                      </div>
+
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={handleAddAddon}
+                        className="h-8 gap-1 bg-sky-600 text-xs text-white hover:bg-sky-700"
+                      >
+                        <Plus className="size-3.5" />
+                        <span>Save Option</span>
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Active Toggle */}
-              <div className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
+              <div className="flex items-center justify-between rounded-lg border p-3 sm:col-span-3">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-xs font-semibold text-foreground">Service Active</span>
                   <span className="text-[11px] text-muted-foreground">

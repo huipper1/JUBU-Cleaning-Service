@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 import type { Service } from "@/types/content";
 
@@ -63,34 +63,41 @@ export function Services({
             >
               <div className="grid w-full grid-cols-2 items-center gap-3">
                 {/* Left Half: Icon, Title, Description, Round Arrow Button */}
-                <div className="flex h-full flex-col justify-between py-2 pl-2 md:py-4.5 md:pl-4.5">
+                <div className="flex h-full flex-col justify-between py-2.5 pl-2.5 md:py-4.5 md:pl-4.5">
                   <div>
                     {/* Square rounded icon button with soft blue bg */}
-                    <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100/70 text-[#0070ba] shadow-2xs transition-colors duration-300">
+                    <div className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-100/70 text-[#0070ba] shadow-2xs transition-colors duration-300 sm:h-11 sm:w-11">
                       <Icon name={service.icon} className="h-5 w-5" />
                     </div>
 
-                    <h3 className="mb-1.5 text-base leading-snug font-extrabold text-[#081839] transition-colors group-hover:text-[#0070ba] sm:text-lg">
+                    <h3 className="mb-1 text-base leading-snug font-extrabold text-[#081839] transition-colors group-hover:text-[#0070ba] sm:text-lg">
                       {service.title}
                     </h3>
 
-                    <p className="line-clamp-3 text-xs leading-relaxed text-slate-500">
+                    <p className="line-clamp-2 text-xs leading-relaxed text-slate-500">
                       {service.shortDescription}
                     </p>
                   </div>
 
-                  {/* Circular Light Blue Arrow Button */}
-                  <div className="pt-4">
-                    <span
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100/80 text-[#0070ba] transition-all duration-200 group-hover:scale-105 group-hover:bg-[#0070ba] group-hover:text-white"
-                      aria-hidden="true"
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
+                  {/* Bottom Action: Price & Circular Arrow Button */}
+                  <div className="pt-3">
+                    <div className="flex items-center justify-between gap-1.5">
+                      <span className="inline-flex items-center gap-1 rounded-lg bg-sky-50 px-2 py-1 text-[11px] font-bold text-[#0070ba] transition-all group-hover:bg-[#0070ba] group-hover:text-white">
+                        <Sparkles className="size-3 shrink-0" />
+                        <span className="truncate">Customize</span>
+                      </span>
+
+                      <span
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100/80 text-[#0070ba] transition-all duration-200 group-hover:scale-105 group-hover:bg-[#0070ba] group-hover:text-white"
+                        aria-hidden="true"
+                      >
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Half: Rounded Image Preview */}
+                {/* Right Half: Rounded Image Preview with Starting Price Badge */}
                 <figure className="relative m-0 aspect-4/5 w-full overflow-hidden rounded-2xl bg-slate-100">
                   <Image
                     src={getPublicImageUrl(
@@ -102,6 +109,11 @@ export function Services({
                     sizes="(max-width: 768px) 50vw, 33vw"
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
+                  {/* Floating Starting Price Badge */}
+                  <div className="absolute top-2.5 right-2.5 z-10 inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/95 px-2.5 py-0.5 text-[11px] font-extrabold text-[#081839] shadow-md backdrop-blur-xs">
+                    <span className="text-[9px] font-bold text-slate-500 uppercase">From</span>
+                    <span className="text-[#0070ba]">{service.basePrice ?? 199} AED</span>
+                  </div>
                   <figcaption className="sr-only">{service.title}</figcaption>
                 </figure>
               </div>

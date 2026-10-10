@@ -21,6 +21,7 @@ export default async function ServicesCatalogPage() {
     imageSrc: s.imageSrc,
     imageAlt: s.imageAlt,
     basePrice: s.basePrice ?? 199,
+    addons: (s.addons as unknown as import("@/types/content").ServiceAddon[]) ?? [],
     order: s.order,
     isActive: s.isActive
   }));

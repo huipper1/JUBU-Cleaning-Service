@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 
+import type { Prisma } from "@prisma/client";
 import slugify from "@sindresorhus/slugify";
+
+import type { ServiceAddon } from "@/types/content";
 
 import { prisma } from "@/lib/db/prisma";
 
@@ -15,6 +18,7 @@ export interface ServiceFormData {
   imageSrc: string;
   imageAlt: string;
   basePrice?: number;
+  addons?: ServiceAddon[];
   order: number;
   isActive: boolean;
 }
@@ -47,6 +51,7 @@ export async function createServiceAction(data: ServiceFormData) {
           data.basePrice !== undefined && !isNaN(Number(data.basePrice))
             ? Number(data.basePrice)
             : 199,
+        addons: (data.addons as unknown as Prisma.InputJsonValue) ?? [],
         order: data.order ?? 0,
         isActive: data.isActive ?? true
       }
@@ -98,6 +103,7 @@ export async function updateServiceAction(id: string, data: ServiceFormData) {
           data.basePrice !== undefined && !isNaN(Number(data.basePrice))
             ? Number(data.basePrice)
             : 199,
+        addons: data.addons ? (data.addons as unknown as Prisma.InputJsonValue) : undefined,
         order: data.order ?? 0,
         isActive: data.isActive ?? true
       }

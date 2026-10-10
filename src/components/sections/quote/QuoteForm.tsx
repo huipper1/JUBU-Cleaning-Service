@@ -40,6 +40,7 @@ import { WhatsAppIcon } from "@/components/icons";
 import { Calendar as CalendarPicker, Icon, Popover, PopoverContent, PopoverTrigger } from "@/ui";
 
 import { BookingPaymentModal } from "./BookingPaymentModal";
+import { ServiceAddonsSelector } from "./ServiceAddonsSelector";
 
 const PROPERTY_TYPES = [
   {
@@ -152,6 +153,53 @@ export function QuoteForm({
 
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
 
+  // Selected add-on quantities per service
+  const [selectedAddonQuantities, setSelectedAddonQuantities] = useState<Record<string, number>>(
+    {}
+  );
+
+  // Reset or initialize add-on quantities when service changes
+  useEffect(() => {
+    const activeService = services.find((s) => s.id === formData.serviceId);
+    if (!activeService || !activeService.addons || activeService.addons.length === 0) {
+      setSelectedAddonQuantities({});
+      return;
+    }
+    const initial: Record<string, number> = {};
+    activeService.addons.forEach((addon) => {
+      if (addon.defaultQty && addon.defaultQty > 0) {
+        initial[addon.id] = addon.defaultQty;
+      }
+    });
+    setSelectedAddonQuantities(initial);
+  }, [formData.serviceId, services]);
+
+  // Dynamic pricing calculations
+  const selectedServiceObj = services.find((s) => s.id === formData.serviceId);
+  const currentServiceTitle =
+    selectedServiceObj?.title ??
+    (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service");
+  const activeBasePrice =
+    selectedServiceObj?.basePrice ?? SERVICE_BASE_PRICES[formData.serviceId]?.basePrice ?? 199;
+  const availableAddons = selectedServiceObj?.addons ?? [];
+
+  const addonsTotalPrice = availableAddons.reduce((sum, addon) => {
+    const qty = selectedAddonQuantities[addon.id] ?? 0;
+    return sum + addon.price * qty;
+  }, 0);
+
+  const totalCalculatedPrice = activeBasePrice + addonsTotalPrice;
+
+  const activeAddonsBreakdown = availableAddons
+    .filter((addon) => (selectedAddonQuantities[addon.id] ?? 0) > 0)
+    .map((addon) => ({
+      id: addon.id,
+      name: addon.name,
+      quantity: selectedAddonQuantities[addon.id] ?? 0,
+      unitPrice: addon.price,
+      total: addon.price * (selectedAddonQuantities[addon.id] ?? 0)
+    }));
+
   // Close custom dropdowns on outside click or escape
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -244,6 +292,8 @@ export function QuoteForm({
       typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
     const fullPayload: CreateLeadInput = {
       ...formData,
+      amount: totalCalculatedPrice,
+      addonsBreakdown: activeAddonsBreakdown.length > 0 ? activeAddonsBreakdown : undefined,
       sourceArea: formData.sourceArea || sourceArea,
       utmSource: searchParams?.get("utm_source") ?? formData.utmSource,
       utmMedium: searchParams?.get("utm_medium") ?? formData.utmMedium,
@@ -318,12 +368,22 @@ export function QuoteForm({
     const activeSourceArea = fullPayload.sourceArea || sourceArea || "main-page";
 
     // Build plain-text WhatsApp message per spec
+    const addonsWaText =
+      activeAddonsBreakdown.length > 0
+        ? `Personalized Items:\n` +
+          activeAddonsBreakdown
+            .map((a) => `• ${a.name}: ${a.quantity} (+${a.total} AED)`)
+            .join("\n")
+        : "";
+
     const waMessage = [
       `New Quote Request - JUBU Cleaning Service`,
       `Name: ${submittedName}`,
       `Phone: ${submittedMobile}`,
       `WhatsApp: ${submittedWhatsApp || submittedMobile}`,
       `Service: ${currentService}`,
+      `Estimated Total: ${totalCalculatedPrice} AED (Base: ${activeBasePrice} AED${addonsTotalPrice > 0 ? ` + ${addonsTotalPrice} AED Extras` : ""})`,
+      ...(addonsWaText ? [addonsWaText] : []),
       `Location: ${submittedLocation}`,
       `Property: ${submittedPropertyType}`,
       `Preferred Date: ${submittedPreferredDate}`,
@@ -332,7 +392,9 @@ export function QuoteForm({
       `Contact: ${contactPreference}`,
       `Source: ${activeSourceArea} (${utmSource} / ${utmCampaign})`,
       `Page: ${pageUrl}`
-    ].join("\n");
+    ]
+      .filter(Boolean)
+      .join("\n");
 
     const waUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
 
@@ -934,6 +996,25 @@ export function QuoteForm({
                     )}
                   </div>
 
+                  {/* Dynamic Service Personalization & Add-ons Stepper */}
+                  {availableAddons.length > 0 && (
+                    <div className="mt-2">
+                      <ServiceAddonsSelector
+                        addons={availableAddons}
+                        selectedQuantities={selectedAddonQuantities}
+                        onChangeQuantity={(addonId: string, newQty: number) => {
+                          setSelectedAddonQuantities((prev) => ({
+                            ...prev,
+                            [addonId]: newQty
+                          }));
+                        }}
+                        onReset={() => setSelectedAddonQuantities({})}
+                        basePrice={activeBasePrice}
+                        serviceTitle={currentServiceTitle}
+                      />
+                    </div>
+                  )}
+
                   {/* Location / Area & Property Type — side by side */}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
@@ -1382,19 +1463,9 @@ export function QuoteForm({
                       <div className="flex items-center gap-2.5">
                         <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/50 bg-emerald-500/90 px-3.5 py-1 text-xs font-black tracking-wide text-white shadow-md shadow-emerald-950/30 sm:text-sm">
                           <span className="text-[10px] font-bold text-emerald-100 uppercase">
-                            From
+                            {addonsTotalPrice > 0 ? "Total" : "From"}
                           </span>
-                          {(() => {
-                            const matchedService = services.find(
-                              (s) => s.id === formData.serviceId
-                            );
-                            return (
-                              matchedService?.basePrice ??
-                              SERVICE_BASE_PRICES[formData.serviceId]?.basePrice ??
-                              199
-                            );
-                          })()}{" "}
-                          AED
+                          <span>{totalCalculatedPrice} AED</span>
                         </span>
                         <div className="flex size-7 items-center justify-center rounded-full bg-white/20 transition-transform group-hover:translate-x-1">
                           <ArrowRight className="size-4 text-white" />
@@ -1423,15 +1494,10 @@ export function QuoteForm({
         open={isPaymentModalOpen}
         onOpenChange={setIsPaymentModalOpen}
         serviceId={formData.serviceId}
-        serviceName={
-          services.find((s) => s.id === formData.serviceId)?.title ??
-          (formData.serviceId === "other" ? "Custom Cleaning" : "Cleaning Service")
-        }
-        basePrice={
-          services.find((s) => s.id === formData.serviceId)?.basePrice ??
-          SERVICE_BASE_PRICES[formData.serviceId]?.basePrice ??
-          199
-        }
+        serviceName={currentServiceTitle}
+        basePrice={activeBasePrice}
+        calculatedTotalAmount={totalCalculatedPrice}
+        addonsBreakdown={activeAddonsBreakdown}
         bankDetails={{
           bankName: settings.bankName,
           iban: settings.bankIban,
@@ -1440,7 +1506,11 @@ export function QuoteForm({
           routingNumber: settings.bankRoutingNumber,
           accountOpeningDate: settings.bankAccountOpeningDate
         }}
-        leadFormData={formData}
+        leadFormData={{
+          ...formData,
+          amount: totalCalculatedPrice,
+          addonsBreakdown: activeAddonsBreakdown.length > 0 ? activeAddonsBreakdown : undefined
+        }}
         whatsappNumber={settings.whatsappNumber}
         onSuccessSubmit={(payload, waUrl) => {
           setIsPaymentModalOpen(false);

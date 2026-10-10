@@ -15,7 +15,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import type { BankTransferDetails, CreateLeadInput, PaymentMethod } from "@/types/lead";
+import type {
+  BankTransferDetails,
+  CreateLeadInput,
+  LeadAddonItem,
+  PaymentMethod
+} from "@/types/lead";
 import { ADMIN_BANK_DETAILS, SERVICE_BASE_PRICES } from "@/constants/payment";
 
 import { trackBookingConfirmed } from "@/lib/analytics/data-layer";
@@ -34,6 +39,8 @@ interface BookingPaymentModalProps {
   serviceId: string;
   serviceName: string;
   basePrice?: number;
+  calculatedTotalAmount?: number;
+  addonsBreakdown?: LeadAddonItem[];
   bankDetails?: Partial<BankTransferDetails>;
   leadFormData: CreateLeadInput;
   whatsappNumber: string;
@@ -46,6 +53,8 @@ export function BookingPaymentModal({
   serviceId,
   serviceName,
   basePrice,
+  calculatedTotalAmount,
+  addonsBreakdown,
   bankDetails: customBankDetails,
   leadFormData,
   whatsappNumber,
@@ -58,9 +67,14 @@ export function BookingPaymentModal({
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [isConfirmed, setIsConfirmed] = React.useState<boolean>(false);
 
-  // Dynamic service price lookup (custom basePrice from admin catalog takes top precedence)
+  // Dynamic service price lookup (custom calculatedTotalAmount or basePrice takes top precedence)
   const defaultPricing = SERVICE_BASE_PRICES[serviceId] ?? SERVICE_BASE_PRICES["other"]!;
-  const amount = basePrice !== undefined && basePrice > 0 ? basePrice : defaultPricing.basePrice;
+  const amount =
+    calculatedTotalAmount !== undefined && calculatedTotalAmount > 0
+      ? calculatedTotalAmount
+      : basePrice !== undefined && basePrice > 0
+        ? basePrice
+        : defaultPricing.basePrice;
   const currency = "AED";
 
   // Active bank details merging admin settings with default Emirates NBD
@@ -96,6 +110,8 @@ export function BookingPaymentModal({
         paymentStatus: selectedMethod === "cash" ? "cash_on_delivery" : "pending",
         amount,
         currency,
+        addonsBreakdown:
+          addonsBreakdown && addonsBreakdown.length > 0 ? addonsBreakdown : undefined,
         transactionRef: selectedMethod === "bank_transfer" ? transactionRef.trim() : undefined,
         bankDetails:
           selectedMethod === "bank_transfer"
@@ -125,12 +141,19 @@ export function BookingPaymentModal({
           ? "Cash on Service Delivery (Pay at Location)"
           : `Bank Transfer (${activeBankDetails.bankName}) - Ref: ${transactionRef.trim() || "Pending"}`;
 
+      const addonsText =
+        addonsBreakdown && addonsBreakdown.length > 0
+          ? `Personalized Items:\n` +
+            addonsBreakdown.map((a) => `• ${a.name} x${a.quantity} (+${a.total} AED)`).join("\n")
+          : "";
+
       const waBookingMsg = [
         `*New Instant Booking & Payment Order - JUBU Cleaning*`,
         `Name: ${leadFormData.fullName}`,
         `Phone: ${leadFormData.mobile}`,
         `Service: ${serviceName}`,
         `Total Amount: ${amount} ${currency}`,
+        ...(addonsText ? [addonsText] : []),
         `Payment Method: ${paymentMethodLabel}`,
         `Location: ${leadFormData.location || "N/A"}`,
         `Preferred Date: ${leadFormData.preferredDate || "N/A"}`,
@@ -308,6 +331,37 @@ export function BookingPaymentModal({
                 </div>
               </div>
 
+              {/* Itemized Personalized Breakdown (if customer selected add-ons) */}
+              {addonsBreakdown && addonsBreakdown.length > 0 && (
+                <div className="rounded-xl border border-brand-sky/30 bg-brand-sky/10 p-2.5">
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <span className="flex items-center gap-1.5 text-brand-sky">
+                      <Sparkles className="size-3.5" />
+                      Personalized Breakdown
+                    </span>
+                    <span className="text-[10px] font-normal text-slate-300">
+                      Base: {basePrice ?? defaultPricing.basePrice} {currency}
+                    </span>
+                  </div>
+                  <div className="mt-2 space-y-1.5 border-t border-white/10 pt-1.5">
+                    {addonsBreakdown.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between text-[11px] text-slate-200"
+                      >
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <span className="size-1.5 rounded-full bg-brand-sky" />
+                          {item.name} × {item.quantity}
+                        </span>
+                        <span className="font-semibold text-brand-sky">
+                          +{item.total} {currency}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Action Buttons */}
               <div className="flex flex-col gap-2 pt-1">
                 <button
@@ -409,6 +463,37 @@ export function BookingPaymentModal({
                     </div>
                   </div>
                 </div>
+
+                {/* Itemized Personalized Breakdown (if customer selected add-ons) */}
+                {addonsBreakdown && addonsBreakdown.length > 0 && (
+                  <div className="rounded-xl border border-brand-sky/30 bg-brand-sky/10 p-2.5">
+                    <div className="flex items-center justify-between text-xs font-bold text-white">
+                      <span className="flex items-center gap-1.5 text-brand-sky">
+                        <Sparkles className="size-3.5" />
+                        Personalized Breakdown
+                      </span>
+                      <span className="text-[10px] font-normal text-slate-300">
+                        Base: {basePrice ?? defaultPricing.basePrice} {currency}
+                      </span>
+                    </div>
+                    <div className="mt-2 space-y-1.5 border-t border-white/10 pt-1.5">
+                      {addonsBreakdown.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between text-[11px] text-slate-200"
+                        >
+                          <span className="flex items-center gap-1.5 font-medium">
+                            <span className="size-1.5 rounded-full bg-brand-sky" />
+                            {item.name} × {item.quantity}
+                          </span>
+                          <span className="font-semibold text-brand-sky">
+                            +{item.total} {currency}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex flex-col gap-2 pt-1">
