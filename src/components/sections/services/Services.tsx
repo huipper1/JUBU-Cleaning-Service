@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 
 import type { Service } from "@/types/content";
 
@@ -23,7 +23,11 @@ export function Services({
   title = "Cleaning Solutions for Every Space",
   description = "From deep home sanitization to specialized commercial cleaning, Our trained cleaning team delivers reliable and professional cleaning results with care and attention to detail."
 }: ServicesProps) {
-  const handleSelectService = (serviceId: string, serviceTitle: string) => {
+  const handleSelectService = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    serviceId: string,
+    serviceTitle: string
+  ) => {
     // Fire DataLayer select_item event
     trackServiceSelect({
       item_id: serviceId,
@@ -38,6 +42,13 @@ export function Services({
           detail: { serviceId }
         })
       );
+
+      const target = document.getElementById("quote") || document.getElementById("booking-form");
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.history.replaceState(null, "", `#quote?service=${serviceId}`);
+      }
     }
   };
 
@@ -56,9 +67,9 @@ export function Services({
           {services.map((service) => (
             <Link
               key={service.id}
-              href={`#quote?service=${service.id}`}
-              onClick={() => handleSelectService(service.id, service.title)}
-              aria-label={`Get a quote for ${service.title}`}
+              href="#quote"
+              onClick={(e) => handleSelectService(e, service.id, service.title)}
+              aria-label={`Book ${service.title} - Get a quote`}
               className="group relative flex cursor-pointer overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-[#0070ba]"
             >
               <div className="grid w-full grid-cols-2 items-center gap-3">
@@ -79,13 +90,18 @@ export function Services({
                     </p>
                   </div>
 
-                  {/* Circular Light Blue Arrow Button */}
-                  <div className="pt-4">
+                  {/* Circular Light Blue Arrow Button & Duration Badge */}
+                  <div className="flex items-center justify-between gap-1.5 pt-4">
                     <span
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100/80 text-[#0070ba] transition-all duration-200 group-hover:scale-105 group-hover:bg-[#0070ba] group-hover:text-white"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100/80 text-[#0070ba] transition-all duration-200 group-hover:scale-105 group-hover:bg-[#0070ba] group-hover:text-white"
                       aria-hidden="true"
                     >
                       <ArrowRight className="h-4 w-4" />
+                    </span>
+
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-100/80 bg-sky-50/90 px-2.5 py-1 text-[13px] font-semibold text-slate-600 transition-colors group-hover:border-sky-200 group-hover:bg-sky-100/80 group-hover:text-[#0070ba]">
+                      <Clock className="h-3.5 w-3.5 shrink-0 text-[#0070ba]" />
+                      <span className="whitespace-nowrap">Min. 4 Hours</span>
                     </span>
                   </div>
                 </div>

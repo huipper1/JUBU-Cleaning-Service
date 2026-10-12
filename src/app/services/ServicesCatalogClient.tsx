@@ -40,6 +40,12 @@ export function ServicesCatalogClient({ services, whatsappNumber }: ServicesCata
           detail: { serviceId }
         })
       );
+
+      const target = document.getElementById("quote") || document.getElementById("booking-form");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.history.replaceState(null, "", `#quote?service=${serviceId}`);
+      }
     }
   };
 

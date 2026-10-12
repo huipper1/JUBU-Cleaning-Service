@@ -201,6 +201,9 @@ export function QuoteForm({
       }
     };
 
+    // Read initial hash on mount if present
+    handleHashService();
+
     window.addEventListener("hashchange", handleHashService);
     window.addEventListener("select-service", handleCustomServiceSelect);
 
@@ -409,7 +412,7 @@ export function QuoteForm({
   return (
     <section
       id="quote"
-      className="relative overflow-hidden bg-[#071933] py-16 text-white sm:py-20 lg:py-24"
+      className="relative scroll-mt-20 overflow-hidden bg-[#071933] py-16 text-white sm:py-20 lg:py-24"
       aria-label="Request a Free Quote"
     >
       {/* Dubai City Skyline Background */}
@@ -588,7 +591,12 @@ export function QuoteForm({
                 </div>
               ) : (
                 /* Interactive Form State */
-                <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+                <form
+                  id="booking-form"
+                  onSubmit={handleSubmit}
+                  noValidate
+                  className="flex flex-col gap-4"
+                >
                   <div>
                     <span className="mb-1 block text-xs font-bold tracking-wider text-brand-green uppercase">
                       REQUEST A FREE QUOTE

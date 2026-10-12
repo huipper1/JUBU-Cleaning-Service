@@ -13,7 +13,7 @@
   },
   "scripts": {
     "seed": "tsx prisma/seed.ts",
-    "dev": "next dev",
+    "dev": "next dev --webpack -p 3003",
     "build": "next build",
     "start": "next start",
     "analyze": "cross-env ANALYZE=true next build --webpack && open .next/analyze/nodejs.html",
