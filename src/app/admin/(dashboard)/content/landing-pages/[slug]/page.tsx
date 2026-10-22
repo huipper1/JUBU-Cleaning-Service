@@ -50,6 +50,8 @@ export default async function AdminAreaLandingPageEditPage({
     nearYouText: page.nearYouText,
     finalCtaTitle: page.finalCtaTitle,
     faqs: (page.faqs as unknown as Array<{ question: string; answer: string }>) ?? [],
+    showHeroForm: page.showHeroForm ?? true,
+    showVideoReels: page.showVideoReels ?? true,
     isActive: page.isActive
   };
 

@@ -91,6 +91,12 @@ export default async function AdminAreaLandingPagesHub() {
                     <Badge variant="outline" className="text-[10px]">
                       {faqs.length} FAQ items
                     </Badge>
+                    <Badge variant={p.showHeroForm ? "secondary" : "outline"} className="text-[10px]">
+                      Form: {p.showHeroForm ? "Active" : "Off"}
+                    </Badge>
+                    <Badge variant={p.showVideoReels ? "secondary" : "outline"} className="text-[10px]">
+                      Reels: {p.showVideoReels ? "Active" : "Off"}
+                    </Badge>
                   </div>
                 </CardContent>
               </div>

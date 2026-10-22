@@ -4,7 +4,13 @@ import type {
   AreaGalleryItem,
   AreaLandingPage,
   BlogPost,
+  AreaZoneOption,
   FaqItem,
+  NavLinkOption,
+  PropertyTypeOption,
+  TimeSlotOption,
+  VideoReel,
+  VideoReelsConfig,
   FeaturedContentBlock,
   GalleryItem,
   HeroContent,
@@ -70,6 +76,7 @@ export class PrismaContentRepository implements ContentRepository {
         issueDate: s.licenceIssueDate
       },
       showHero: s.showHero,
+      showHeroForm: s.showHeroForm,
       showServices: s.showServices,
       showWhyChoose: s.showWhyChoose,
       showAbout: s.showAbout,
@@ -86,7 +93,15 @@ export class PrismaContentRepository implements ContentRepository {
       bankAccountNumber: s.bankAccountNumber ?? undefined,
       bankSwiftCode: s.bankSwiftCode ?? undefined,
       bankRoutingNumber: s.bankRoutingNumber ?? undefined,
-      bankAccountOpeningDate: s.bankAccountOpeningDate ?? undefined
+      bankAccountOpeningDate: s.bankAccountOpeningDate ?? undefined,
+      propertyTypes: (s.propertyTypes as unknown as PropertyTypeOption[]) ?? undefined,
+      timeSlots: (s.timeSlots as unknown as TimeSlotOption[]) ?? undefined,
+      areaZones: (s.areaZones as unknown as AreaZoneOption[]) ?? undefined,
+      navItems: (s.navItems as unknown as NavLinkOption[]) ?? undefined,
+      quickLinks: (s.quickLinks as unknown as NavLinkOption[]) ?? undefined,
+      faqs: (s.faqs as unknown as FaqItem[]) ?? undefined,
+      showVideoReels: (s as unknown as { showVideoReels?: boolean }).showVideoReels ?? true,
+      videoReels: (s.videoReels as unknown as VideoReel[] | VideoReelsConfig) ?? []
     };
   }
 
@@ -118,7 +133,8 @@ export class PrismaContentRepository implements ContentRepository {
         width: h.heroImageWidth,
         height: h.heroImageHeight
       },
-      floatingBadge: h.floatingBadge
+      floatingBadge: h.floatingBadge,
+      socialProofAvatars: (h.socialProofAvatars as unknown as Array<{ id: string; src: string; alt: string }>) ?? undefined
     };
   }
 
@@ -299,7 +315,7 @@ export class PrismaContentRepository implements ContentRepository {
   async getAreaLandingPages(): Promise<AreaLandingPage[]> {
     const pages = await prisma.areaLandingPage.findMany({
       where: { isActive: true },
-      orderBy: { order: "asc" }
+      orderBy: [{ order: "asc" }, { areaName: "asc" }]
     });
 
     return pages.map((p) => this.mapAreaLandingPage(p));
@@ -329,6 +345,8 @@ export class PrismaContentRepository implements ContentRepository {
     heroImageAlt: string | null;
     heroImageWidth: number | null;
     heroImageHeight: number | null;
+    showHeroForm?: boolean;
+    showVideoReels?: boolean;
     servicesSectionTitle: string;
     servicesList: string[];
     serviceIds?: string[];
@@ -359,6 +377,8 @@ export class PrismaContentRepository implements ContentRepository {
               height: p.heroImageHeight
             }
           : undefined,
+      showHeroForm: p.showHeroForm ?? true,
+      showVideoReels: p.showVideoReels ?? true,
       servicesSectionTitle: p.servicesSectionTitle,
       servicesList: p.servicesList,
       serviceIds: p.serviceIds ?? [],

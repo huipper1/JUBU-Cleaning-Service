@@ -4,7 +4,7 @@ import { Clock, ShieldCheck, Sparkles, Star } from "lucide-react";
 
 import { env } from "@/env";
 
-import { getServices, getSettings } from "@/lib/content";
+import { getAreaLandingPages, getServices, getSettings } from "@/lib/content";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
 import { QuoteForm } from "@/components/sections";
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ServicesPage() {
-  const [settings, services] = await Promise.all([getSettings(), getServices()]);
+  const [settings, services, landingPages] = await Promise.all([getSettings(), getServices(), getAreaLandingPages()]);
   const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
 
   const defaultWhatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
@@ -76,7 +76,7 @@ export default async function ServicesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="relative flex min-h-screen flex-col bg-[#020b18] font-sans text-slate-100 selection:bg-brand-sky selection:text-[#020b18]">
-        <Header settings={settings} />
+        <Header settings={settings} areas={landingPages} />
 
         <main className="flex-1">
           {/* Hero Section */}

@@ -5,7 +5,7 @@ import { Award, CheckCircle2, FileText, Shield, Sparkles, Users } from "lucide-r
 
 import { env } from "@/env";
 
-import { getAbout, getServices, getSettings, getTeam } from "@/lib/content";
+import { getAbout, getAreaLandingPages, getServices, getSettings, getTeam } from "@/lib/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
@@ -38,11 +38,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const [settings, about, team, services] = await Promise.all([
+  const [settings, about, team, services, landingPages] = await Promise.all([
     getSettings(),
     getAbout(),
     getTeam(),
-    getServices()
+    getServices(),
+    getAreaLandingPages()
   ]);
 
   const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
@@ -75,7 +76,7 @@ export default async function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="relative flex min-h-screen flex-col bg-[#020b18] font-sans text-slate-100 selection:bg-brand-sky selection:text-[#020b18]">
-        <Header settings={settings} />
+        <Header settings={settings} areas={landingPages} />
 
         <main className="flex-1">
           {/* Hero Section */}

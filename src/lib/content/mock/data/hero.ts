@@ -11,8 +11,8 @@ export const mockHeroData: HeroContent = {
     href: "https://wa.me/971542995191"
   },
   secondaryCta: {
-    label: "WhatsApp Us",
-    href: "https://wa.me/971542995191"
+    label: "Request Free Quote",
+    href: "#quote"
   },
   trustBadges: [
     {

@@ -7,6 +7,7 @@ export * from "./featured";
 export * from "./gallery";
 export * from "./hero";
 export * from "./quote";
+export * from "./reels";
 export * from "./services";
 export * from "./team";
 export * from "./testimonials";

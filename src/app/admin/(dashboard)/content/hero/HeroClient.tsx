@@ -17,9 +17,10 @@ import { updateHeroAction, type UpdateHeroData } from "./actions";
 interface HeroClientProps {
   initialHero: UpdateHeroData;
   initialShowHero?: boolean;
+  initialShowHeroForm?: boolean;
 }
 
-export function HeroClient({ initialHero, initialShowHero = true }: HeroClientProps) {
+export function HeroClient({ initialHero, initialShowHero = true, initialShowHeroForm = true }: HeroClientProps) {
   const [formData, setFormData] = useState<UpdateHeroData>(initialHero);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -54,6 +55,11 @@ export function HeroClient({ initialHero, initialShowHero = true }: HeroClientPr
           sectionKey="showHero"
           label="Hero Section"
           initialVisible={initialShowHero}
+        />
+        <SectionVisibilityToggle
+          sectionKey="showHeroForm"
+          label="Hero Quick Form"
+          initialVisible={initialShowHeroForm}
         />
         <Button type="submit" disabled={isSaving}>
           {isSaving ? (

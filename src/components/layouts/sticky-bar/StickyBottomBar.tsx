@@ -29,7 +29,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
         <a
           href={`tel:${settings.phoneTel}`}
           onClick={() => trackPhoneClick("sticky_bottom_bar", settings.phoneTel)}
-          className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-blue px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-blue-hover active:scale-95"
+          className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-brand-blue px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-blue-hover active:scale-95"
           aria-label={`Call JUBU at ${settings.phoneDisplay}`}
         >
           <Phone className="h-4 w-4 shrink-0" />
@@ -44,7 +44,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
           onClick={() =>
             trackWhatsAppClick("sticky_bottom_bar", undefined, settings.whatsappNumber)
           }
-          className="flex items-center justify-center gap-1.5 rounded-lg bg-brand-green px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-green-hover active:scale-95"
+          className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg bg-brand-green px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-green-hover active:scale-95"
           aria-label="Chat with JUBU on WhatsApp"
         >
           <WhatsAppIcon monochrome className="h-4 w-4 shrink-0" />
@@ -55,7 +55,7 @@ export function StickyBottomBar({ settings }: StickyBottomBarProps) {
         <Link
           href="#quote"
           onClick={() => trackCtaClick("request_free_quote", "sticky_bottom_bar")}
-          className="flex items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-brand-navy-light px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#1E3B68] active:scale-95"
+          className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-brand-navy-light px-2 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-[#1E3B68] active:scale-95"
           aria-label="Request a free cleaning quote"
         >
           <FileText className="h-4 w-4 shrink-0" />

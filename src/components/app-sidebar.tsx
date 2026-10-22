@@ -233,6 +233,16 @@ export function AppSidebar({ user, branding, ...props }: AppSidebarProps) {
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
                         asChild
+                        isActive={pathname === "/admin/content/reels"}
+                      >
+                        <Link href="/admin/content/reels">
+                          <span>Video Reels</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        asChild
                         isActive={
                           pathname === "/admin/content/blog" ||
                           pathname.startsWith("/admin/content/blog/")

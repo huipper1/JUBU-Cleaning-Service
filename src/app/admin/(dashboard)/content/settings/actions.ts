@@ -34,6 +34,7 @@ export interface UpdateSettingsData {
   bankRoutingNumber?: string;
   bankAccountOpeningDate?: string;
   showHero: boolean;
+  showHeroForm?: boolean;
   showServices: boolean;
   showWhyChoose: boolean;
   showAbout: boolean;
@@ -42,6 +43,7 @@ export interface UpdateSettingsData {
   showQuote: boolean;
   showAreas: boolean;
   showContact: boolean;
+  showVideoReels?: boolean;
 }
 
 export async function updateSettingsAction(data: UpdateSettingsData) {

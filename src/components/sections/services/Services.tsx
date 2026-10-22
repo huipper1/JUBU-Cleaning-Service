@@ -72,9 +72,24 @@ export function Services({
               aria-label={`Book ${service.title} - Get a quote`}
               className="group relative flex cursor-pointer overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-sky-300 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-[#0070ba]"
             >
-              <div className="grid w-full grid-cols-2 items-center gap-3">
-                {/* Left Half: Icon, Title, Description, Round Arrow Button */}
-                <div className="flex h-full flex-col justify-between py-2 pl-2 md:py-4.5 md:pl-4.5">
+              <div className="flex w-full flex-col sm:grid sm:grid-cols-2 sm:items-center sm:gap-3">
+                {/* Image: Top Banner on mobile, Right column on tablet/desktop */}
+                <figure className="relative m-0 aspect-16/10 w-full overflow-hidden bg-slate-100 sm:order-2 sm:aspect-4/5 sm:rounded-2xl">
+                  <Image
+                    src={getPublicImageUrl(
+                      service.image.src,
+                      "/images/placeholder/gallery-home.png"
+                    )}
+                    alt={getServiceImageAlt(service.title, service.image.alt)}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <figcaption className="sr-only">{service.title}</figcaption>
+                </figure>
+
+                {/* Content: Below image on mobile, Left column on tablet/desktop */}
+                <div className="flex h-full flex-col justify-between p-4.5 sm:order-1 sm:py-4.5 sm:pl-4.5 sm:pr-0">
                   <div>
                     {/* Square rounded icon button with soft blue bg */}
                     <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100/70 text-[#0070ba] shadow-2xs transition-colors duration-300">
@@ -85,7 +100,7 @@ export function Services({
                       {service.title}
                     </h3>
 
-                    <p className="line-clamp-3 text-xs leading-relaxed text-slate-500">
+                    <p className="line-clamp-2 text-xs leading-relaxed text-slate-500 sm:line-clamp-3">
                       {service.shortDescription}
                     </p>
                   </div>
@@ -99,27 +114,12 @@ export function Services({
                       <ArrowRight className="h-4 w-4" />
                     </span>
 
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-100/80 bg-sky-50/90 px-2.5 py-1 text-[13px] font-semibold text-slate-600 transition-colors group-hover:border-sky-200 group-hover:bg-sky-100/80 group-hover:text-[#0070ba]">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-100/80 bg-sky-50/90 px-2.5 py-1 text-[12px] font-semibold text-slate-600 transition-colors group-hover:border-sky-200 group-hover:bg-sky-100/80 group-hover:text-[#0070ba] sm:text-[13px]">
                       <Clock className="h-3.5 w-3.5 shrink-0 text-[#0070ba]" />
                       <span className="whitespace-nowrap">Min. 4 Hours</span>
                     </span>
                   </div>
                 </div>
-
-                {/* Right Half: Rounded Image Preview */}
-                <figure className="relative m-0 aspect-4/5 w-full overflow-hidden rounded-2xl bg-slate-100">
-                  <Image
-                    src={getPublicImageUrl(
-                      service.image.src,
-                      "/images/placeholder/gallery-home.png"
-                    )}
-                    alt={getServiceImageAlt(service.title, service.image.alt)}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <figcaption className="sr-only">{service.title}</figcaption>
-                </figure>
               </div>
             </Link>
           ))}

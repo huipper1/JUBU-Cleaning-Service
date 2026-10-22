@@ -7,7 +7,8 @@ import { usePathname } from "next/navigation";
 
 import { ChevronDown, MapPin, Menu, Phone, X } from "lucide-react";
 
-import type { ServiceArea, SiteSettings } from "@/types/content";
+import type { AreaLandingPage, ServiceArea, SiteSettings } from "@/types/content";
+import type { AreaNavItem } from "@/types/navigation";
 import { AREA_NAV_ITEMS, MAIN_NAV_ITEMS } from "@/constants/navigation";
 
 import { trackPhoneClick, trackWhatsAppClick } from "@/lib/analytics";
@@ -17,7 +18,7 @@ import { WhatsAppIcon } from "@/components/icons";
 
 interface HeaderProps {
   settings: SiteSettings;
-  areas?: ServiceArea[];
+  areas?: Array<AreaLandingPage | ServiceArea | AreaNavItem>;
 }
 
 export function Header({ settings, areas }: HeaderProps) {
@@ -35,13 +36,33 @@ export function Header({ settings, areas }: HeaderProps) {
     setIsMobileAreasOpen(false);
   };
 
+  const activeNavItems =
+    settings?.navItems && settings.navItems.length > 0
+      ? settings.navItems
+      : MAIN_NAV_ITEMS;
+
   const navAreas =
     areas && areas.length > 0
-      ? areas.map((a) => ({
-          name: a.name,
-          href: `/${a.slug}`,
-          subtitle: "Cleaning Services"
-        }))
+      ? areas.map((a) => {
+          const name =
+            "areaName" in a && a.areaName
+              ? a.areaName
+              : "name" in a && a.name
+                ? a.name
+                : "";
+          const href =
+            "href" in a && a.href
+              ? a.href
+              : "slug" in a && a.slug
+                ? `/${a.slug}`
+                : "#";
+          const subtitle = "subtitle" in a && a.subtitle ? a.subtitle : "Cleaning Services";
+          return {
+            name,
+            href,
+            subtitle
+          };
+        })
       : AREA_NAV_ITEMS;
 
   return (
@@ -73,7 +94,7 @@ export function Header({ settings, areas }: HeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main Navigation">
-          {MAIN_NAV_ITEMS.map((link) => {
+          {activeNavItems.map((link) => {
             const isHome = link.label === "Home";
             const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
 
@@ -193,10 +214,10 @@ export function Header({ settings, areas }: HeaderProps) {
 
       {/* Mobile Navigation Drawer */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-x-0 top-20 z-40 animate-in border-b border-white/10 bg-[#041633]/98 shadow-2xl backdrop-blur-xl duration-200 slide-in-from-top-2 lg:hidden">
+        <div className="fixed inset-x-0 top-20 z-40 max-h-[calc(100vh-5rem)] overflow-y-auto animate-in border-b border-white/10 bg-[#041633]/98 shadow-2xl backdrop-blur-xl duration-200 slide-in-from-top-2 lg:hidden">
           <div className="container mx-auto flex flex-col gap-4 px-4 py-6">
             <nav className="flex flex-col gap-1" aria-label="Mobile Navigation">
-              {MAIN_NAV_ITEMS.map((link) => {
+              {activeNavItems.map((link) => {
                 const isHome = link.label === "Home";
                 const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
 

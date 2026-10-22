@@ -48,6 +48,7 @@ export default async function AdminSettingsPage() {
     bankRoutingNumber: settings?.bankRoutingNumber ?? "024",
     bankAccountOpeningDate: settings?.bankAccountOpeningDate ?? "25 January 2022",
     showHero: settings?.showHero ?? true,
+    showHeroForm: settings?.showHeroForm ?? true,
     showServices: settings?.showServices ?? true,
     showWhyChoose: settings?.showWhyChoose ?? true,
     showAbout: settings?.showAbout ?? true,
@@ -55,7 +56,8 @@ export default async function AdminSettingsPage() {
     showGallery: settings?.showGallery ?? true,
     showQuote: settings?.showQuote ?? true,
     showAreas: settings?.showAreas ?? true,
-    showContact: settings?.showContact ?? true
+    showContact: settings?.showContact ?? true,
+    showVideoReels: settings?.showVideoReels ?? true
   };
 
   return <SettingsClient initialSettings={initialSettings} />;

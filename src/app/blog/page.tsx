@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 
 import { env } from "@/env";
 
-import { getBlogPosts, getSettings } from "@/lib/content";
+import { getAreaLandingPages, getBlogPosts, getSettings } from "@/lib/content";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
 
@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-  const [settings, posts] = await Promise.all([getSettings(), getBlogPosts()]);
+  const [settings, posts, landingPages] = await Promise.all([getSettings(), getBlogPosts(), getAreaLandingPages()]);
   const baseUrl = env.NEXT_PUBLIC_SITE_URL || "https://jubucleaning.com";
 
   // Schema.org Blog collection
@@ -59,7 +59,7 @@ export default async function BlogPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="relative flex min-h-screen flex-col bg-[#020b18] font-sans text-slate-100 selection:bg-brand-sky selection:text-[#020b18]">
-        <Header settings={settings} />
+        <Header settings={settings} areas={landingPages} />
 
         <main className="flex-1">
           {/* Hero Banner */}

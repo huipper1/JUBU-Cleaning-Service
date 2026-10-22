@@ -101,6 +101,7 @@ model SiteSettings {
 
   // Section Visibility Toggles (default true / on)
   showHero                Boolean  @default(true)
+  showHeroForm            Boolean  @default(true)
   showServices            Boolean  @default(true)
   showWhyChoose           Boolean  @default(true)
   showAbout               Boolean  @default(true)
@@ -113,6 +114,22 @@ model SiteSettings {
 
   // Homepage Selected Services (in order)
   homepageServiceIds      String[] @default([])
+
+  // Form Configuration (Property Types & Time Slots)
+  propertyTypes           Json?    @default("[]")
+  timeSlots               Json?    @default("[]")
+
+  // Navigation & Grouping Configuration
+  navItems                Json?    @default("[]")
+  quickLinks              Json?    @default("[]")
+  areaZones               Json?    @default("[]")
+
+  // Homepage FAQ Configuration
+  faqs                    Json?    @default("[]")
+
+  // Video Reels Configuration (Real work video samples in 9:16 format)
+  showVideoReels          Boolean  @default(true)
+  videoReels              Json?    @default("[]")
 
   updatedAt               DateTime @updatedAt
 }
@@ -130,6 +147,9 @@ model HeroContent {
 
   // Trust Badges JSON: Array of { id: string, label: string, icon: string }
   trustBadges    Json     @default("[]")
+
+  // Social Proof Avatars JSON: Array of { id: string, src: string, alt: string }
+  socialProofAvatars Json?    @default("[]")
 
   // Hero Cutout Image
   heroImageSrc   String   @default("/images/placeholder/hero-cleaner.png")
@@ -178,6 +198,17 @@ model Service {
   
   // Dynamic Pricing in AED (Configurable via Admin Panel)
   basePrice        Float?        @default(199)
+  customQuoteAvailable Boolean      @default(true)
+  features             String[]     @default([])
+  priceType            String?
+  propertyTypes        String[]     @default([])
+  talkToOwner          Boolean      @default(false)
+  customOwnerPhone     String?
+  customOwnerWhatsapp  String?
+  priceLabel           String?
+  priceSuffix          String?
+  pricingTiers         Json?
+  addons               Json?
 
   imageSrc         String
   imageAlt         String
@@ -280,6 +311,9 @@ model AreaLandingPage {
   heroImageAlt         String?
   heroImageWidth       Int?
   heroImageHeight      Int?
+
+  showHeroForm         Boolean  @default(true)
+  showVideoReels       Boolean  @default(true)
 
   servicesSectionTitle String
   servicesList         String[] // Descriptive bullet strings

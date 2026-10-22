@@ -34,6 +34,10 @@ const QUICK_LINKS = [
 ] as const;
 
 export function Footer({ settings }: FooterProps) {
+  const activeQuickLinks =
+    settings?.quickLinks && settings.quickLinks.length > 0
+      ? settings.quickLinks
+      : QUICK_LINKS;
   const pathname = usePathname();
   const isRoot = pathname === "/";
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
@@ -144,7 +148,7 @@ export function Footer({ settings }: FooterProps) {
               Quick Links
             </h3>
             <ul className="grid grid-cols-2 gap-x-8 gap-y-2.5 sm:gap-x-12 md:grid-cols-1">
-              {QUICK_LINKS.map((link) => {
+              {activeQuickLinks.map((link) => {
                 const isHome = link.label === "Home";
                 const linkHref = isHome ? (isRoot ? "#top" : "/") : link.href;
                 return (
@@ -198,7 +202,7 @@ export function Footer({ settings }: FooterProps) {
 
       {/* Bottom Copyright Bar with Trade Licence Trust Line */}
       <div className="relative z-10 border-t border-white/10 bg-[#030d1d]/75 backdrop-blur-xs">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-slate-300 sm:flex-row sm:px-6 lg:px-8">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 pt-5 pb-20 text-xs text-slate-300 sm:flex-row sm:px-6 sm:py-5 lg:px-8">
           <div className="flex flex-col items-center gap-1 text-center sm:items-start sm:text-left">
             <p>{settings.copyrightText}</p>
             <p className="text-[11px] text-slate-400">

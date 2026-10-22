@@ -11,7 +11,7 @@ export default async function AdminHeroPage() {
     }),
     prisma.siteSettings.findUnique({
       where: { id: "default" },
-      select: { showHero: true }
+      select: { showHero: true, showHeroForm: true }
     })
   ]);
 
@@ -31,5 +31,5 @@ export default async function AdminHeroPage() {
     floatingBadge: hero?.floatingBadge ?? "Cleaner Spaces Brighter Lives"
   };
 
-  return <HeroClient initialHero={initialHero} initialShowHero={settings?.showHero ?? true} />;
+  return <HeroClient initialHero={initialHero} initialShowHero={settings?.showHero ?? true} initialShowHeroForm={settings?.showHeroForm ?? true} />;
 }

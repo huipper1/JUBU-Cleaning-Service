@@ -7,7 +7,7 @@ import { ArrowLeft, Calendar, Clock, Share2, ShieldCheck, Sparkles, Tag, User } 
 
 import { env } from "@/env";
 
-import { getBlogPostBySlug, getRecentBlogPosts, getSettings } from "@/lib/content";
+import { getAreaLandingPages, getBlogPostBySlug, getRecentBlogPosts, getSettings } from "@/lib/content";
 import { getPublicImageUrl } from "@/lib/content/image-url";
 
 import { Footer, Header, StickyBottomBar } from "@/components/layouts";
@@ -69,10 +69,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const [settings, post, recentPosts] = await Promise.all([
+  const [settings, post, recentPosts, landingPages] = await Promise.all([
     getSettings(),
     getBlogPostBySlug(slug),
-    getRecentBlogPosts(4)
+    getRecentBlogPosts(4),
+    getAreaLandingPages()
   ]);
 
   if (!post) {
@@ -126,7 +127,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="relative flex min-h-screen flex-col bg-[#020b18] font-sans text-slate-100 selection:bg-brand-sky selection:text-[#020b18]">
-        <Header settings={settings} />
+        <Header settings={settings} areas={landingPages} />
 
         <main className="flex-1">
           {/* Breadcrumbs & Header Section */}

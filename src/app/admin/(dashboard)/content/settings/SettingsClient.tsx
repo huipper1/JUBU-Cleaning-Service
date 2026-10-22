@@ -48,6 +48,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     key: keyof Pick<
       UpdateSettingsData,
       | "showHero"
+      | "showHeroForm"
       | "showServices"
       | "showWhyChoose"
       | "showAbout"
@@ -56,6 +57,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       | "showQuote"
       | "showAreas"
       | "showContact"
+      | "showVideoReels"
     >;
     title: string;
     description: string;
@@ -64,6 +66,11 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       key: "showHero",
       title: "Hero Section",
       description: "Top headline, call-to-actions, and main cleaner banner."
+    },
+    {
+      key: "showHeroForm",
+      title: "Hero Quick Lead Form",
+      description: "Minimal instant 3-field booking form below hero banner on homepage & all area pages."
     },
     {
       key: "showServices",
@@ -99,6 +106,11 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       key: "showAreas",
       title: "Dubai Service Areas",
       description: "Interactive coverage map and list of covered Dubai neighborhoods."
+    },
+    {
+      key: "showVideoReels",
+      title: "Work Video Reels",
+      description: "Satisfying before & after short video reels showcase across homepage & all area pages."
     },
     {
       key: "showContact",

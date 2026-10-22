@@ -25,6 +25,8 @@ export interface UpdateAreaLandingPageData {
   nearYouText: string;
   finalCtaTitle: string;
   faqs: Array<{ question: string; answer: string }>;
+  showHeroForm?: boolean;
+  showVideoReels?: boolean;
   isActive: boolean;
 }
 
@@ -52,6 +54,8 @@ export async function updateAreaLandingPageAction(slug: string, data: UpdateArea
         nearYouText: data.nearYouText,
         finalCtaTitle: data.finalCtaTitle,
         faqs: data.faqs as unknown as Prisma.InputJsonValue,
+        showHeroForm: data.showHeroForm !== undefined ? data.showHeroForm : true,
+        showVideoReels: data.showVideoReels !== undefined ? data.showVideoReels : true,
         isActive: data.isActive
       }
     });

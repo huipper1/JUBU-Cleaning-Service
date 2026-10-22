@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import type { FaqItem } from "@/types/content";
 
 import { siteConfig } from "@/config/site";
 import { env } from "@/env";
 
 import {
   getAbout,
+  getAreaLandingPages,
   getAreas,
   getGallery,
   getHero,
@@ -24,12 +26,14 @@ import {
   Contact,
   Gallery,
   Hero,
+  HeroQuickForm,
   QuoteForm,
   ServiceAreas,
   Services,
   Team,
   Testimonials,
-  WhyChooseUs
+  WhyChooseUs,
+  WorkReels
 } from "@/components/sections";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -79,6 +83,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const DEFAULT_FAQS: FaqItem[] = [
+  {
+    question: "Which areas in Dubai does JUBU Cleaning Service cover?",
+    answer: "JUBU Cleaning Service covers 10 primary communities across Dubai including Downtown Dubai, Business Bay, Dubai Marina, Jumeirah Lake Towers (JLT), Jumeirah Beach Residence (JBR), Jumeirah, Palm Jumeirah, Al Barsha, Jumeirah Village Circle (JVC), and Dubai Hills Estate."
+  },
+  {
+    question: "Is JUBU Cleaning Service licensed in Dubai?",
+    answer: "Yes, JUBU Cleaning Service is an LLC licensed by the Dubai Department of Economy and Tourism under Trade Licence No. 1026183, active since 25 January 2022."
+  },
+  {
+    question: "What cleaning equipment does JUBU use?",
+    answer: "JUBU Cleaning Service uses professional machines including Wet & Dry Vacuum Cleaners, Floor Scrubbers, Single Disc Machines, High Pressure Washers, Carpet and Sofa Extractor Machines, Steam Cleaners, and complete safety equipment."
+  },
+  {
+    question: "How can I request a quote for cleaning in Dubai?",
+    answer: "You can request a free custom cleaning quote online via our website form, call us at +971 54 299 5191, or send an instant message on WhatsApp at +971 54 299 5191."
+  }
+];
+
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [
     settings,
@@ -89,6 +114,7 @@ export default async function Home() {
     team,
     gallery,
     areas,
+    landingPages,
     testimonials,
     recentBlogPosts
   ] = await Promise.all([
@@ -100,6 +126,7 @@ export default async function Home() {
     getTeam(),
     getGallery(),
     getAreas(),
+    getAreaLandingPages(),
     getTestimonials(),
     getRecentBlogPosts(3)
   ]);
@@ -125,6 +152,8 @@ export default async function Home() {
   );
 
   // Enhanced JSON-LD Structured Data (LocalBusiness + Service Catalog + FAQPage) for SEO & AI SEO / GEO
+  const activeFaqs = settings?.faqs && settings.faqs.length > 0 ? settings.faqs : DEFAULT_FAQS;
+
   const structuredData = [
     {
       "@context": "https://schema.org",
@@ -187,45 +216,19 @@ export default async function Home() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Which areas in Dubai does JUBU Cleaning Service cover?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "JUBU Cleaning Service covers 10 primary communities across Dubai including Downtown Dubai, Business Bay, Dubai Marina, Jumeirah Lake Towers (JLT), Jumeirah Beach Residence (JBR), Jumeirah, Palm Jumeirah, Al Barsha, Jumeirah Village Circle (JVC), and Dubai Hills Estate."
-          }
-        },
-        {
-          "@type": "Question",
-          name: "Is JUBU Cleaning Service licensed in Dubai?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, JUBU Cleaning Service is an LLC licensed by the Dubai Department of Economy and Tourism under Trade Licence No. 1026183, active since 25 January 2022."
-          }
-        },
-        {
-          "@type": "Question",
-          name: "What cleaning equipment does JUBU use?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "JUBU Cleaning Service uses professional machines including Wet & Dry Vacuum Cleaners, Floor Scrubbers, Single Disc Machines, High Pressure Washers, Carpet and Sofa Extractor Machines, Steam Cleaners, and complete safety equipment."
-          }
-        },
-        {
-          "@type": "Question",
-          name: "How can I request a quote for cleaning in Dubai?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "You can request a free custom cleaning quote online via our website form, call us at +971 54 299 5191, or send an instant message on WhatsApp at +971 54 299 5191."
-          }
+      mainEntity: activeFaqs.map((faq: FaqItem) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer
         }
-      ]
+      }))
     }
   ];
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-[#041633] pb-16 md:pb-0">
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#041633] pb-16 md:pb-0">
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -233,11 +236,16 @@ export default async function Home() {
       />
 
       {/* 1. Header (sticky, anchor nav, actions) */}
-      <Header settings={settings} areas={areas} />
+      <Header settings={settings} areas={landingPages} />
 
       {/* 2. Hero Section */}
       {(settings.showHero ?? true) && (
         <Hero content={hero} phoneTel={settings.phoneTel} phoneDisplay={settings.phoneDisplay} />
+      )}
+
+      {/* 2.1 Quick Lead Capture Form (Minimal, Clean, Database + Same DataLayer) */}
+      {(settings.showHeroForm ?? true) && (
+        <HeroQuickForm services={services} settings={settings} />
       )}
 
       {/* 3. Our Services (6 cards, data-driven) */}
@@ -258,7 +266,12 @@ export default async function Home() {
       {/* 7.1 Customer Reviews / Testimonials */}
       <Testimonials testimonials={testimonials} />
 
-      {/* 8. Get a Free Quote (Lead Form) */}
+      {/* 7.2 Work Video Reels (Before & After Satisfying Short Clips) */}
+      {(settings.showVideoReels ?? true) && (
+        <WorkReels reels={settings.videoReels} settings={settings} />
+      )}
+
+      {/* 8. Get a Free Quote (Original Comprehensive Lead Form) */}
       {(settings.showQuote ?? true) && <QuoteForm services={services} settings={settings} />}
 
       {/* 8.1 Cleaning Guides & Blog Section */}

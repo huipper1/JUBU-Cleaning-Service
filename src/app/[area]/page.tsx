@@ -27,12 +27,14 @@ import {
   FeaturedBlock,
   Gallery,
   Hero,
+  HeroQuickForm,
   QuoteForm,
   ServiceAreas,
   Services,
   Team,
   Testimonials,
-  WhyChooseUs
+  WhyChooseUs,
+  WorkReels
 } from "@/components/sections";
 
 interface AreaPageProps {
@@ -91,7 +93,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
   }
 
   // Fetch shared site content exactly like the root page
-  const [settings, hero, allServices, whyChoose, about, team, gallery, areas, testimonials] =
+  const [settings, hero, allServices, whyChoose, about, team, gallery, areas, landingPages, testimonials] =
     await Promise.all([
       getSettings(),
       getHero(),
@@ -101,6 +103,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
       getTeam(),
       getGallery(),
       getAreas(),
+      getAreaLandingPages(),
       getTestimonials()
     ]);
 
@@ -229,7 +232,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
   ];
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-[#041633] pb-16 md:pb-0">
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#041633] pb-16 md:pb-0">
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -237,7 +240,7 @@ export default async function AreaPage({ params }: AreaPageProps) {
       />
 
       {/* 1. Header (sticky, anchor nav, actions) */}
-      <Header settings={settings} areas={areas} />
+      <Header settings={settings} areas={landingPages} />
 
       {/* 2. Hero Section (swapped headline, intro, and optional hero image) */}
       <Hero
@@ -248,7 +251,20 @@ export default async function AreaPage({ params }: AreaPageProps) {
         intro={areaData.heroIntro}
         heroImage={areaData.heroImage}
         socialProofText={`Serving ${areaData.areaName} & premier residential areas across Dubai`}
+        services={services}
+        settings={settings}
+        sourceArea={areaData.slug}
       />
+
+      {/* 2.1 Quick Lead Capture Form (Minimal, Clean, Database + Same DataLayer) */}
+      {(settings.showHeroForm ?? true) && (areaData.showHeroForm ?? true) && (
+        <HeroQuickForm
+          services={services}
+          settings={settings}
+          sourceArea={areaData.slug}
+          areaName={areaData.areaName}
+        />
+      )}
 
       {/* 3. Our Services (swapped heading per client brief) */}
       {(settings.showServices ?? true) && (
@@ -276,6 +292,11 @@ export default async function AreaPage({ params }: AreaPageProps) {
 
       {/* 7.1 Customer Reviews / Testimonials */}
       <Testimonials testimonials={testimonials} />
+
+      {/* 7.2 Work Video Reels (Before & After Satisfying Short Clips) */}
+      {(settings.showVideoReels ?? true) && (areaData.showVideoReels ?? true) && (
+        <WorkReels reels={settings.videoReels} settings={settings} />
+      )}
 
       {/* 8. Frequently Asked Questions (Area-specific FAQ section) */}
       <Faq faqs={areaData.faqs} areaName={areaData.areaName} />

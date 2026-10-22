@@ -10,6 +10,11 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   reactCompiler: true,
   htmlLimitedBots: /.*/,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "250mb"
+    }
+  },
   turbopack: {
     rules: {
       "*.svg": {

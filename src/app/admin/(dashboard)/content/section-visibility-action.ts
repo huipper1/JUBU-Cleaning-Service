@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db/prisma";
 
 export type SectionKey =
   | "showHero"
+  | "showHeroForm"
   | "showServices"
   | "showWhyChoose"
   | "showAbout"
@@ -13,7 +14,8 @@ export type SectionKey =
   | "showGallery"
   | "showQuote"
   | "showAreas"
-  | "showContact";
+  | "showContact"
+  | "showVideoReels";
 
 export async function toggleSectionVisibilityAction(sectionKey: SectionKey, isVisible: boolean) {
   try {

@@ -128,7 +128,7 @@ export function WhyChooseUs({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-stretch lg:grid-cols-12">
           {/* Left Column: Image */}
-          <div className="relative min-h-[320px] w-full overflow-hidden sm:min-h-[420px] lg:col-span-5 lg:min-h-[500px]">
+          <div className="relative min-h-[260px] w-full overflow-hidden sm:min-h-[380px] lg:col-span-5 lg:min-h-[500px]">
             <Image
               src={getPublicImageUrl(image.src, "/images/placeholder/why-choose-us.png")}
               alt={
@@ -159,7 +159,7 @@ export function WhyChooseUs({
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-3 lg:gap-4">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center gap-2.5 text-left sm:gap-3">
-                  <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.06)] sm:h-14 sm:w-14">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.06)] sm:h-13 sm:w-13">
                     <FeatureIcon id={item.id} />
                   </div>
                   <h3 className="flex flex-col text-[11px] leading-tight font-bold text-[#081839] sm:text-xs xl:text-[13px]">

@@ -59,6 +59,8 @@ interface AreaLandingPageEditorProps {
     nearYouText: string;
     finalCtaTitle: string;
     faqs: Array<{ question: string; answer: string }>;
+    showHeroForm?: boolean;
+    showVideoReels?: boolean;
     isActive: boolean;
   };
   availableServices?: ServiceOption[];
@@ -73,6 +75,8 @@ export function AreaLandingPageEditor({
 
   // Form State
   const [isActive, setIsActive] = useState(pageData.isActive);
+  const [showHeroForm, setShowHeroForm] = useState(pageData.showHeroForm ?? true);
+  const [showVideoReels, setShowVideoReels] = useState(pageData.showVideoReels ?? true);
   const [metaTitle, setMetaTitle] = useState(pageData.metaTitle);
   const [metaDescription, setMetaDescription] = useState(pageData.metaDescription);
   const [heroHeadline, setHeroHeadline] = useState(pageData.heroHeadline);
@@ -264,6 +268,8 @@ export function AreaLandingPageEditor({
         nearYouText,
         finalCtaTitle,
         faqs,
+        showHeroForm,
+        showVideoReels,
         isActive
       };
 
@@ -797,6 +803,47 @@ export function AreaLandingPageEditor({
 
         {/* Sidebar Settings (1 col) */}
         <div className="flex flex-col gap-6">
+          {/* Section Visibility Controls for This Area */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Section Visibility (This Area)</CardTitle>
+              <CardDescription>
+                Enable or disable specific high-conversion sections on /{pageData.slug}.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-medium text-foreground">Hero Quick Lead Form</span>
+                  <span className="text-[11px] text-muted-foreground">3-field instant booking form under hero</span>
+                </div>
+                <Button
+                  type="button"
+                  variant={showHeroForm ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShowHeroForm(!showHeroForm)}
+                >
+                  {showHeroForm ? "Visible" : "Hidden"}
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-between border-t pt-3">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-medium text-foreground">Work Video Reels</span>
+                  <span className="text-[11px] text-muted-foreground">Short video clips showcase</span>
+                </div>
+                <Button
+                  type="button"
+                  variant={showVideoReels ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShowVideoReels(!showVideoReels)}
+                >
+                  {showVideoReels ? "Visible" : "Hidden"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Status & Final CTA */}
           <Card>
             <CardHeader>

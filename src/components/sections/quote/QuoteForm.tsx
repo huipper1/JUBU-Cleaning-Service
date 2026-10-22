@@ -89,6 +89,25 @@ const TIME_SLOTS = [
   }
 ] as const;
 
+function getPropertyIcon(id?: string, iconName?: string) {
+  switch (id || iconName) {
+    case "villa":
+    case "home":
+      return Home;
+    case "office":
+    case "briefcase":
+      return Briefcase;
+    case "shop":
+    case "store":
+      return Store;
+    case "apartment":
+    case "building-2":
+      return Building2;
+    default:
+      return Sparkles;
+  }
+}
+
 interface QuoteFormProps {
   services: Service[];
   settings: SiteSettings;
@@ -106,6 +125,22 @@ export function QuoteForm({
   areaName,
   finalCtaTitle
 }: QuoteFormProps) {
+  // Database-driven Property Types & Time Slots with fallback
+  const activePropertyTypes =
+    settings?.propertyTypes && settings.propertyTypes.length > 0
+      ? settings.propertyTypes.map((p) => ({
+          id: p.id,
+          title: p.title,
+          shortDescription: p.shortDescription || "",
+          icon: getPropertyIcon(p.id, p.icon)
+        }))
+      : PROPERTY_TYPES;
+
+  const activeTimeSlots =
+    settings?.timeSlots && settings.timeSlots.length > 0
+      ? settings.timeSlots
+      : TIME_SLOTS;
+
   const [formData, setFormData] = useState<CreateLeadInput>(() => ({
     fullName: "",
     mobile: "",
@@ -412,7 +447,7 @@ export function QuoteForm({
   return (
     <section
       id="quote"
-      className="relative scroll-mt-20 overflow-hidden bg-[#071933] py-16 text-white sm:py-20 lg:py-24"
+      className="relative scroll-mt-20 overflow-hidden bg-[#071933] py-12 text-white sm:py-20 lg:py-24"
       aria-label="Request a Free Quote"
     >
       {/* Dubai City Skyline Background */}
@@ -431,7 +466,7 @@ export function QuoteForm({
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-14">
           {/* Left Column: Value propositions & WhatsApp contact box */}
           <div className="flex flex-col items-start text-left lg:col-span-6">
             <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-white backdrop-blur-xs">
@@ -456,8 +491,24 @@ export function QuoteForm({
               quickly and easily.
             </p>
 
-            {/* 3 Benefits bullets with circular icons matching design */}
-            <div className="mb-8 w-full max-w-md space-y-4 sm:mb-10">
+            {/* Mobile Trust Pill Badges */}
+            <div className="mb-6 flex flex-wrap items-center gap-2 lg:hidden">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
+                <ShieldCheck className="h-3.5 w-3.5 text-brand-sky" />
+                <span>Fast Response</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
+                <Settings className="h-3.5 w-3.5 text-brand-sky" />
+                <span>Custom Solutions</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                <span>No Obligation</span>
+              </span>
+            </div>
+
+            {/* 3 Benefits bullets with circular icons matching design (Desktop) */}
+            <div className="mb-8 hidden w-full max-w-md space-y-4 sm:mb-10 lg:block">
               <div className="flex items-start gap-3.5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white">
                   <ShieldCheck className="h-5 w-5" />
@@ -489,8 +540,8 @@ export function QuoteForm({
               </div>
             </div>
 
-            {/* Direct Call & WhatsApp row with cursive slogan */}
-            <div className="flex w-full flex-col gap-4">
+            {/* Direct Call & WhatsApp row with cursive slogan (Desktop) */}
+            <div className="hidden w-full flex-col gap-4 lg:flex">
               <div className="flex items-center gap-3.5">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-lg">
                   <WhatsAppIcon className="h-full w-full" />
@@ -550,7 +601,7 @@ export function QuoteForm({
 
           {/* Right Column: Lead Form Card */}
           <div className="lg:col-span-6">
-            <div className="rounded-3xl border border-white/15 bg-[#071933]/40 p-6 text-white shadow-2xl backdrop-blur-xl sm:p-8 md:p-10">
+            <div className="rounded-3xl border border-white/15 bg-[#071933]/75 p-4.5 text-white shadow-2xl backdrop-blur-xl sm:p-8 md:p-10">
               {status === "success" ? (
                 /* Redirecting / Success State */
                 <div className="flex animate-in flex-col items-center py-6 text-center duration-300 zoom-in-95 fade-in">
@@ -1011,7 +1062,7 @@ export function QuoteForm({
                         <div className="flex min-w-0 items-center gap-3">
                           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-sky transition-colors group-hover:bg-brand-sky/20">
                             {(() => {
-                              const activeProp = PROPERTY_TYPES.find(
+                              const activeProp = activePropertyTypes.find(
                                 (p) => p.id === formData.propertyType
                               );
                               const IconComp = activeProp?.icon || Building2;
@@ -1023,7 +1074,7 @@ export function QuoteForm({
                               formData.propertyType ? "text-white" : "text-slate-400"
                             }`}
                           >
-                            {PROPERTY_TYPES.find((p) => p.id === formData.propertyType)?.title ??
+                            {activePropertyTypes.find((p) => p.id === formData.propertyType)?.title ??
                               "Select property type"}
                           </span>
                         </div>
@@ -1048,7 +1099,7 @@ export function QuoteForm({
                             Available Property Types
                           </div>
 
-                          {PROPERTY_TYPES.map((prop) => {
+                          {activePropertyTypes.map((prop) => {
                             const isSelected = formData.propertyType === prop.id;
                             const IconComponent = prop.icon;
                             return (
@@ -1161,7 +1212,7 @@ export function QuoteForm({
                         </PopoverTrigger>
                         <PopoverContent
                           align="start"
-                          className="w-auto overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-xl"
+                          className="w-auto max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-0 text-white shadow-2xl backdrop-blur-xl"
                         >
                           <CalendarPicker
                             mode="single"
@@ -1237,7 +1288,7 @@ export function QuoteForm({
                         </PopoverTrigger>
                         <PopoverContent
                           align="start"
-                          className="w-72 overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-3 text-white shadow-2xl backdrop-blur-xl sm:w-80"
+                          className="w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-white/20 bg-[#081839]/98 p-3 text-white shadow-2xl backdrop-blur-xl sm:w-80"
                         >
                           <div className="mb-2.5 flex items-center justify-between border-b border-white/10 pb-2">
                             <div className="flex items-center gap-2">
@@ -1250,7 +1301,7 @@ export function QuoteForm({
                           </div>
 
                           <div className="flex flex-col gap-3">
-                            {TIME_SLOTS.map((group) => (
+                            {activeTimeSlots.map((group) => (
                               <div key={group.group} className="flex flex-col gap-1.5">
                                 <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                                   {group.group}

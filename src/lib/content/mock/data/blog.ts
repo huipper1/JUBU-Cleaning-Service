@@ -2,173 +2,215 @@ import type { BlogPost } from "@/types/content";
 
 export const mockBlogPostsData: BlogPost[] = [
   {
-    id: "post-1",
-    title: "Complete Move-Out Cleaning Checklist for Dubai Tenants (100% Deposit Return)",
-    slug: "move-out-cleaning-checklist-dubai",
-    excerpt:
-      "Planning to relocate in Dubai? Follow this room-by-room deep cleaning checklist to ensure your landlord or building management returns your security deposit in full.",
-    content: `
-      <h2>The Realities of Move-Out Inspections in Dubai</h2>
-      <p>Moving home in Dubai is an exciting milestone, whether transitioning from a Marina high-rise to an Arabian Ranches villa or upgrading your apartment in Downtown. However, landlord and real estate handover inspections across Dubai have become increasingly stringent. Uncleaned kitchen grease, limescale on sanitary ware, or scuffed skirting boards can easily cost you AED 1,000 to AED 3,000 off your security deposit.</p>
-      
-      <p>Professional cleaning ensures your property meets strict Dubai tenancy standards. Here is the authoritative checklist vetted by our senior Dubai cleaning supervisors.</p>
-
-      <div class="my-8 flex justify-center">
-        <figure class="max-w-xl text-center">
-          <img src="/images/placeholder/gallery-move.png" alt="Dubai apartment move-out deep cleaning inspection" class="rounded-2xl border border-white/10 shadow-xl mx-auto w-full" />
-          <figcaption class="mt-2.5 text-xs text-slate-400">Tenancy handover deep cleaning restores walls, tile grout, and appliances to spotless condition.</figcaption>
-        </figure>
-      </div>
-
-      <h2>1. Kitchen & Heavy Degreasing</h2>
-      <p>Dubai kitchens accumulate heavy airborne grease due to closed AC circulation. Standard surface wiping is rarely enough for tenancy handovers:</p>
-      <ul>
-        <li><strong>Exhaust Fan & Hood Filters:</strong> Soak metal mesh filters in commercial-grade degreasing agents to melt hardened oils.</li>
-        <li><strong>Oven & Cooktop Chambers:</strong> Strip carbonized stains from oven glass racks, tray rails, and stovetop igniters.</li>
-        <li><strong>Under & Behind Appliances:</strong> Pull out refrigerators and dishwashers to vacuum sand dust blown in from balcony vents.</li>
-        <li><strong>Cabinet Interior Sanitization:</strong> Wipe all shelving, hinges, and drawer tracks free of condiment residue or pests.</li>
-      </ul>
-
-      <blockquote>
-        <p>“Property managers in Dubai inspect under kitchen sinks and behind oven doors first. If grease or water deposits are detected, re-cleaning fees are charged immediately.”</p>
-      </blockquote>
-
-      <h2>2. Bathrooms & Descaling Limescale</h2>
-      <p>Dubai tap water contains high mineral concentrations which create stubborn calcium and limescale crusts on chrome fixtures and glass enclosures:</p>
-      <ul>
-        <li><strong>Shower Glass Partitions:</strong> Use eco-friendly calcium-dissolving acids to eradicate mineral cloudiness and soap scum.</li>
-        <li><strong>Grout Lines & Tile Joints:</strong> Steam extract mildew and discolored grime between wall and floor tiles.</li>
-        <li><strong>Drain Grates & Overflows:</strong> Disinfect hair traps and pour enzymatic drain cleaners to prevent post-handover odors.</li>
-      </ul>
-
-      <h2>3. AC Vents & Balcony Pressure Washing</h2>
-      <p>Desert dust settles inside ceiling AC supply grills and on exterior balcony tiles throughout the summer months:</p>
-      <p>Always unscrew or vacuum dust filters, wipe linear diffuser louvers with microbial disinfectant, and pressure-wash balcony railings before scheduling your final landlord walk-through.</p>
-
-      <h2>Why Hire Certified Dubai Professionals?</h2>
-      <p>At <strong>JUBU Cleaning Service</strong>, our dedicated move-in/move-out crew brings industrial single-disc floor scrubbers, wet extraction vacuums, and eco-certified chemicals. We guarantee handover-grade inspection readiness so you receive 100% of your deposit hassle-free.</p>
-    `,
-    coverImage: "/images/placeholder/gallery-move.png",
-    coverImageAlt: "Dubai move-out deep cleaning inspection checklist",
-    category: "Move-In & Move-Out",
-    tags: ["Move Out Dubai", "Deposit Return", "Deep Cleaning", "Tenancy Inspection"],
-    author: "JUBU Technical Team",
-    authorRole: "Tenancy Cleaning Specialist",
-    status: "PUBLISHED",
-    publishedAt: "2026-03-15T09:00:00Z",
-    readTime: "5 min read",
-    metaTitle: "Move-Out Cleaning Checklist Dubai | 100% Deposit Return Guide",
-    metaDescription:
-      "Expert move-out cleaning checklist for Dubai apartments and villas. Learn how to pass landlord handover inspections and get your full security deposit refunded.",
-    order: 1,
-    createdAt: "2026-03-15T09:00:00Z",
-    updatedAt: "2026-03-15T09:00:00Z"
+    "id": "post-1",
+    "title": "Complete Move-Out Cleaning Checklist for Dubai Tenants (100% Deposit Return)",
+    "slug": "move-out-cleaning-checklist-dubai",
+    "excerpt": "Planning to relocate in Dubai? Follow this room-by-room deep cleaning checklist to ensure your landlord or building management returns your security deposit in full.",
+    "content": "\n      <h2>The Realities of Move-Out Inspections in Dubai</h2>\n      <p>Moving home in Dubai is an exciting milestone, whether transitioning from a Marina high-rise to an Arabian Ranches villa or upgrading your apartment in Downtown. However, landlord and real estate handover inspections across Dubai have become increasingly stringent. Uncleaned kitchen grease, limescale on sanitary ware, or scuffed skirting boards can easily cost you AED 1,000 to AED 3,000 off your security deposit.</p>\n      \n      <p>Professional cleaning ensures your property meets strict Dubai tenancy standards. Here is the authoritative checklist vetted by our senior Dubai cleaning supervisors.</p>\n\n      <div class=\"my-8 flex justify-center\">\n        <figure class=\"max-w-xl text-center\">\n          <img src=\"/images/placeholder/gallery-move.png\" alt=\"Dubai apartment move-out deep cleaning inspection\" class=\"rounded-2xl border border-white/10 shadow-xl mx-auto w-full\" />\n          <figcaption class=\"mt-2.5 text-xs text-slate-400\">Tenancy handover deep cleaning restores walls, tile grout, and appliances to spotless condition.</figcaption>\n        </figure>\n      </div>\n\n      <h2>1. Kitchen & Heavy Degreasing</h2>\n      <p>Dubai kitchens accumulate heavy airborne grease due to closed AC circulation. Standard surface wiping is rarely enough for tenancy handovers:</p>\n      <ul>\n        <li><strong>Exhaust Fan & Hood Filters:</strong> Soak metal mesh filters in commercial-grade degreasing agents to melt hardened oils.</li>\n        <li><strong>Oven & Cooktop Chambers:</strong> Strip carbonized stains from oven glass racks, tray rails, and stovetop igniters.</li>\n        <li><strong>Under & Behind Appliances:</strong> Pull out refrigerators and dishwashers to vacuum sand dust blown in from balcony vents.</li>\n        <li><strong>Cabinet Interior Sanitization:</strong> Wipe all shelving, hinges, and drawer tracks free of condiment residue or pests.</li>\n      </ul>\n\n      <blockquote>\n        <p>“Property managers in Dubai inspect under kitchen sinks and behind oven doors first. If grease or water deposits are detected, re-cleaning fees are charged immediately.”</p>\n      </blockquote>\n\n      <h2>2. Bathrooms & Descaling Limescale</h2>\n      <p>Dubai tap water contains high mineral concentrations which create stubborn calcium and limescale crusts on chrome fixtures and glass enclosures:</p>\n      <ul>\n        <li><strong>Shower Glass Partitions:</strong> Use eco-friendly calcium-dissolving acids to eradicate mineral cloudiness and soap scum.</li>\n        <li><strong>Grout Lines & Tile Joints:</strong> Steam extract mildew and discolored grime between wall and floor tiles.</li>\n        <li><strong>Drain Grates & Overflows:</strong> Disinfect hair traps and pour enzymatic drain cleaners to prevent post-handover odors.</li>\n      </ul>\n\n      <h2>3. AC Vents & Balcony Pressure Washing</h2>\n      <p>Desert dust settles inside ceiling AC supply grills and on exterior balcony tiles throughout the summer months:</p>\n      <p>Always unscrew or vacuum dust filters, wipe linear diffuser louvers with microbial disinfectant, and pressure-wash balcony railings before scheduling your final landlord walk-through.</p>\n\n      <h2>Why Hire Certified Dubai Professionals?</h2>\n      <p>At <strong>JUBU Cleaning Service</strong>, our dedicated move-in/move-out crew brings industrial single-disc floor scrubbers, wet extraction vacuums, and eco-certified chemicals. We guarantee handover-grade inspection readiness so you receive 100% of your deposit hassle-free.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-move.png",
+    "coverImageAlt": "Dubai move-out deep cleaning inspection checklist",
+    "category": "Move-In & Move-Out",
+    "tags": [
+      "Move Out Dubai",
+      "Deposit Return",
+      "Deep Cleaning",
+      "Tenancy Inspection"
+    ],
+    "author": "JUBU Technical Team",
+    "authorRole": "Tenancy Cleaning Specialist",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-03-15T09:00:00.000Z",
+    "readTime": "5 min read",
+    "metaTitle": "Move-Out Cleaning Checklist Dubai | 100% Deposit Return Guide",
+    "metaDescription": "Expert move-out cleaning checklist for Dubai apartments and villas. Learn how to pass landlord handover inspections and get your full security deposit refunded.",
+    "order": 1,
+    "createdAt": "2026-10-08T07:46:55.323Z",
+    "updatedAt": "2026-10-08T07:46:55.323Z"
   },
   {
-    id: "post-2",
-    title: "How Often Should You Deep Clean Sofas and Carpets in Dubai?",
-    slug: "sofa-carpet-cleaning-frequency-dubai",
-    excerpt:
-      "Dust mites, fine desert sand, and high humidity can deteriorate home upholstery quickly. Discover the ideal cleaning schedules recommended by Dubai health specialists.",
-    content: `
-      <h2>The Unique Climate Challenges of Dubai Living</h2>
-      <p>In the UAE, air conditioners run almost 24/7 during extended summer stretches. While closed windows keep desert heat outside, recirculated indoor air traps microscopic sand particles, skin flakes, and cooking vapors deep within fabric fibers.</p>
-
-      <p>Over time, luxury living room sofas, imported Persian carpets, and mattress paddings become reservoirs for dust mites and allergens, often causing morning sneezing and irritated sinuses.</p>
-
-      <div class="my-8 flex justify-center">
-        <figure class="max-w-xl text-center">
-          <img src="/images/placeholder/gallery-sofa.png" alt="Professional upholstery steam shampooing in Dubai villa" class="rounded-2xl border border-white/10 shadow-xl mx-auto w-full" />
-          <figcaption class="mt-2.5 text-xs text-slate-400">Hot water extraction removes embedded desert dust and dust mites without damaging delicate fibers.</figcaption>
-        </figure>
-      </div>
-
-      <h2>Recommended Cleaning Schedules by Household Type</h2>
-      <ul>
-        <li><strong>Standard Apartments (1–2 Adults):</strong> Every <strong>6 months</strong> for sofas; annual deep steam shampooing for area rugs.</li>
-        <li><strong>Homes with Young Children:</strong> Every <strong>3 to 4 months</strong> to eliminate milk spills, food stains, and germ accumulation.</li>
-        <li><strong>Pet-Friendly Villas (Cats/Dogs):</strong> Every <strong>2 to 3 months</strong> with specialized enzyme deodorization for pet dander and hair.</li>
-        <li><strong>Asthma & Allergy Sufferers:</strong> Every <strong>60 to 90 days</strong> using HEPA extraction and chemical-free thermal sanitization.</li>
-      </ul>
-
-      <h2>Dry Vacuuming vs. Deep Injection Extraction</h2>
-      <p>A common mistake is relying solely on domestic cordless vacuums. While convenient for weekly maintenance, consumer vacuums lack the suction bar pressure required to reach sponge cores where allergen colonies nest.</p>
-
-      <blockquote>
-        <p>“Professional deep injection-extraction forces heated sanitizing solution at 4 bar pressure into the cushion fiber and extracts 98% of the liquid instantly, drying completely within 2 to 4 hours in Dubai indoor conditions.”</p>
-      </blockquote>
-
-      <h2>Protecting Fabric Longevity</h2>
-      <p>Investing in scheduled upholstery care doubles the lifespan of premium velvet, linen, and microfiber furniture. Contact <strong>JUBU Cleaning Service</strong> for same-day mobile upholstery sanitization across Business Bay, Downtown, and Dubai Marina.</p>
-    `,
-    coverImage: "/images/placeholder/gallery-sofa.png",
-    coverImageAlt: "Deep sofa and carpet shampooing in Dubai living room",
-    category: "Upholstery Care",
-    tags: ["Sofa Cleaning", "Carpet Shampoo", "Allergy Care", "Dubai Marina"],
-    author: "Eng. Tariq Al-Mansoor",
-    authorRole: "Hygiene & Sanitization Lead",
-    status: "PUBLISHED",
-    publishedAt: "2026-03-22T11:30:00Z",
-    readTime: "4 min read",
-    metaTitle: "How Often to Clean Sofas & Carpets in Dubai? | Expert Guide",
-    metaDescription:
-      "Find out the recommended frequency for sofa and carpet deep cleaning in Dubai. Prevent dust mites, allergies, and fabric damage from desert climate.",
-    order: 2,
-    createdAt: "2026-03-22T11:30:00Z",
-    updatedAt: "2026-03-22T11:30:00Z"
+    "id": "post-2",
+    "title": "How Often Should You Deep Clean Sofas and Carpets in Dubai?",
+    "slug": "sofa-carpet-cleaning-frequency-dubai",
+    "excerpt": "Dust mites, fine desert sand, and high humidity can deteriorate home upholstery quickly. Discover the ideal cleaning schedules recommended by Dubai health specialists.",
+    "content": "\n      <h2>The Unique Climate Challenges of Dubai Living</h2>\n      <p>In the UAE, air conditioners run almost 24/7 during extended summer stretches. While closed windows keep desert heat outside, recirculated indoor air traps microscopic sand particles, skin flakes, and cooking vapors deep within fabric fibers.</p>\n\n      <p>Over time, luxury living room sofas, imported Persian carpets, and mattress paddings become reservoirs for dust mites and allergens, often causing morning sneezing and irritated sinuses.</p>\n\n      <div class=\"my-8 flex justify-center\">\n        <figure class=\"max-w-xl text-center\">\n          <img src=\"/images/placeholder/gallery-sofa.png\" alt=\"Professional upholstery steam shampooing in Dubai villa\" class=\"rounded-2xl border border-white/10 shadow-xl mx-auto w-full\" />\n          <figcaption class=\"mt-2.5 text-xs text-slate-400\">Hot water extraction removes embedded desert dust and dust mites without damaging delicate fibers.</figcaption>\n        </figure>\n      </div>\n\n      <h2>Recommended Cleaning Schedules by Household Type</h2>\n      <ul>\n        <li><strong>Standard Apartments (1–2 Adults):</strong> Every <strong>6 months</strong> for sofas; annual deep steam shampooing for area rugs.</li>\n        <li><strong>Homes with Young Children:</strong> Every <strong>3 to 4 months</strong> to eliminate milk spills, food stains, and germ accumulation.</li>\n        <li><strong>Pet-Friendly Villas (Cats/Dogs):</strong> Every <strong>2 to 3 months</strong> with specialized enzyme deodorization for pet dander and hair.</li>\n        <li><strong>Asthma & Allergy Sufferers:</strong> Every <strong>60 to 90 days</strong> using HEPA extraction and chemical-free thermal sanitization.</li>\n      </ul>\n\n      <h2>Dry Vacuuming vs. Deep Injection Extraction</h2>\n      <p>A common mistake is relying solely on domestic cordless vacuums. While convenient for weekly maintenance, consumer vacuums lack the suction bar pressure required to reach sponge cores where allergen colonies nest.</p>\n\n      <blockquote>\n        <p>“Professional deep injection-extraction forces heated sanitizing solution at 4 bar pressure into the cushion fiber and extracts 98% of the liquid instantly, drying completely within 2 to 4 hours in Dubai indoor conditions.”</p>\n      </blockquote>\n\n      <h2>Protecting Fabric Longevity</h2>\n      <p>Investing in scheduled upholstery care doubles the lifespan of premium velvet, linen, and microfiber furniture. Contact <strong>JUBU Cleaning Service</strong> for same-day mobile upholstery sanitization across Business Bay, Downtown, and Dubai Marina.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-sofa.png",
+    "coverImageAlt": "Deep sofa and carpet shampooing in Dubai living room",
+    "category": "Upholstery Care",
+    "tags": [
+      "Sofa Cleaning",
+      "Carpet Shampoo",
+      "Allergy Care",
+      "Dubai Marina"
+    ],
+    "author": "Eng. Tariq Al-Mansoor",
+    "authorRole": "Hygiene & Sanitization Lead",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-03-22T11:30:00.000Z",
+    "readTime": "4 min read",
+    "metaTitle": "How Often to Clean Sofas & Carpets in Dubai? | Expert Guide",
+    "metaDescription": "Find out the recommended frequency for sofa and carpet deep cleaning in Dubai. Prevent dust mites, allergies, and fabric damage from desert climate.",
+    "order": 2,
+    "createdAt": "2026-10-08T07:46:55.572Z",
+    "updatedAt": "2026-10-08T07:46:55.572Z"
   },
   {
-    id: "post-3",
-    title: "Post-Construction Cleaning: 5 Critical Steps Before Furnishing Your Villa",
-    slug: "post-construction-cleaning-villa-dubai-guide",
-    excerpt:
-      "Just finished renovating or moving into a newly handed-over villa in Dubai Hills or Palm Jumeirah? Here is why standard housekeeping fails against hazardous silica dust.",
-    content: `
-      <h2>The Hidden Dangers of Post-Renovation Silica Dust</h2>
-      <p>Renovating a villa in Dubai is a thrilling milestone, but the aftermath of gypsum board cutting, tile grouting, and marble polishing produces microscopic silica dust. Unlike ordinary household dust, construction residue is abrasive, chemically alkaline, and capable of permanently scratching tempered window glass if improperly wiped.</p>
-
-      <p>Furthermore, moving furniture in before thorough decontamination traps fine dust inside AC coils, causing persistent white film on polished tables for months.</p>
-
-      <div class="my-8 flex justify-center">
-        <figure class="max-w-xl text-center">
-          <img src="/images/placeholder/gallery-construction.png" alt="Industrial post-construction dust extraction in Dubai villa" class="rounded-2xl border border-white/10 shadow-xl mx-auto w-full" />
-          <figcaption class="mt-2.5 text-xs text-slate-400">Industrial single-disc scrubbers and HEPA air extractors eliminate alkaline construction residue safely.</figcaption>
-        </figure>
-      </div>
-
-      <h2>Step 1: Rough Dust Extraction (Top-to-Bottom Protocol)</h2>
-      <p>Construction cleaning must strictly follow gravitational physics. Never sweep floors first. Start by vacuuming high ceiling moldings, recessed spotlight cavities, curtain pelmets, and AC return plenums using HEPA-filtered industrial dry vacuums.</p>
-
-      <h2>Step 2: Paint Droplet, Silicon & Cement Film Removal</h2>
-      <p>Tile installers and painters inevitably leave overspray, masking tape glue, and silicone beads on window glass and polished porcelain floors:</p>
-      <ul>
-        <li><strong>Specialized Razor Scrapers:</strong> Must be operated at exact 30-degree angles with lubricating soap to prevent scratch marks on double-glazed villa windows.</li>
-        <li><strong>Neutralizing Solvents:</strong> Remove epoxy grout haze and adhesive residues without corroding expensive marble sealants.</li>
-      </ul>
-
-      <h2>Step 3: Rotary Machine Floor Scrubbing</h2>
-      <p>Post-construction floors require motorized single-disc rotary scrubbers equipped with red and white buffing pads. This process pulls embedded plaster powders from micro-textured tiles and leaves floors with a factory-fresh satin sheen.</p>
-
-      <h2>Step 4: Deep Sanitization of Ducts and Cabinetry</h2>
-      <p>All newly built-in wardrobes, walk-in closets, and vanity cabinets must be wiped down with microfiber cloths dampened in non-toxic antimicrobial solutions.</p>
-
-      <h2>Trust JUBU for Post-Construction Excellence</h2>
-      <p>JUBU Cleaning Service handles post-renovation handovers for private villas and commercial penthouses throughout Dubai. Our certified teams arrive fully equipped with heavy-duty machines and complete safety gear.</p>
-    `,
-    coverImage: "/images/placeholder/gallery-construction.png",
-    coverImageAlt: "Villa post-construction cleaning team in Dubai",
-    category: "Villa Cleaning",
-    tags: ["Post Construction", "Villa Handover", "Silica Dust Removal", "Dubai Hills"],
-    author: "JUBU Technical Team",
-    authorRole: "Industrial Cleaning Supervisor",
-    status: "PUBLISHED",
-    publishedAt: "2026-03-29T14:00:00Z",
-    readTime: "6 min read",
-    metaTitle: "Post-Construction Cleaning Dubai: 5 Steps for New Villas",
-    metaDescription:
-      "Essential guide to post-construction cleaning for Dubai villas and apartments. Learn how to remove hazardous silica dust and paint stains before furnishing.",
-    order: 3,
-    createdAt: "2026-03-29T14:00:00Z",
-    updatedAt: "2026-03-29T14:00:00Z"
+    "id": "post-3",
+    "title": "Post-Construction Cleaning: 5 Critical Steps Before Furnishing Your Villa",
+    "slug": "post-construction-cleaning-villa-dubai-guide",
+    "excerpt": "Just finished renovating or moving into a newly handed-over villa in Dubai Hills or Palm Jumeirah? Here is why standard housekeeping fails against hazardous silica dust.",
+    "content": "\n      <h2>The Hidden Dangers of Post-Renovation Silica Dust</h2>\n      <p>Renovating a villa in Dubai is a thrilling milestone, but the aftermath of gypsum board cutting, tile grouting, and marble polishing produces microscopic silica dust. Unlike ordinary household dust, construction residue is abrasive, chemically alkaline, and capable of permanently scratching tempered window glass if improperly wiped.</p>\n\n      <p>Furthermore, moving furniture in before thorough decontamination traps fine dust inside AC coils, causing persistent white film on polished tables for months.</p>\n\n      <div class=\"my-8 flex justify-center\">\n        <figure class=\"max-w-xl text-center\">\n          <img src=\"/images/placeholder/gallery-construction.png\" alt=\"Industrial post-construction dust extraction in Dubai villa\" class=\"rounded-2xl border border-white/10 shadow-xl mx-auto w-full\" />\n          <figcaption class=\"mt-2.5 text-xs text-slate-400\">Industrial single-disc scrubbers and HEPA air extractors eliminate alkaline construction residue safely.</figcaption>\n        </figure>\n      </div>\n\n      <h2>Step 1: Rough Dust Extraction (Top-to-Bottom Protocol)</h2>\n      <p>Construction cleaning must strictly follow gravitational physics. Never sweep floors first. Start by vacuuming high ceiling moldings, recessed spotlight cavities, curtain pelmets, and AC return plenums using HEPA-filtered industrial dry vacuums.</p>\n\n      <h2>Step 2: Paint Droplet, Silicon & Cement Film Removal</h2>\n      <p>Tile installers and painters inevitably leave overspray, masking tape glue, and silicone beads on window glass and polished porcelain floors:</p>\n      <ul>\n        <li><strong>Specialized Razor Scrapers:</strong> Must be operated at exact 30-degree angles with lubricating soap to prevent scratch marks on double-glazed villa windows.</li>\n        <li><strong>Neutralizing Solvents:</strong> Remove epoxy grout haze and adhesive residues without corroding expensive marble sealants.</li>\n      </ul>\n\n      <h2>Step 3: Rotary Machine Floor Scrubbing</h2>\n      <p>Post-construction floors require motorized single-disc rotary scrubbers equipped with red and white buffing pads. This process pulls embedded plaster powders from micro-textured tiles and leaves floors with a factory-fresh satin sheen.</p>\n\n      <h2>Step 4: Deep Sanitization of Ducts and Cabinetry</h2>\n      <p>All newly built-in wardrobes, walk-in closets, and vanity cabinets must be wiped down with microfiber cloths dampened in non-toxic antimicrobial solutions.</p>\n\n      <h2>Trust JUBU for Post-Construction Excellence</h2>\n      <p>JUBU Cleaning Service handles post-renovation handovers for private villas and commercial penthouses throughout Dubai. Our certified teams arrive fully equipped with heavy-duty machines and complete safety gear.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-construction.png",
+    "coverImageAlt": "Villa post-construction cleaning team in Dubai",
+    "category": "Villa Cleaning",
+    "tags": [
+      "Post Construction",
+      "Villa Handover",
+      "Silica Dust Removal",
+      "Dubai Hills"
+    ],
+    "author": "JUBU Technical Team",
+    "authorRole": "Industrial Cleaning Supervisor",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-03-29T14:00:00.000Z",
+    "readTime": "6 min read",
+    "metaTitle": "Post-Construction Cleaning Dubai: 5 Steps for New Villas",
+    "metaDescription": "Essential guide to post-construction cleaning for Dubai villas and apartments. Learn how to remove hazardous silica dust and paint stains before furnishing.",
+    "order": 3,
+    "createdAt": "2026-10-08T07:46:55.804Z",
+    "updatedAt": "2026-10-08T07:46:55.804Z"
+  },
+  {
+    "id": "post-bb-moveout",
+    "title": "Complete Move-Out Cleaning Checklist for Business Bay Tenants (100% Deposit Return)",
+    "slug": "business-bay-move-out-cleaning-deposit-guide",
+    "excerpt": "Vacating an apartment in Business Bay? Follow this comprehensive room-by-room move-out deep cleaning checklist to ensure your property manager or landlord returns your full security deposit.",
+    "content": "\n      <h2>The Realities of Business Bay Tenancy Handovers</h2>\n      <p>Business Bay is one of Dubai's premier residential hubs, home to iconic developments such as Executive Towers, Damac Maison, and Bay Square. However, when your lease concludes, building management companies and landlords enforce rigorous inspection protocols. Small oversight—such as baked-on stove grease, calcium buildup on bathroom mixers, or sand accumulation on high-rise balcony tracks—can lead to deposit deductions ranging from AED 1,000 to over AED 3,500.</p>\n      \n      <p>Securing 100% of your security deposit requires more than a casual wipe-down. Here is the exact, step-by-step handover standard followed by <a href=\"/business-bay\" class=\"text-sky-600 font-bold hover:underline\">JUBU professional cleaners in Business Bay</a>.</p>\n\n      <h2>1. Kitchen Degreasing & Appliance Stripping</h2>\n      <p>Because Business Bay apartments utilize central air conditioning, airborne cooking grease settles into cabinet surfaces and cooker hoods:</p>\n      <ul>\n        <li><strong>Extractor Hood & Filters:</strong> Submerge metal mesh filters into commercial degreasing baths to dissolve polymerized cooking oils.</li>\n        <li><strong>Oven Interior Chambers:</strong> Scrape burnt carbon residues from bake trays, interior glass panels, and rubber door seals.</li>\n        <li><strong>Under & Behind Appliances:</strong> Move refrigerators and dishwashers forward to extract dust bunnies and sand blown in through balcony exhaust louvers.</li>\n        <li><strong>Cabinet Interior Sanitization:</strong> Wipe all shelving, hinges, and drawer slides clean of food crumbs and seasoning stains.</li>\n      </ul>\n\n      <blockquote>\n        <p>“Property inspectors in Business Bay examine under the sink and inside the oven glass first. If sticky oil residues or watermarks are visible, landlord re-cleaning charges are billed immediately.”</p>\n      </blockquote>\n\n      <h2>2. Bathroom Descaling & Grout Restoration</h2>\n      <p>Dubai's tap water has high mineral content that crystallizes into stubborn white limescale:</p>\n      <ul>\n        <li><strong>Shower Glass Enclosures:</strong> Use calcium-dissolving, eco-safe formulations to eliminate mineral cloudiness and soap scum rings.</li>\n        <li><strong>Wall & Floor Tile Grout:</strong> Steam sanitize tile joints to eradicate mold and grime discoloration.</li>\n        <li><strong>Drain Grates & Overflows:</strong> Disinfect hair traps and clear drainage chambers to prevent odors.</li>\n      </ul>\n\n      <h2>3. Balcony Sand Extraction & Floor Buffing</h2>\n      <p>High winds along Dubai Canal frequently deposit heavy layers of fine sand on Business Bay balconies:</p>\n      <p>Power-wash exterior tiles, clear railing dust, clean glass balustrades, and ensure drainage holes flow freely without letting water spill onto lower units.</p>\n\n      <h2>Why Choose JUBU for End of Tenancy Handover?</h2>\n      <p>When you book our <a href=\"/business-bay\" class=\"text-sky-600 font-bold hover:underline\">move-out cleaning in Business Bay</a>, our fully equipped teams bring single-disc floor rotary scrubbers, steam generators, and industrial vacuums. We guarantee inspection-ready cleanliness so you get your deposit back in full without stress.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-move.png",
+    "coverImageAlt": "Move out deep cleaning inspection checklist in Business Bay Dubai",
+    "category": "Move-In & Move-Out",
+    "tags": [
+      "Move Out Business Bay",
+      "Deposit Return",
+      "End of Tenancy",
+      "Deep Cleaning",
+      "Business Bay Dubai"
+    ],
+    "author": "JUBU Tenancy Team",
+    "authorRole": "Handover Inspection Specialist",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-22T10:35:03.675Z",
+    "readTime": "6 min read",
+    "metaTitle": "Business Bay Move-Out Cleaning Guide | 100% Security Deposit Return",
+    "metaDescription": "Professional move out cleaning checklist for Business Bay apartments. Meet strict landlord handover standards and secure your full deposit refund.",
+    "order": 4,
+    "createdAt": "2026-10-22T10:35:04.754Z",
+    "updatedAt": "2026-10-22T10:35:04.754Z"
+  },
+  {
+    "id": "post-bb-studio",
+    "title": "Studio & 1-Bedroom Apartment Cleaning in Business Bay: Pricing, Frequency & Checklist",
+    "slug": "studio-apartment-cleaning-guide-business-bay",
+    "excerpt": "Living in a high-rise studio or 1-bedroom flat in Business Bay? Here is everything you need to know about hourly maid service rates, deep cleaning frequency, and balcony dust maintenance.",
+    "content": "\n      <h2>The Urban Lifestyle of Business Bay Apartments</h2>\n      <p>From young corporate executives to digital nomads, Business Bay's studio and 1-bedroom apartments offer dynamic city living minutes from Downtown Dubai and DIFC. However, compact open-concept floorplans present unique cleaning challenges: cooking aromas easily reach living areas, and sand dust quickly settles across modern glossy surfaces.</p>\n\n      <h2>Hourly Maid Service vs. Fixed Deep Cleaning</h2>\n      <p>Choosing the right cleaning service depends on your lifestyle and current property condition:</p>\n      <ul>\n        <li><strong>Hourly Maid Service (from AED 35/hr):</strong> Ideal for weekly maintenance. An experienced part-time maid dusts surfaces, vacuums rugs, mops floors, irons clothing, and tidies your kitchen. A typical studio or 1-bedroom apartment takes just 2 to 3 hours.</li>\n        <li><strong>Comprehensive Apartment Deep Clean:</strong> Recommended every 3 to 6 months or after moving in. Includes high-pressure steam sanitization, oven degreasing, bathroom descaling, and balcony scrubbing.</li>\n      </ul>\n\n      <h2>Transparent Cleaning Prices in Business Bay</h2>\n      <p>At JUBU Cleaning Service, we believe in 100% upfront pricing with zero surprise charges:</p>\n      <ul>\n        <li><strong>Studio Regular Clean:</strong> 2–3 hours hourly service starting from ~AED 70 to AED 105.</li>\n        <li><strong>1-Bedroom Regular Clean:</strong> 3–4 hours hourly service starting from ~AED 105 to AED 140.</li>\n        <li><strong>Apartment Deep Clean:</strong> Fixed comprehensive packages starting from AED 249 to AED 399.</li>\n      </ul>\n\n      <h2>Recommended Weekly Routine for Busy Professionals</h2>\n      <p>Scheduling a <a href=\"/business-bay\" class=\"text-sky-600 font-bold hover:underline\">weekly cleaning service in Business Bay</a> ensures your home stays sparkling while you focus on career and leisure. Our background-checked maids arrive on time, whether you are at home or at the office.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-home.png",
+    "coverImageAlt": "Modern studio apartment cleaning in Business Bay Dubai",
+    "category": "Apartment Living",
+    "tags": [
+      "Studio Apartment",
+      "1 Bedroom Cleaning",
+      "Business Bay",
+      "Hourly Maid",
+      "Affordable Cleaning"
+    ],
+    "author": "JUBU Home Services",
+    "authorRole": "Residential Care Coordinator",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-22T10:35:03.675Z",
+    "readTime": "5 min read",
+    "metaTitle": "Studio & 1-Bedroom Cleaning Business Bay | Prices & Checklist",
+    "metaDescription": "Transparent prices and cleaning schedules for studio and 1-bedroom apartments in Business Bay, Dubai. Hourly maid service from AED 35/hr.",
+    "order": 5,
+    "createdAt": "2026-10-22T10:35:04.995Z",
+    "updatedAt": "2026-10-22T10:35:04.995Z"
+  },
+  {
+    "id": "post-bb-deep-clean",
+    "title": "Deep Cleaning vs. Regular Maid Service in Business Bay: Which Does Your Home Need?",
+    "slug": "deep-cleaning-vs-regular-maid-service-business-bay",
+    "excerpt": "Discover the vital differences between routine hourly housekeeping and intensive deep sanitization. Learn when to schedule machine floor scrubbing, oven degreasing, and AC vent cleaning.",
+    "content": "\n      <h2>Understanding the Difference</h2>\n      <p>Many homeowners in Business Bay wonder: <em>“Should I book a standard maid service, or do I need an intensive deep clean?”</em> While both keep your home hygienic, they serve fundamentally different purposes.</p>\n\n      <h2>1. Regular Maid Service (Maintenance Cleaning)</h2>\n      <p>Regular housekeeping maintains day-to-day cleanliness. It focuses on accessible surface dust, dishwashing, bed making, trash removal, and floor mopping. It is preventative care that keeps your home fresh on a weekly or bi-weekly cadence.</p>\n\n      <h2>2. Deep Cleaning (Restorative Sanitization)</h2>\n      <p>Deep cleaning goes beneath and behind the surface to remove years of accumulated grime, bacteria, and mineral buildup:</p>\n      <ul>\n        <li><strong>Kitchen:</strong> Disassembling and soaking grease filters, baking soda scrub on carbonized ovens, and sanitizing interior refrigerator coils.</li>\n        <li><strong>Bathroom:</strong> High-temperature steam sanitization at 140°C to destroy 99.9% of bacteria in tile grout, silicone seals, and drain channels.</li>\n        <li><strong>Balcony:</strong> Power scrubbing porous tiles embedded with fine desert dust.</li>\n        <li><strong>Air Quality:</strong> Wiping down air conditioning linear diffuser grills and vent surrounds where dust colonies gather.</li>\n      </ul>\n\n      <h2>When Should You Book a Deep Clean?</h2>\n      <p>We recommend scheduling <a href=\"/business-bay\" class=\"text-sky-600 font-bold hover:underline\">deep cleaning services in Business Bay</a> in the following situations:</p>\n      <ol>\n        <li><strong>Moving into a new flat or tenancy handover:</strong> Guaranteeing total hygiene and full deposit return.</li>\n        <li><strong>After interior painting or minor renovations:</strong> Eradicating toxic gypsum dust and paint splatters.</li>\n        <li><strong>Post-summer dust recovery:</strong> Clearing months of closed AC condensation and desert dust.</li>\n        <li><strong>Seasonal home refresh:</strong> Every 4 to 6 months for ongoing allergy protection.</li>\n      </ol>\n    ",
+    "coverImage": "/images/placeholder/gallery-deep-cleaning.png",
+    "coverImageAlt": "Professional deep cleaning and steam sanitization in Business Bay",
+    "category": "Deep Cleaning",
+    "tags": [
+      "Deep Cleaning",
+      "Maid Service",
+      "Kitchen Deep Clean",
+      "Bathroom Sanitization",
+      "Business Bay"
+    ],
+    "author": "Eng. Tariq Al-Mansoor",
+    "authorRole": "Hygiene & Sanitization Lead",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-22T10:35:03.675Z",
+    "readTime": "5 min read",
+    "metaTitle": "Deep Cleaning vs Maid Service Business Bay | Expert Comparison",
+    "metaDescription": "Understand the difference between hourly maid service and apartment deep cleaning in Business Bay. When to book, equipment used, and price comparison.",
+    "order": 6,
+    "createdAt": "2026-10-22T10:35:05.226Z",
+    "updatedAt": "2026-10-22T10:35:05.226Z"
+  },
+  {
+    "id": "post-bb-office",
+    "title": "Maintaining a Pristine Corporate Space: Commercial & Office Cleaning in Business Bay",
+    "slug": "office-cleaning-services-guide-business-bay",
+    "excerpt": "From executive suites in Bay Square to creative offices in The Opus, explore commercial sanitation protocols, flexible after-hours contracts, and workplace hygiene standards.",
+    "content": "\n      <h2>Business Bay: The Commercial Epicenter of Dubai</h2>\n      <p>Home to thousands of international corporations, financial firms, tech startups, and law offices, Business Bay demands immaculate executive environments. A spotless office not only creates an impressive first impression for visiting clients and investors, but also reduces employee sick days and elevates team morale.</p>\n\n      <h2>Key Focus Areas for Commercial Office Sanitation</h2>\n      <ul>\n        <li><strong>High-Touch Contact Points:</strong> Disinfecting conference room tables, presentation remote controls, door handles, light switches, and shared printer panels.</li>\n        <li><strong>Pantry & Breakroom Hygiene:</strong> Descaling coffee machines, deep-cleaning water dispensers, sanitizing microwaves, and degreasing pantry sinks.</li>\n        <li><strong>Reception & Client Lounges:</strong> Glass partition polishing, upholstery shampooing for waiting room sofas, and floor buffing.</li>\n        <li><strong>Restroom Sanitization:</strong> Multi-point disinfection of sanitary ware, replenishment of consumables, and odor elimination.</li>\n      </ul>\n\n      <h2>Flexible Scheduling: Day-Porter vs. After-Hours Cleaning</h2>\n      <p>Every company has unique operational schedules. JUBU provides:</p>\n      <ul>\n        <li><strong>After-Hours Evening Cleaning:</strong> Our crew operates between 6:00 PM and 10:00 PM so your daily operations remain completely undisturbed.</li>\n        <li><strong>Weekend Deep Sanitize:</strong> Full floor scrubbing, carpet wet extraction, and window washing during weekend downtimes.</li>\n        <li><strong>Dedicated Day Porters:</strong> Continuous restroom checks and conference room resetting throughout the business day.</li>\n      </ul>\n\n      <p>Partner with <a href=\"/business-bay\" class=\"text-sky-600 font-bold hover:underline\">JUBU commercial cleaning in Business Bay</a> for dependable, licensed corporate maintenance contracts tailored to your office square footage.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-office.png",
+    "coverImageAlt": "Corporate office cleaning and sanitization in Business Bay Dubai",
+    "category": "Commercial Cleaning",
+    "tags": [
+      "Office Cleaning",
+      "Commercial Cleaning",
+      "Corporate Sanitization",
+      "Business Bay Offices"
+    ],
+    "author": "JUBU Corporate Team",
+    "authorRole": "Commercial Operations Director",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-22T10:35:03.675Z",
+    "readTime": "5 min read",
+    "metaTitle": "Office Cleaning Services Business Bay | Corporate Cleaning Guide",
+    "metaDescription": "Licensed commercial and office cleaning solutions for companies in Business Bay, Dubai. Desk sanitization, pantry hygiene, and flexible contracts.",
+    "order": 7,
+    "createdAt": "2026-10-22T10:35:05.457Z",
+    "updatedAt": "2026-10-22T10:35:05.457Z"
+  },
+  {
+    "id": "post-bb-upholstery",
+    "title": "How to Remove Desert Sand & Dust from Balconies, Sofas & Mattresses in Business Bay",
+    "slug": "balcony-sofa-mattress-cleaning-business-bay",
+    "excerpt": "Desert dust storms and high-rise balcony exposure can ruin upholstery and outdoor tiles. Discover how industrial injection extraction and steam eradicate allergens and deep-seated grime.",
+    "content": "\n      <h2>The Desert Environment & High-Rise Dust Accumulation</h2>\n      <p>Business Bay's towering residential buildings offer panoramic views of the Burj Khalifa and the Dubai Water Canal. However, the wind tunnels created between high-rises draw microscopic desert sand into balcony corners and through open windows, embedding deep into sofa cushions, mattresses, and dining chairs.</p>\n\n      <h2>1. Balcony Power Cleaning Without Violating Building Rules</h2>\n      <p>Building management in Business Bay strictly regulates balcony water discharge to prevent dirty runoff from cascading down building facades onto lower terraces:</p>\n      <ul>\n        <li><strong>Rotary Scrubber & Wet Vacuuming:</strong> We apply neutral detergent, mechanically agitate tile pores with soft brushes, and immediately extract dirty liquid using high-suction wet extractors.</li>\n        <li><strong>Glass Balustrade Polishing:</strong> Squeegee cleaning removes water spotting and fine dust haze without drips.</li>\n      </ul>\n\n      <h2>2. Deep Injection Extraction for Fabric Sofas</h2>\n      <p>Standard dusting only removes surface sand. Professional sofa cleaning involves:</p>\n      <ul>\n        <li>Pre-vacuuming with specialized crevice tools to lift loose sand and crumbs.</li>\n        <li>Applying fabric-safe, organic enzyme stain pretreatments to break down coffee, wine, or food stains.</li>\n        <li>Pressurized hot-water injection followed by instantaneous 98% vacuum extraction, drying thoroughly within 2 to 4 hours.</li>\n      </ul>\n\n      <h2>3. Mattress Sanitization & Dust Mite Removal</h2>\n      <p>In Dubai's warm climate, mattresses accumulate moisture, sweat salts, and dead skin cells that nourish dust mite populations. JUBU utilizes 160°C dry steam sanitization that kills dust mites and neutralizes allergens without soaking mattress core foams.</p>\n\n      <p>Restore your furniture today with <a href=\"/business-bay\" class=\"text-sky-600 font-bold hover:underline\">same-day sofa, carpet, and mattress cleaning in Business Bay</a>.</p>\n    ",
+    "coverImage": "/images/placeholder/gallery-sofa.png",
+    "coverImageAlt": "Sofa and balcony pressure deep cleaning in Business Bay",
+    "category": "Specialized Cleaning",
+    "tags": [
+      "Balcony Cleaning",
+      "Sofa Cleaning",
+      "Carpet Cleaning",
+      "Mattress Sanitization",
+      "Business Bay"
+    ],
+    "author": "JUBU Specialist Crew",
+    "authorRole": "Fabric & Extraction Expert",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-22T10:35:03.675Z",
+    "readTime": "5 min read",
+    "metaTitle": "Balcony, Sofa & Carpet Cleaning Business Bay | Desert Dust Guide",
+    "metaDescription": "Combat fine sand on high-rise balconies, sofas, and mattresses in Business Bay. Learn expert extraction techniques and book same-day upholstery cleaning.",
+    "order": 8,
+    "createdAt": "2026-10-22T10:35:05.687Z",
+    "updatedAt": "2026-10-22T10:35:05.687Z"
   }
 ];

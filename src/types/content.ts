@@ -49,6 +49,7 @@ export interface SiteSettings {
   copyrightText: string;
   licence: TradeLicence;
   showHero?: boolean;
+  showHeroForm?: boolean;
   showServices?: boolean;
   showWhyChoose?: boolean;
   showAbout?: boolean;
@@ -69,6 +70,60 @@ export interface SiteSettings {
   bankSwiftCode?: string;
   bankRoutingNumber?: string;
   bankAccountOpeningDate?: string;
+
+  // Form & Layout Configurations from Database
+  propertyTypes?: PropertyTypeOption[];
+  timeSlots?: TimeSlotOption[];
+  areaZones?: AreaZoneOption[];
+  navItems?: NavLinkOption[];
+  quickLinks?: NavLinkOption[];
+  faqs?: FaqItem[];
+  showVideoReels?: boolean;
+  videoReels?: VideoReel[] | VideoReelsConfig;
+}
+
+export interface VideoReelsConfig {
+  badge?: string;
+  heading?: string;
+  subheading?: string;
+  items: VideoReel[];
+}
+
+export interface VideoReel {
+  id: string;
+  title?: string;
+  serviceTitle?: string;
+  location?: string;
+  videoUrl: string;
+  posterUrl?: string;
+  badge?: string;
+  duration?: string;
+  order: number;
+  isActive: boolean;
+}
+
+export interface PropertyTypeOption {
+  id: string;
+  title: string;
+  shortDescription?: string;
+  icon?: string;
+}
+
+export interface TimeSlotOption {
+  group: string;
+  slots: string[];
+}
+
+export interface AreaZoneOption {
+  id: string;
+  title: string;
+  description: string;
+  areaIds: string[];
+}
+
+export interface NavLinkOption {
+  label: string;
+  href: string;
 }
 
 export interface TrustBadgeItem {
@@ -86,6 +141,7 @@ export interface HeroContent {
   trustBadges: TrustBadgeItem[];
   heroImage: ImageItem;
   floatingBadge: string;
+  socialProofAvatars?: Array<{ id: string; src: string; alt: string }>;
 }
 
 export interface Service {
@@ -213,6 +269,8 @@ export interface AreaLandingPage {
   nearYouText: string;
   finalCtaTitle: string;
   faqs: FaqItem[];
+  showHeroForm?: boolean;
+  showVideoReels?: boolean;
   isActive: boolean;
   order: number;
 }

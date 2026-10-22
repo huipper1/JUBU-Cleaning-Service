@@ -48,5 +48,8 @@ export const mockSettingsData: SiteSettings = {
     issueDate: "25 January 2022"
   },
   gtmId: "",
-  gaId: ""
+  gaId: "",
+  showHeroForm: true,
+  showVideoReels: true,
+  videoReels: []
 };

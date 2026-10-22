@@ -92,6 +92,11 @@ export function ServiceAreas({
     }
   ];
 
+  const activeAreaZones =
+    settings?.areaZones && settings.areaZones.length > 0
+      ? settings.areaZones
+      : AREA_ZONES;
+
   return (
     <section
       id="areas"
@@ -129,7 +134,7 @@ export function ServiceAreas({
 
             {/* 2x2 Soft Feature Cards matching site theme */}
             <div className="mt-6 grid w-full grid-cols-1 gap-3.5 sm:grid-cols-2">
-              {AREA_ZONES.map((zone) => {
+              {activeAreaZones.map((zone) => {
                 const isSelected = zone.areaIds.some((id) => id === activeId);
                 return (
                   <button
