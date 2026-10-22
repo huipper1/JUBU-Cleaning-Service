@@ -127,15 +127,42 @@ export function WorkReels({ reels, settings }: WorkReelsProps) {
     };
   }, [activeModalIndex]);
 
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const hasMovedRef = useRef(false);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollContainerRef.current) return;
+    isDraggingRef.current = true;
+    hasMovedRef.current = false;
+    startXRef.current = e.pageX - scrollContainerRef.current.offsetLeft;
+    scrollLeftRef.current = scrollContainerRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current || !scrollContainerRef.current) return;
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startXRef.current) * 1.5;
+    if (Math.abs(walk) > 5) {
+      hasMovedRef.current = true;
+    }
+    scrollContainerRef.current.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const handleMouseUp = () => {
+    isDraggingRef.current = false;
+  };
+
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -320, behavior: "smooth" });
+      scrollContainerRef.current.scrollBy({ left: -310, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 320, behavior: "smooth" });
+      scrollContainerRef.current.scrollBy({ left: 310, behavior: "smooth" });
     }
   };
 
@@ -169,7 +196,7 @@ export function WorkReels({ reels, settings }: WorkReelsProps) {
 
           {/* Navigation Controls (Desktop) */}
           {activeReels.length > 1 && (
-            <div className="hidden items-center gap-2 sm:flex">
+            <div className="flex items-center gap-2">
               <button
                 onClick={scrollLeft}
                 aria-label="Previous reels"
@@ -191,13 +218,21 @@ export function WorkReels({ reels, settings }: WorkReelsProps) {
         {/* 9:16 Vertical Reels Cards Grid / Carousel */}
         <div
           ref={scrollContainerRef}
-          className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 sm:gap-6 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          className="flex snap-x snap-mandatory gap-4 sm:gap-6 overflow-x-auto scroll-smooth pb-4 pt-1 px-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           {activeReels.map((reel, idx) => (
             <div
               key={reel.id}
-              onClick={() => openModal(idx)}
-              className="group relative aspect-9/16 min-w-[260px] snap-center cursor-pointer overflow-hidden rounded-3xl border border-white/15 bg-[#061836] shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-sky-400 hover:shadow-2xl hover:shadow-sky-500/15 sm:min-w-[280px] lg:min-w-0"
+              onClick={() => {
+                if (!hasMovedRef.current) {
+                  openModal(idx);
+                }
+              }}
+              className="group relative aspect-9/16 w-[235px] sm:w-[255px] md:w-[275px] lg:w-[285px] shrink-0 snap-start cursor-pointer overflow-hidden rounded-3xl border border-white/15 bg-[#061836] shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-sky-400 hover:shadow-2xl hover:shadow-sky-500/15"
             >
               {/* Poster Thumbnail Image or Video First Frame */}
               {reel.posterUrl ? (
